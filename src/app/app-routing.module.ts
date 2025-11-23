@@ -6,7 +6,6 @@ import { AngularFireAuthGuard, redirectUnauthorizedTo, redirectLoggedInTo } from
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 
 // Redirige les utilisateurs connectés vers l'admin
-const redirectLoggedInToAdmin = () => redirectLoggedInTo(['admin']);
 const routes: Routes = [
 
   {
@@ -24,7 +23,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {useHash: true})],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

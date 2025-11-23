@@ -3,10 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { LandingV10Component } from './landing-v10/landing-v10.component';
 import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
-import {AngularFireAuthGuard, redirectLoggedInTo, redirectUnauthorizedTo} from '@angular/fire/compat/auth-guard';
+import {AngularFireAuthGuard, redirectUnauthorizedTo} from '@angular/fire/compat/auth-guard';
 import {PasswordForgetComponent} from './password-forget/password-forget.component';
-// Redirige les utilisateurs connectés vers l'admin
-const redirectLoggedInToAdmin = () => redirectLoggedInTo(['admin']);
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 const routes: Routes = [
   {
