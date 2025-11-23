@@ -55,10 +55,50 @@
   font-size: 14px;
 }
 
+.view-toggle {
+  display: inline-flex;
+  background: #f1f3f5;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.btn-switch {
+  border: none;
+  background: transparent;
+  padding: 8px 12px;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.btn-switch.active {
+  background: #1e3c72;
+  color: #fff;
+}
+
+.actions-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.board-search {
+  flex: 1 1 220px;
+}
+
+.board-search .form-control {
+  border-radius: 10px;
+}
+
 @media (min-width: 576px) {
   .header-actions {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+  }
+  .actions-right {
+    width: auto;
+    justify-content: flex-end;
   }
 }

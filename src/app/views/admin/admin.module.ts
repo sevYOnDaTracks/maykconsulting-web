@@ -63,6 +63,7 @@ import {MatBadge} from '@angular/material/badge';
 import {MessageGestionComponent} from './components/message-gestion/message-gestion.component';
 import {UserDetailComponent} from './components/user-detail/user-detail.component';
 import {PaymentPageComponent} from './components/payment-page/payment-page.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -131,6 +132,7 @@ import {PaymentPageComponent} from './components/payment-page/payment-page.compo
         MatPaginatorModule,
         MatSortModule,
         MatBadge,
+        DragDropModule,
 
     ],
   providers: [

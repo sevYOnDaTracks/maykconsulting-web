@@ -1,17 +1,72 @@
 <!-- app.component.html -->
 <div class="container mt-4 p-3">
-    <div class="header-actions">
-        <h3 class="title text-uppercase fw-bold mb-3">Mes Dossiers : Garant Financier</h3>
-        <button class="btn-report" type="button" (click)="generateReport()">
-            <i class="fas fa-download"></i>
-            <span>Générer un rapport</span>
-        </button>
+    <div class="subnav">
+        <div class="subnav-left">
+            <div class="subnav-icon">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+            <div class="subnav-text">
+                <div class="eyebrow">Module</div>
+                <div class="subnav-title">Mes dossiers : Garants Financier</div>
+            </div>
+        </div>
+        <div class="subnav-right">
+            <button class="btn-report" type="button" (click)="generateReport()">
+                <i class="fas fa-money-check-alt"></i>
+                <span>Argent à retirer</span>
+            </button>
+            <div class="view-toggle">
+                <button class="btn-switch" [class.active]="viewMode === 'table'" (click)="viewMode = 'table'">Tableau</button>
+                <button class="btn-switch" [class.active]="viewMode === 'board'" (click)="viewMode = 'board'">Board</button>
+            </div>
+        </div>
     </div>
 
+    <div class="board-controls mb-3" *ngIf="viewMode === 'board'">
+        <div class="board-search">
+            <input type="text" class="form-control" [(ngModel)]="searchTerm" placeholder="Rechercher (nom, pays, email, code)">
+        </div>
+        <div class="board-limit">
+           <!--<label>Cartes par colonne</label> --> 
+            <select class="form-select" [(ngModel)]="itemsPerPage">
+                <option *ngFor="let opt of itemsPerPageOptions" [ngValue]="opt">{{ opt === 'all' ? 'Tout' : opt }}</option>
+            </select>
+        </div>
+    </div>
 
-    <!-- Status Cards -->
+    <!-- BOARD VIEW --><br>
+    <div *ngIf="viewMode === 'board'" class="board-wrapper">
+        <div class="board-column" *ngFor="let col of boardColumns">
+            <div class="board-column-header">
+                <span class="badge-dot" [class]="'status-' + col.color"></span>
+                <div class="d-flex align-items-center gap-1 flex-wrap">
+                    <span class="board-title">{{ col.label }}</span>
+                    <span class="board-sub" *ngIf="col.status === 2">({{ visaRequestCount }} / {{ finishRequestCount }} visas)</span>
+                </div>
+                <span class="board-count">{{ filtered(col.data).length }}</span>
+            </div>
+            <div class="board-drop" cdkDropList [cdkDropListData]="col.data" (cdkDropListDropped)="onDrop($event, col.status)">
+                <div class="board-card" *ngFor="let item of visible(col.data, col.status)" cdkDrag (click)="openEditFinanceDemande(item.id || item.userId)">
+                    <div class="card-top">
+                        <div>
+                            <div class="card-name">{{ item.demandeur || '—' }}</div>
+                            <div class="card-meta">{{ item.country || 'N/A' }} · {{ item.telephone || '—' }}</div>
+                        </div>
+                        <div class="card-chip" [class.has-proof]="item.justificatifPaiement">{{ item.justificatifPaiement ? 'Payé' : 'Non payé' }}</div>
+                    </div>
+                    <div class="card-bottom">
+                        <div class="meta-item"><i class="fas fa-calendar-alt"></i>&nbsp;{{ item.dateDemande ? (item.dateDemande | date:'dd/MM/yyyy') : '—' }}</div>
+                        <div class="meta-item"><i class="fas fa-money-bill-wave"></i>&nbsp;{{ item.paiementMontant || '—' }}</div>
+                        <div class="meta-item"><i class="fas fa-user-shield"></i>&nbsp;{{ item.payout === '1' ? 'Cashout: Oui' : 'Cashout: Non' }}</div>
+                    </div>
+                </div>
+                <div class="board-empty" *ngIf="filtered(col.data).length === 0">Aucune carte</div>
+            </div>
+        </div>
+    </div>
 
-    <div class="row mb-2">
+    <!-- Status Cards (TABLE VIEW) -->
+    <div *ngIf="viewMode === 'table'" class="row mb-2">
         <div class="col-md-3 col-xl-3 mb-4">
             <div class="card shadow border-start-primary py-2">
                 <div class="card-body">
@@ -21,8 +76,8 @@
                                 <span>En attente</span>
                             </div>
                             <div class="text-dark fw-bold h-5 mb-0">
-								<span>
-									{{ pendingRequestCount }}</span>
+					<span>
+						{{ pendingRequestCount }}</span>
                             </div>
                         </div>
                         <div class="col-auto">
@@ -41,8 +96,8 @@
                                 <span>En Traitement</span>
                             </div>
                             <div class="text-dark fw-bold h-5 mb-0">
-								<span>
-									{{ inProgressRequestCount }}</span>
+					<span>
+						{{ inProgressRequestCount }}</span>
                             </div>
                         </div>
                         <div class="col-auto">
@@ -61,8 +116,8 @@
                                 <span>Visa accordés</span>
                             </div>
                             <div class="text-dark fw-bold h-5 mb-0">
-								<span>
-									{{ visaRequestCount }} / {{ finishRequestCount }}  </span>
+					<span>
+						{{ visaRequestCount }} / {{ finishRequestCount }}  </span>
                             </div>
                         </div>
                         <div class="col-auto">
@@ -81,12 +136,12 @@
                                 <span>Archivées</span>
                             </div>
                             <div class="text-dark fw-bold h-5 mb-0">
-								<span>
-									{{ archivedRequestCount }}</span>
+					<span>
+						{{ archivedRequestCount }}</span>
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-times fa-2x text-gray-300"></i>
+                            <i class="fas fa-archive fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -95,8 +150,9 @@
     </div>
 
     <!-- Table Section -->
+    <ng-container *ngIf="viewMode === 'table'">
     <!-- Angular Material Card -->
-    <div class="card mb-4">
+    <div class="card mb-4" *ngIf="viewMode === 'table'">
         <div class="card-header text-warning text-uppercase text-xs">En attente de paiement</div>
 
         <!-- Search Input -->
@@ -175,7 +231,7 @@
         <mat-paginator [pageSizeOptions]="[5, 10, 20 , 100]" showFirstLastButtons></mat-paginator>
     </div>
 
-    <div class="card mb-4">
+    <div class="card mb-4" *ngIf="viewMode === 'table'">
         <div class="card-header text-primary text-uppercase text-xs">En cours de traitement</div>
 
         <!-- Search Input -->
@@ -254,7 +310,7 @@
         <mat-paginator [pageSizeOptions]="[5, 10, 20,100]" showFirstLastButtons #inProgressPaginator></mat-paginator>
     </div>
 
-    <div class="card mb-4">
+    <div class="card mb-4" *ngIf="viewMode === 'table'">
         <div class="card-header text-success text-uppercase text-xs">Traitement terminé</div>
 
         <!-- Search Input -->
@@ -332,7 +388,7 @@
         <mat-paginator [pageSizeOptions]="[5, 10, 20 , 100]" showFirstLastButtons #finishPaginator></mat-paginator>
     </div>
 
-    <div class="card mb-4">
+    <div class="card mb-4" *ngIf="viewMode === 'table'">
         <div class="card-header text-danger text-uppercase text-xs">Demandes Archivées</div>
 
         <!-- Search Input -->
@@ -434,4 +490,3 @@
             <button mat-raised-button color="primary" (click)="sendReply()" [disabled]="replyForm.invalid || isSending">Envoyer</button>
         </mat-dialog-actions>
     </ng-template>
-</div>

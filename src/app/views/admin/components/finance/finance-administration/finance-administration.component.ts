@@ -1,4 +1,5 @@
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
@@ -25,6 +26,14 @@ export class FinanceAdministrationComponent implements OnInit, OnDestroy {
   dataSourceInProgress: MatTableDataSource<any>;
   dataSourceFinish: MatTableDataSource<any>;
   dataSourceArchived: MatTableDataSource<any>;
+  pendingList: any[] = [];
+  inProgressList: any[] = [];
+  finishList: any[] = [];
+  archivedList: any[] = [];
+  viewMode: 'table' | 'board' = 'table';
+  searchTerm = '';
+  itemsPerPageOptions: (number | 'all')[] = [5, 10, 15, 20, 50, 'all'];
+  itemsPerPage: number | 'all' = 5;
   replyForm: FormGroup;
   selectedRequest: any = null;
   isSending = false;
@@ -142,12 +151,13 @@ export class FinanceAdministrationComponent implements OnInit, OnDestroy {
                 return combineLatest(userObservables);
               })
           )
-          .subscribe(data => {
-            this.dataSource = new MatTableDataSource(data);
-            this.pendingRequestCount = data.length;
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-          })
+            .subscribe(data => {
+              this.dataSource = new MatTableDataSource(data);
+              this.pendingRequestCount = data.length;
+              this.dataSource.paginator = this.paginator;
+              this.dataSource.sort = this.sort;
+              this.pendingList = data;
+            })
     );
 
     // Table for in-progress payment requests (etatDemande = 1)
@@ -176,6 +186,7 @@ export class FinanceAdministrationComponent implements OnInit, OnDestroy {
             console.log(this.dataSourceInProgress);
             this.dataSourceInProgress.paginator = this.inProgressPaginator;
             this.dataSourceInProgress.sort = this.inProgressSort;
+            this.inProgressList = data;
           })
     );
 
@@ -204,6 +215,7 @@ export class FinanceAdministrationComponent implements OnInit, OnDestroy {
             this.dataSourceFinish.paginator = this.finishPaginator;
             this.finishRequestCount = data.length;
             this.dataSourceFinish.sort = this.finishSort;
+            this.finishList = data;
           })
     );
       // Table for in-progress payment requests (etatDemande = 3)
@@ -231,6 +243,7 @@ export class FinanceAdministrationComponent implements OnInit, OnDestroy {
                 this.dataSourceArchived.paginator = this.archivedPaginator;
                 this.archivedRequestCount = data.length;
                 this.dataSourceArchived.sort = this.archivedSort;
+                this.archivedList = data;
             })
       );
 
@@ -275,6 +288,7 @@ export class FinanceAdministrationComponent implements OnInit, OnDestroy {
           this.pendingRequestCount = data.length;
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
+          this.pendingList = data;
         });
 
     // Table for in-progress payment requests (etatDemande = 1)
@@ -301,6 +315,7 @@ export class FinanceAdministrationComponent implements OnInit, OnDestroy {
           console.log(this.dataSourceInProgress);
           this.dataSourceInProgress.paginator = this.inProgressPaginator;
           this.dataSourceInProgress.sort = this.inProgressSort;
+          this.inProgressList = data;
         });
 
     // Table for in-progress payment requests (etatDemande = 2)
@@ -326,6 +341,7 @@ export class FinanceAdministrationComponent implements OnInit, OnDestroy {
           this.dataSourceFinish.paginator = this.finishPaginator;
           this.finishRequestCount = data.length;
           this.dataSourceFinish.sort = this.finishSort;
+          this.finishList = data;
         });
   }
 
@@ -394,6 +410,55 @@ export class FinanceAdministrationComponent implements OnInit, OnDestroy {
       this.snackBar.open('Demande supprimée', 'Fermer', { duration: 3000 });
     }).catch(() => {
       this.snackBar.open('Erreur lors de la suppression', 'Fermer', { duration: 4000 });
+    });
+  }
+
+  get boardColumns() {
+    return [
+      { status: 0, label: 'En attente', color: 'warning', data: this.pendingList },
+      { status: 1, label: 'En cours', color: 'info', data: this.inProgressList },
+      { status: 2, label: 'Terminés', color: 'success', data: this.finishList },
+      { status: 3, label: 'Archivées', color: 'secondary', data: this.archivedList },
+    ];
+  }
+
+  filtered(list: any[]) {
+    if (!this.searchTerm) {
+      return list;
+    }
+    const term = this.searchTerm.toLowerCase();
+    return list.filter(item =>
+        (item.demandeur || '').toLowerCase().includes(term) ||
+        (item.country || '').toLowerCase().includes(term) ||
+        (item.email || '').toLowerCase().includes(term) ||
+        (item.paiementCode || '').toLowerCase().includes(term) ||
+        (item.paiementService || '').toLowerCase().includes(term)
+    );
+  }
+
+  visible(list: any[], status: number) {
+    const arr = this.filtered(list);
+    if (this.itemsPerPage === 'all') {
+      return arr;
+    }
+    return arr.slice(0, this.itemsPerPage);
+  }
+
+  onDrop(event: CdkDragDrop<any[]>, targetStatus: number) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      return;
+    }
+    const item = event.previousContainer.data[event.previousIndex];
+    transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+    const targetId = item?.id || item?.userId;
+    if (!targetId) {
+      this.snackBar.open('Identifiant manquant pour mettre à jour le statut', 'Fermer', { duration: 3000 });
+      return;
+    }
+    const payload = { ...item, etatDemande: targetStatus };
+    this.financeService.updateFinanceData(targetId, payload).catch(() => {
+      this.snackBar.open('Erreur lors du changement de colonne', 'Fermer', { duration: 3000 });
     });
   }
 }
