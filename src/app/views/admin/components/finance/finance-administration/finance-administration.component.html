@@ -1,9 +1,10 @@
 <!-- app.component.html -->
 <div class="container mt-4 p-3">
-    <div class="d-sm-flex justify-content-between align-items-center mb-2 ">
-        <h3 class="mb-4 text-uppercase text-xl text-uppercase  fw-bold ">Mes Dossiers : Garant Financier</h3>
-        <button class="btn btn-dark d-none d-sm-inline-block" type="button" (click)="generateReport()">
-            <i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Générer un rapport
+    <div class="header-actions">
+        <h3 class="title text-uppercase fw-bold mb-3">Mes Dossiers : Garant Financier</h3>
+        <button class="btn-report" type="button" (click)="generateReport()">
+            <i class="fas fa-download"></i>
+            <span>Générer un rapport</span>
         </button>
     </div>
 
