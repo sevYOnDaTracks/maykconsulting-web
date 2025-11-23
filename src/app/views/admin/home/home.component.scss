@@ -144,3 +144,10 @@ h1.example-app-name {
   justify-content: center; /* Center icons in mini mode */
 }
 
+/* Pleine largeur du drawer sur mobile */
+@media (max-width: 768px) {
+  mat-sidenav.custom-sidenav {
+    width: 100vw !important;
+    max-width: 100vw;
+  }
+}
