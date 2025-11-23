@@ -1,0 +1,96 @@
+<div class="container p-3 mt-5" *ngIf="user$ | async as user; else loading">
+    <div class="row justify-content-center">
+        <div class="text-center">
+            <h2>Hello  {{ user.firstName }} {{ user.lastName }} !</h2>
+        </div>
+    </div>
+    <div *ngIf="emailVerified === false" class="alert alert-danger text-center mt-4 mb-4">
+        Votre adresse email n'est pas vérifiée, vérifiez votre boîte aux lettres, un lien vous a été envoyé avec comme expéditeur "{{ 'no-reply@maykconsulting.fr' }}". Vérifiez également vos Spams si besoin.
+    </div>
+    <div *ngIf="hasExistingAdmissionNotPay" class="alert alert-warning text-center mt-4 mb-4">
+        Vous avez une demande d'admission en attente de paiement !  <u style="cursor:pointer;" routerLink="/admin/admission">Cliquez ici pour voir.</u>
+    </div>
+    <div *ngIf="hasExistingHebergementNotPay" class="alert alert-warning text-center mt-4 mb-4">
+        Vous avez une demande d'hébergement en attente de paiement !  <u style="cursor:pointer;" routerLink="/admin/hebergement">Cliquez ici pour voir.</u>
+    </div>
+    <div *ngIf="hasExistingFinanceNotPay" class="alert alert-warning text-center mt-4 mb-4">
+        Vous avez une demande de garant financier en attente de paiement !  <u style="cursor:pointer;" routerLink="/admin/finance">Cliquez ici pour voir.</u>
+    </div>
+    <div *ngIf="hebergementData?.hebergemntFile" class="alert alert-success text-center mt-4 mb-4">
+        Merci de votre patience, vos documents d'hébergement sont prêts !  <u style="cursor:pointer;" routerLink="/admin/hebergement">Cliquez ici pour voir.</u>
+    </div>
+    <div *ngIf="financeData?.garantFile" class="alert text-center mt-4 mb-4" style="background: rgba(47,163,34,0.25)">
+        Merci de votre patience, vos documents de garant financier sont prêts !  <u style="cursor:pointer;" routerLink="/admin/finance">Cliquez ici pour voir.</u>
+    </div>
+
+    <div *ngIf="admissionData?.etatDemande === 3" class="alert text-center mt-4 mb-4" style="background: rgba(47,163,34,0.25)">
+        Félicitations vous avez été accepté dans au moins 1 établissement !  <u style="cursor:pointer;" routerLink="/admin/admission">Cliquez ici pour voir.</u>
+    </div>
+
+    <div *ngIf="admissionData?.etatDemande === 4" class="alert text-center mt-4 mb-4" style="background: rgba(191,60,20,0.21)">
+        Pas de chance !!! Malheuresement vous n'avez été accepté dans aucun établissement. <br>Nous pouvons tenter une admission dans une école privée, mais les frais d'admission seront à votre charge.
+    </div>
+
+
+
+    <h5 align="center" class="mt-4"> Que souhaitez-vous comme prestation ?</h5>
+    <!-- Replace buttons with clickable cards and icons -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-4 mt-2">
+            <mat-card class="text-center" routerLink="/admin/hebergement" style="cursor:pointer;">
+                <mat-card-content class="mt-3 mb-3">
+                    <mat-icon style="color: #4e2680">weekend</mat-icon>
+                    <p>Hébergement</p>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="col-md-4 mt-2">
+            <mat-card class="text-center" routerLink="/admin/admission" style="cursor:pointer;">
+                <mat-card-content class="mt-3 mb-3">
+                    <mat-icon style="color: #1e3c72;">school</mat-icon>
+                    <p>Admissions</p>
+                </mat-card-content>
+
+
+            </mat-card>
+        </div>
+        <div class="col-md-4 mt-2">
+            <mat-card class="text-center" routerLink="/admin/finance" style="cursor:pointer;">
+                <mat-card-content class="mt-3 mb-3">
+                    <mat-icon style="color: #43b7df;">work</mat-icon>
+                    <p>Garant Financier</p>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-12">
+            <mat-card class="text-center">
+                <mat-card-header>
+                    <mat-card-title></mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-card-subtitle *ngIf="!user.identityPhotoUrl" class=" alert alert-warn p-2" style="background-color: #fff3cd;justify-content: center">
+                        Hey, nous n'avons toujours pas reçu ta photo d'identité.
+                    </mat-card-subtitle>
+                    <p class="mt-2">Souhaitez-vous gérer vos informations ? C'est par ici !</p>
+                    <button mat-stroked-button routerLink="/admin/user" style="color:#1e3c72">Profil<mat-icon>person</mat-icon></button>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-12 text-center">
+            <p>Pour toutes questions, veuillez nous contacter par mail sur : <a href="mailto:maykconsulting@gmail.com" style="color: #1e3c72">{{ 'maykconsulting@gmail.com' }}</a></p>
+        </div>
+    </div>
+</div>
+
+<ng-template #loading>
+    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <mat-spinner diameter="90"></mat-spinner>
+    </div>
+</ng-template>

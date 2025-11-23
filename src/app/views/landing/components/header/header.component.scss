@@ -1,0 +1,140 @@
+#home-header {
+  position: fixed;
+  width: 100%;
+  background: #072150;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 22px 0;
+  transition: all 0.5s ease-in-out;
+  z-index: 9999;
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.mobile_menu {
+  height: 60px;
+  align-items: center;
+}
+
+#home-header > .container {
+  height: auto;
+}
+
+.header-fixed {
+  position: fixed !important;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding: 0 !important;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+  transition: all 0.5s ease-in-out !important;
+}
+
+.header-fixed .container {
+  height: 60px !important;
+}
+
+.header-fixed .hometop-btn {
+  line-height: 60px !important;
+}
+
+.home-logo {
+  display: flex;
+  align-items: center;
+}
+
+#menu-toggle {
+  display: none;
+  position: absolute;
+  right: 5px;
+  top: 10px;
+}
+
+.icon-button .mat-icon {
+  font-size: 20px;
+}
+
+nav ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  position: relative;
+}
+
+nav ul li {
+  display: inline-block;
+}
+
+nav ul li a {
+  display: block;
+  color: #fff;
+  cursor: pointer;
+}
+
+@media (max-width: 991px) {
+  #home-header {
+    padding: 0;
+  }
+  #home-header > .container {
+    height: 60px;
+    padding: 0;
+  }
+  .menu-opened:host .header-mobile-top {
+    padding: 13px 0;
+  }
+  #menu-toggle {
+    display: block;
+  }
+  .menu-opened:host .container {
+    height: auto !important;
+  }
+  .home-logo {
+    margin-left: 15px;
+  }
+  .top-menu {
+    display: none !important;
+  }
+  .menu-opened:host .top-menu {
+    display: block !important;
+    width: 100% !important;
+    flex: none !important;
+    background: #072150;;
+  }
+  .navbar-collapse {
+    flex-basis: 100%;
+    flex-grow: 1;
+    align-items: center;
+    margin-top: 0px;
+    text-align: center;
+    height: 100vh;
+    overflow-y: scroll;
+    background: #072150;
+  }
+  li.nav-item {
+    text-align: center;
+  }
+}
+
+.navbar-toggler:hover,
+.navbar-toggler:focus {
+  text-decoration: none;
+  outline: none;
+}
+
+span.navbar-toggler-icon .eva {
+  -webkit-text-fill-color: #fff;
+}
+
+@media only screen and (max-width: 765px) {
+  .mobile_menu {
+    height: 60px;
+    align-items: center;
+    padding: 0px 20px;
+  }
+}
+

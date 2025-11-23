@@ -1,0 +1,13 @@
+.btn-gradient {
+  background: #072150;
+  color: white;
+  border: none;
+  border-radius: 0.25rem; /* Ajustez selon le besoin */
+  padding: 0.5rem 1rem; /* Ajustez selon le besoin */
+  transition: background 0.3s ease;
+}
+
+.btn-gradient:hover {
+  background: #ffffff;
+  color: #072150;
+}

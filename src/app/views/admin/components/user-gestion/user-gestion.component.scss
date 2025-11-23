@@ -1,0 +1,88 @@
+/* user-management-dashboard.component.css */
+.user-dashboard {
+  width: 80%;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.search-input {
+  padding: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+
+.user-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.action-button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.dialog-form .mat-form-field {
+  width: 100%;
+}
+.dialog-form {
+  text-align: left;
+}
+
+td, th {
+  width: auto;
+  height: auto;
+}
+
+example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.mat-header-cell, .mat-cell {
+  padding: 16px;
+}
+
+@media (max-width: 768px) {
+  .mat-header-cell, .mat-cell {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .mat-column-photo {
+    width: 60px;
+  }
+
+  .mat-column-actions {
+    width: 80px;
+  }
+}
+
+
+
+

@@ -1,0 +1,146 @@
+.example-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.custom-sidenav {
+  width: 300px; /* Définissez la largeur que vous souhaitez */
+
+}
+.example-is-mobile .example-toolbar {
+  position: fixed;
+  /* Make sure the toolbar will stay on top of the content as it scrolls past. */
+  z-index: 2;
+}
+
+h1.example-app-name {
+  margin-left: 8px;
+}
+
+.example-sidenav-container {
+  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+  flex: 1;
+}
+
+.example-is-mobile .example-sidenav-container {
+  /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+     `<body>` to be our scrolling element for mobile layouts. */
+  flex: 1 0 auto;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.active-link {
+  background-color: #e0e0e0; // Couleur de fond gris
+  border-radius: 9px;
+}
+.user-photo {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.user-name {
+
+  margin-right: 20px;
+}
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.logo {
+  height: auto;
+  width: 180px;
+  margin-left: 0;
+}
+
+.user-photo {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.active-link {
+  background-color: #e0e0e0; /* Couleur de fond gris */
+  border-radius: 9px;
+
+}
+
+/* Média query pour les écrans de petite taille (Téléphone) */
+@media screen and (max-width: 600px) {
+
+  .logo {
+    display: block; /* Ensure the logo is displayed as a block element */
+    margin: 0 auto; /* Auto margin for left and right to center */
+  }
+
+  .only-smart {
+    margin-right: 30px
+  }
+
+  .example-container {
+    margin-top: 30px; /* Adjust this value based on the toolbar height */
+  }
+
+
+}
+.fixed-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #072150;/* Your desired background color */
+  color: white;
+  z-index: 1000; /* Ensures the toolbar is above other content */
+}
+
+.example-container {
+  margin-top: 65px; /* Adjust this value based on the toolbar height */
+}
+
+
+
+
+.custom-sidenav {
+  width: 250px;
+  transition: width 0.9s ease;
+
+}
+
+.sidenav-mini {
+  width: 70px; /* Adjust the width as per your requirement */
+}
+
+.mat-icon {
+  font-size: 24px; /* Adjust icon size if needed */
+}
+
+.sidenav-mini .mat-list-item span {
+  display: none; /* Hide the text labels when in mini mode */
+}
+
+.sidenav-mini .mat-list-item {
+  justify-content: center; /* Center icons in mini mode */
+}
+

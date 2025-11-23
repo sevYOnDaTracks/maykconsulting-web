@@ -1,0 +1,58 @@
+.custom-card-header {
+
+  background: #132a57;
+  margin-bottom: 5px;
+  color: #fff; /* Texte en blanc pour l'en-tête */
+}
+
+
+.hidden-content {
+  visibility: hidden;
+  position: absolute;
+  left: -9999px; /* Positionné hors écran */
+}
+
+.capture-content {
+  opacity: 0; /* Rend le contenu invisible */
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+@media print {
+  .card {
+    page-break-inside: avoid;
+  }
+  .d-flex, .m-2 {
+    display: block; /* Éviter l'affichage en flex ou margin non nécessaires */
+  }
+  /* Cachez les éléments inutiles à l'impression */
+  button, .logo-mayk {
+    display: none;
+  }
+}
+
+.custom-card-header-2 {
+  background: #132a57;
+  /* Ajouté pour uniformité */
+  /* Ajouté pour uniformité */
+  border-radius: 10px;
+  color: #fff; /* Texte en blanc */
+  border: none; /* Assurez-vous que les bordures n'interfèrent pas */
+  /* Bordures transparentes pour cacher les artefacts potentiels */
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+}
+
+@media (max-width: 768px) {
+  .custom-card-header {
+    font-size: 1.2em; /* Ajustement de la taille de police */
+  }
+  .payment-logo {
+    width: 50px; /* Réduction de la taille des logos */
+  }
+  .logo-mayk {
+    width: 150px; /* Ajustement de la taille du logo */
+  }
+  /* Autres ajustements spécifiques aux petits écrans */
+}

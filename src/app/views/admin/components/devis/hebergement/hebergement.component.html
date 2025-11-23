@@ -1,0 +1,128 @@
+<div class="container mt-3" *ngIf="user$ | async as user; else loading">
+
+    <div class="mt-2 mb-2">
+        <mat-card appearance="outlined"  class="custom-card text-dark mt-2" style="padding: -10rem;">
+            <mat-card-content>
+                <div align="center" >
+                    <h1 class="text-dark">Hébergement <mat-icon>weekend</mat-icon></h1>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+    </div>
+
+    <mat-card appearance="outlined" class="mb-2">
+        <mat-card-content>
+            <div class="d-flex justify-content-between align-items-center">
+                <button routerLink="/admin/hebergement/" mat-flat-button>
+                    <mat-icon>arrow_left</mat-icon> Revenir
+                </button>
+                <button (click)="downloadPDF()" mat-stroked-button>
+                    <mat-icon>download</mat-icon> Télécharger
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+
+    <mat-card  class="card mb-4" appearance="outlined">
+        <mat-card-content class="m-2">
+            <div id="devis-section" class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mt-2">
+                        <h5>{{ user.firstName }} {{ user.lastName }}</h5>
+                        <h5>Né(e) le {{ user.birthDate | date:'dd-MM-yyyy' }}</h5>
+                        <h5>{{ user.email }}</h5>
+                        <h5>{{ user.phone }}</h5>
+                    </div>
+                    <div class="col-md-6 text-right mt-2">
+                        <h5>Date : {{ formattedDate }}</h5>
+                    </div>
+                </div>
+                <table class="table mt-5">
+                    <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Hébergement </td>
+                        <td> <strong>{{ hebergementData?.country }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Ville :</td>
+                        <td><strong> {{ hebergementData.city }} </strong></td>
+                    </tr>
+                    <tr>
+                        <td>Prix :</td>
+                        <td class="text-danger" *ngIf="hebergementData.country === 'France'"><strong>200 000 FCFA</strong></td>
+                        <td class="text-danger" *ngIf="hebergementData.country === 'Canada'"><strong>A définir</strong></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="text-center mt-5 mb-3">
+                    <p>Paiement à effectuer via <strong>Western Union, Ria, MoneyGram...</strong> Vers :</p>
+                    <div class="d-flex justify-content-center mt-3 mb-3">
+                        <img src="assets/images/wuLogoOffi.jpg" alt="Western Union" class="payment-logo">
+                        <img src="assets/images/ria.png" alt="Ria" class="payment-logo">
+                        <img src="assets/images/MoneyGramLogo.png" alt="MoneyGram" class="payment-logo">
+                    </div>
+                </div>
+                <table class="table mt-5">
+                    <thead>
+                    <tr>
+                        <th>Agent de Réception</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                     <tr>
+                    <td>Agent : Eboua Attié Yves-Patrick</td>
+                </tr>
+                <tr>
+                    <td>Pays de résidence : France</td>
+                </tr>
+                <tr>
+                    <td>Adresse : 90 Chaussée Jules César</td>
+                </tr>
+                <tr>
+                    <td>Ville : Eaubonne</td>
+                </tr>
+                <tr>
+                    <td>Numéro : +33 7 62 68 12 47</td>
+                </tr>
+                    </tbody>
+                </table>
+                <p align="start" class="mt-3">By Maykconsulting le {{ formattedDate }}</p>
+                <div align="end"> <img class="logo-mayk" src="assets/images/landing/lOGO_d/logo.png" ></div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<ng-template #loading>
+    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <mat-spinner diameter="50"></mat-spinner>
+    </div>
+</ng-template>
+
+<style>
+    .custom-card-header {
+        background-color: #132a57;
+        color: #fff;
+    }
+
+    .payment-logo {
+        width: 65px;
+        height: auto;
+        margin: 0 15px;
+    }
+
+    .logo-mayk {
+        width: 190px;
+        height: auto;
+        margin-right: 15px;
+    }
+
+</style>

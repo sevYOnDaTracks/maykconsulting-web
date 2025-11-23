@@ -1,0 +1,149 @@
+.full-width {
+  width: 100%;
+}
+
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.col-lg-6, .col-md-6, .col-sm-12, .col-12 {
+  padding: 0 10px;
+}
+
+.mt-5 {
+  margin-top: 3rem;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.p-4 {
+  padding: 1.5rem;
+}
+
+.stepper-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.file-name {
+  margin-left: 10px;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .doc-heb{
+    margin-top: 30px;
+  }
+
+  .justificatif-btn {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .file-name {
+    text-align: center;
+    margin-top: 5px;
+  }
+  .mat-form-field {
+    width: 100%;
+  }
+
+  .custom-toolbar h1 {
+    margin-bottom: 40px;
+  }
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.bg-gradient {
+  background: linear-gradient(120deg, #3e1778 0%, #85cbfd 100%);
+}
+
+.custom-card {
+  border-radius: 10px;
+  box-shadow: 10px 10px 5px rgba(236, 236, 236, 0.5);
+}
+
+.custom-card-header {
+
+  background: #132a57;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  margin-bottom: 5px;
+  color: #fff; /* Texte en blanc pour l'en-tête */
+}
+
+.custom-card-header-2 {
+
+  box-shadow: 10px 10px 5px rgba(243, 243, 243, 0.5);
+  /* Ajouté pour uniformité */
+  /* Ajouté pour uniformité */
+  border-radius: 10px;
+  //color: white; /* Texte en blanc */
+  border: none; /* Assurez-vous que les bordures n'interfèrent pas */
+  /* Bordures transparentes pour cacher les artefacts potentiels */
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+}
+
+.custom-toolbar {
+  background: #df3671;
+  /* Ajouté pour uniformité */
+  /* Ajouté pour uniformité */
+  box-shadow: 10px 10px 5px rgba(243, 243, 243, 0.5);
+  color: #fff; /* Texte en blanc */
+  border: none; /* Assurez-vous que les bordures n'interfèrent pas */
+  /* Bordures transparentes pour cacher les artefacts potentiels */
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-radius: 15px;
+  margin: 12px;
+}
+
+.custom-card-header-3 {
+  background: #ffffff;
+  box-shadow: 10px 10px 5px rgba(243, 243, 243, 0.5);
+  /* Ajouté pour uniformité */
+  /* Ajouté pour uniformité */
+  border-radius: 10px;
+  color: #000000; /* Texte en blanc */
+  border: none; /* Assurez-vous que les bordures n'interfèrent pas */
+  /* Bordures transparentes pour cacher les artefacts potentiels */
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+}
+
+
+.custom-card-normal {
+
+  background: #f3f3f3;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  margin-bottom: 5px;
+  color: #fff; /* Texte en blanc pour l'en-tête */
+}
+
+.custom-card-header mat-card-title {
+  color: #fff; /* Assure que le titre est en blanc */
+}
+
+
+
+
+

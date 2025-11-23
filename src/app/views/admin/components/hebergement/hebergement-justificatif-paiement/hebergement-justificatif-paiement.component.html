@@ -1,0 +1,79 @@
+<h2 mat-dialog-title>
+    Justificatif de paiement
+    <mat-icon>payment</mat-icon>
+</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="paymentForm" class="form-grid">
+        <mat-form-field appearance="outline">
+            <mat-label>Service de paiement</mat-label>
+            <mat-select formControlName="servicePaiement">
+                <mat-option value="Western Union">Western Union</mat-option>
+                <mat-option value="Ria">Ria</mat-option>
+                <mat-option value="MoneyGram">MoneyGram</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Code de retrait</mat-label>
+            <input matInput formControlName="codeRetrait" placeholder="XXXX XXX XXX">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Montant (€)</mat-label>
+            <input matInput type="number" step="0.01" inputmode="decimal" formControlName="montantPaiement" min="1" placeholder="Ex: 250">
+        </mat-form-field>
+
+        <div class="upload-block">
+            <input type="file" (change)="onFileSelected($event)" hidden #fileInput accept="image/*,application/pdf">
+            <button mat-stroked-button color="primary" (click)="fileInput.click()">
+                <mat-icon>cloud_upload</mat-icon> Justificatif
+            </button>
+            <p class="muted">Image ou PDF · max 8 Mo</p>
+        </div>
+
+        <div *ngIf="file || fileUrl" class="preview-card mat-elevation-z2">
+            <div *ngIf="isImageFile() || fileUrl" class="file-preview">
+                <img [src]="filePreview || fileUrl" alt="Aperçu du justificatif">
+            </div>
+            <div *ngIf="isPdfFile()" class="file-preview pdf-preview">
+                <img src="assets/images/pdf.png" alt="PDF">
+                <div>Aperçu PDF indisponible</div>
+            </div>
+            <div class="preview-actions">
+                <button mat-button color="accent" (click)="removeFile()">
+                    <mat-icon>delete</mat-icon> Retirer
+                </button>
+                <button mat-button color="primary" *ngIf="fileUrl" (click)="viewFile()">
+                    <mat-icon>visibility</mat-icon> Consulter
+                </button>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">Annuler</button>
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="isSubmitting">
+        Enregistrer
+    </button>
+</mat-dialog-actions>
+
+<div *ngIf="isSubmitting" class="overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+</div>
+
+<style>
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+</style>

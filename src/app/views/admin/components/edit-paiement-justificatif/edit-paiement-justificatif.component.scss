@@ -1,0 +1,74 @@
+.pdf-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px; /* Ajustez la hauteur selon vos besoins */
+  background-color: #f5f5f5; /* Optionnel : pour un fond léger */
+}
+
+.pdf-icon {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  width: 100%;
+}
+mat-form-field {
+  width: 100%;
+}
+.upload-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  grid-column: span 1;
+}
+.upload-block button {
+  width: fit-content;
+}
+.preview-card {
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+.file-preview img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+.preview-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.muted {
+  color: #6b7280;
+}
+
+@media (max-width: 600px) {
+  .preview-actions {
+    flex-wrap: wrap;
+  }
+  .upload-block button {
+    width: 100%;
+  }
+}
+
+
+/* Ajustements visuels du dialog (mobile-friendly) */
+:host ::ng-deep .mat-dialog-container {
+  padding: 12px 14px 16px 14px;
+  max-width: 420px;
+}
+
+mat-dialog-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  padding-top: 8px;
+}
+mat-dialog-actions button {
+  flex: 1;
+}

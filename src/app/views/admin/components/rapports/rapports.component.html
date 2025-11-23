@@ -1,0 +1,128 @@
+<div class="page">
+  <div class="page-header">
+    <h2>Rapports Administratifs</h2>
+    <p class="subtitle">Vue synthétique des admissions, garanties financières et hébergement (admin uniquement).</p>
+  </div>
+
+  <div class="filters">
+    <mat-form-field appearance="outline">
+      <mat-label>Filtrer par période</mat-label>
+      <mat-date-range-input [formGroup]="dateForm" [rangePicker]="picker" (dateChange)="onDateChange()">
+        <input matStartDate formControlName="start" placeholder="Début">
+        <input matEndDate formControlName="end" placeholder="Fin">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+    <button mat-stroked-button color="primary" (click)="onDateChange()">Appliquer</button>
+    <button mat-button color="warn" (click)="resetDate()">Effacer</button>
+  </div>
+
+  <ng-container *ngIf="report$ | async as report; else loading">
+    <div class="graphs">
+      <div class="graph-panel" *ngFor="let module of toModuleSeries(report)">
+        <div class="panel-header">
+          <h3>{{ module.title }}</h3>
+          <p *ngIf="module.footer">{{ module.footer }}</p>
+          <span class="chip" *ngIf="module.total !== null">Total : {{ module.total }}</span>
+        </div>
+        <div class="stack-bar">
+          <div
+            class="stack-segment"
+            *ngFor="let item of module.items"
+            [style.width]="percent(item.value, module.total) + '%'"
+            [style.background]="item.color"
+            [title]="item.label + ' : ' + item.value">
+            <span *ngIf="percent(item.value, module.total) >= 8">{{ item.value }}</span>
+          </div>
+        </div>
+        <div class="legend">
+          <div class="legend-item" *ngFor="let item of module.items">
+            <span class="dot" [style.background]="item.color"></span>
+            <span class="label">{{ item.label }}</span>
+            <span class="value">{{ item.value }} ({{ percent(item.value, module.total) }}%)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="amounts">
+      <div class="amount-card">
+        <div class="amount-title">Garantie financière</div>
+        <div class="amount-value">{{ report.montants.finance | number:'1.0-0' }} €</div>
+        <div class="amount-sub">Visas validés : {{ report.finance.visasValides || 0 }}</div>
+      </div>
+      <div class="amount-card">
+        <div class="amount-title">Hébergement</div>
+        <div class="amount-value">{{ report.montants.hebergement | number:'1.0-0' }} €</div>
+      </div>
+    </div>
+
+    <div class="layout">
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Backlog Cashout</h3>
+          <p>Payé = Oui et Cashout = Non (priorité)</p>
+        </div>
+        <div *ngIf="!report.backlogCashout.length" class="empty">
+          Aucun dossier en attente de cashout.
+        </div>
+        <table *ngIf="report.backlogCashout.length" mat-table [dataSource]="report.backlogCashout" class="mat-elevation-z1">
+          <ng-container matColumnDef="module">
+            <th mat-header-cell *matHeaderCellDef>Module</th>
+            <td mat-cell *matCellDef="let row">{{ row.module }}</td>
+          </ng-container>
+          <ng-container matColumnDef="pays">
+            <th mat-header-cell *matHeaderCellDef>Pays</th>
+            <td mat-cell *matCellDef="let row">{{ row.pays || 'N/A' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="montant">
+            <th mat-header-cell *matHeaderCellDef>Montant</th>
+            <td mat-cell *matCellDef="let row">{{ row.montant || 0 | number:'1.0-0' }} €</td>
+          </ng-container>
+          <ng-container matColumnDef="payout">
+            <th mat-header-cell *matHeaderCellDef>Cashout</th>
+            <td mat-cell *matCellDef="let row">{{ row.payout === 1 || row.payout === '1' ? 'Oui' : 'Non' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="dateDemande">
+            <th mat-header-cell *matHeaderCellDef>Date demande</th>
+            <td mat-cell *matCellDef="let row">{{ row.dateDemande?.seconds ? (row.dateDemande.seconds * 1000 | date:'short') : (row.dateDemande | date:'short') }}</td>
+          </ng-container>
+          <ng-container matColumnDef="telephone">
+            <th mat-header-cell *matHeaderCellDef>Téléphone</th>
+            <td mat-cell *matCellDef="let row">{{ row.telephone || 'N/A' }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedCashoutColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedCashoutColumns;"></tr>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Top pays (dossiers actifs)</h3>
+          <p>Pays les plus présents dans les demandes en cours / en attente.</p>
+        </div>
+        <div *ngIf="!report.pays.length" class="empty">
+          Aucune donnée pays disponible.
+        </div>
+        <div class="bar-chart" *ngIf="report.pays.length">
+          <div class="bar-row" *ngFor="let row of report.pays; let i = index">
+            <div class="bar-label">{{ row.country }}</div>
+            <div class="bar-track">
+              <div class="bar-fill"
+                   [class.alt]="i % 2 === 1"
+                   [style.width]="barWidth(row.count, report.pays[0].count)">
+                <span class="bar-value">{{ row.count }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="empty">Chargement du rapport...</div>
+  </ng-template>
+</div>

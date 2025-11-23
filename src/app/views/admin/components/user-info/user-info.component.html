@@ -1,0 +1,185 @@
+<mat-tab-group class="custom-tab-group">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon>assignment_ind</mat-icon>
+            <span style="margin-left: 8px">Mes infos</span>
+        </ng-template>
+        <div class="container mt-3" *ngIf="user$ | async as user; else loading">
+            <div align="center"><p><strong>Ici vous avez la possibilité de changer vos informations en cas d'erreur sauf le mail.</strong></p></div>
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <mat-card class="user-card mb-4">
+                        <mat-card-header class="mb-2">
+                            <mat-card-title>{{ user.firstName }} {{ user.lastName }}</mat-card-title>
+                            <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <div class="photo-section">
+                                <div class="avatar-center" >
+                                    <img [src]="user.identityPhotoUrl || 'assets/images/landing/lOGO_d/consulting.png'" alt="User Photo">
+                                </div>
+                            </div>
+                            <form [formGroup]="userForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <mat-form-field appearance="fill" floatLabel="always" class="w-100">
+                                            <mat-label>Nom</mat-label>
+                                            <input matInput formControlName="firstName">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field appearance="fill" class="w-100">
+                                            <mat-label>Prénoms</mat-label>
+                                            <input matInput formControlName="lastName">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <mat-form-field appearance="fill" class="w-100">
+                                            <mat-label>Téléphone</mat-label>
+                                            <input matInput formControlName="phone">
+                                            <mat-icon matSuffix>phone</mat-icon>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field appearance="fill" class="w-100">
+                                            <mat-label>Date de naissance</mat-label>
+                                            <input matInput [matDatepicker]="picker" formControlName="birthDate">
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <mat-form-field appearance="fill" class="w-100">
+                                            <mat-label>Niveau d'étude actuel</mat-label>
+                                            <mat-select formControlName="degreeLevel">
+                                                <mat-option *ngFor="let niveau of niveauxEtude" [value]="niveau.value">
+                                                    {{ niveau.viewValue }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                </div>
+                            </form>
+                        </mat-card-content>
+                        <mat-card-actions align="end">
+                            <button mat-raised-button style="margin-right: 10px; background: #1e3c72; color: white" *ngIf="!isEditing" (click)="editUser()">Modifier</button>
+                            <button mat-raised-button style="margin-right: 10px; background: #1e3c72; color: white" *ngIf="isEditing" (click)="saveUser()">Sauvegarder</button>
+                           <!-- <button mat-raised-button color="warn" (click)="signOut()">Déconnexion</button> -->
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+
+    <!-- mes documents -->
+    <mat-tab>
+        <ng-template mat-tab-label >
+            <mat-icon>menu_book</mat-icon>
+            <span style="margin-left: 8px; ">Mes documents</span>
+        </ng-template>
+        <div class="container mt-5" *ngIf="user$ | async as user; else loading">
+            <div align="center" class="text-danger"><p><strong>* Tous les documents sont obligatoires (Passeport et/ou pièce d'identités). </strong></p></div>
+            <div class="row">
+                <div class="col-md-6" *ngIf="user.identityPhotoUrl === '' || user.cniUrl === '' || user.passportUrl === ''">
+                    <mat-card class="" >
+                        <mat-card-header class="mb-2">
+                            <mat-card-title><div align="center">Ajouter / Modifier documents</div></mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <table class="import-table" style="width: 100%;">
+                                <tr *ngIf="!user.identityPhotoUrl" class="import-item mb-2" style="display: flex; justify-content: space-between; align-items: center;">
+                                    <td class="mb-2">Photo</td>
+                                    <td style="text-align: right;">
+                                        <button style="color: #1e3c72" mat-stroked-button (click)="fileInput.click()">
+                                            <mat-icon>cloud_upload</mat-icon> Charger
+                                        </button>
+                                        <input type="file" #fileInput (change)="uploadDocument($event, 'identityPhoto')" hidden>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!user.cniUrl" class="import-item mb-2" style="display: flex; justify-content: space-between; align-items: center;">
+                                    <td class="mb-2">CNI</td>
+                                    <td style="text-align: right;">
+                                        <button mat-stroked-button style="color: #1e3c72" (click)="cniInput.click()">
+                                            <mat-icon>cloud_upload</mat-icon> Charger
+                                        </button>
+                                        <input type="file" #cniInput (change)="uploadDocument($event, 'cni')" hidden>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!user.passportUrl" class="import-item mb-4" style="display: flex; justify-content: space-between; align-items: center;">
+                                    <td class="mb-4">Passport</td>
+                                    <td style="text-align: right;">
+                                        <button mat-stroked-button style="color: #1e3c72" (click)="passportInput.click()">
+                                            <mat-icon>cloud_upload</mat-icon> Charger
+                                        </button>
+                                        <input type="file" #passportInput (change)="uploadDocument($event, 'passport')" hidden>
+                                    </td>
+                                </tr>
+                            </table>
+                        </mat-card-content>
+                    </mat-card>
+
+<br>
+
+                </div>
+                <div class="col-md-6">
+                    <mat-card class="mb-4">
+                        <mat-card-header class="mb-2">
+                            <mat-card-title>Consulter/Retirer un document</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content class="mb-2">
+                            <table class="document-summary">
+                                <tr class="document-item">
+                                    <td>Photo</td>
+                                    <td>
+                                        <button *ngIf="user.identityPhotoUrl" mat-stroked-button color="warn" (click)="deleteDocument('identityPhoto')">Retirer</button>
+                                        <button mat-button *ngIf="user.identityPhotoUrl" (click)="viewDocument(user.identityPhotoUrl)">
+                                            <mat-icon>visibility</mat-icon> Voir
+                                        </button>
+                                        <span *ngIf="!user.identityPhotoUrl" class="text-danger">A joindre *</span>
+                                    </td>
+                                </tr>
+                                <tr class="document-item">
+                                    <td>CNI</td>
+                                    <td>
+                                        <button *ngIf="user.cniUrl" mat-stroked-button color="warn" (click)="deleteDocument('cni')">Retirer</button>
+                                        <button mat-button *ngIf="user.cniUrl" (click)="viewDocument(user.cniUrl)">
+                                            <mat-icon>visibility</mat-icon> Voir
+                                        </button>
+                                        <span *ngIf="!user.cniUrl" class="text-danger">A joindre *</span>
+                                    </td>
+                                </tr>
+                                <tr class="document-item mb-2">
+                                    <td>Passeport</td>
+                                    <td>
+
+                                        <button *ngIf="user.passportUrl" mat-stroked-button color="warn" (click)="deleteDocument('passport')">Retirer</button>
+                                        <button mat-button *ngIf="user.passportUrl" (click)="viewDocument(user.passportUrl)">
+                                            <mat-icon>visibility</mat-icon> Voir
+                                        </button>
+                                        <span *ngIf="!user.passportUrl" class="text-danger">A joindre *</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <br>
+                <div align="center"><p><strong><u class="text-danger">NB</u>: Si vous souhaitez mettre à jour / remplacer un document veuillez d'abord le retirer </strong></p></div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>
+
+<ng-template #loading>
+    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <mat-spinner diameter="50"></mat-spinner>
+    </div>
+</ng-template>

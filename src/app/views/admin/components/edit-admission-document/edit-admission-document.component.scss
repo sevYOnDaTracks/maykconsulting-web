@@ -1,0 +1,26 @@
+.mat-dialog-content {
+  min-width: 400px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.semester-group {
+  margin-bottom: 20px;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+mat-form-field {
+  margin-bottom: 15px;
+}
+
+mat-dialog-actions {
+  justify-content: space-between;
+  padding: 10px 24px;
+}

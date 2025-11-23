@@ -1,0 +1,154 @@
+<h2 mat-dialog-title>{{ isBac ? 'Éditer le Bac' : 'Éditer l\'Année ' + data.type }} <mat-icon>school</mat-icon></h2>
+<mat-dialog-content>
+    <form [formGroup]="editForm">
+        <div *ngIf="this.data.type === 'bac'">
+            <p align="start" class="mt-2 mb-4">Type de Bac : {{ data.admissionData.bacType }}</p>
+            <mat-form-field class="full-width" floatLabel="always" appearance="outline">
+                <mat-label>Type de baccalauréat</mat-label>
+                <mat-select formControlName="bacType">
+                    <mat-option *ngFor="let bactype of BacType" [value]="bactype.value">{{ bactype.viewValue }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-divider></mat-divider>
+            <p align="start" class="mt-2">Nombre de points :</p>
+            <mat-form-field appearance="outline" class="full-width mt-4">
+                <mat-label>Nombre de points au Bac</mat-label>
+                <input matInput formControlName="bacAverage">
+            </mat-form-field>
+            <mat-divider></mat-divider>
+            <p align="start" class="mt-2">Pièce jointe :</p>
+            <div *ngIf="data.admissionData.bacUrl; else noBacDocument" class="mb-4" align="center">
+                <mat-icon>description</mat-icon> Votre baccalauréat
+                <p class="text-success mt-2">Nous avons reçu votre justificatif.</p>
+                <button mat-raised-button class="full-width mb-3 mt-3" style="background: #1e3c72; color: white;" (click)="viewDocument(0)">Consulter<mat-icon>download</mat-icon></button>
+                <button mat-raised-button color="warn" class="full-width " (click)="deleteDocument(0)">Retirer<mat-icon>delete</mat-icon></button>
+            </div>
+            <ng-template #noBacDocument>
+                <div align="center">
+                    <mat-icon>description</mat-icon> Votre baccalauréat
+                    <p class="text-danger mt-2">* Vous n'avez pas joint de justificatif</p>
+                    <input type="file" hidden (change)="onFileSelected($event, 0)" #fileInputBac>
+                    <button *ngIf="!isLoading" mat-raised-button class="full-width mb-3 mt-3" style="background: #1e3c72; color: white;" (click)="replaceDocument(0)">
+                        Importer
+                        <mat-icon>cloud_upload</mat-icon>
+                    </button>
+                    <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                </div>
+            </ng-template>
+        </div>
+
+        <div *ngIf="this.data.type !== 'bac'">
+
+            <!-- CAMPUS FRANCE -->
+            <div *ngIf="data.admissionData.admissionType === 'CAMPUS_FRANCE'; else otherAdmissionType">
+                <div *ngFor="let sem of [1, 2]" class="semester-group">
+                    <h4 align="center" class="mt-2">Semestre {{ sem }}</h4>
+                    <mat-form-field appearance="outline" floatLabel="always" class="full-width mt-2 mb-2">
+                        <mat-label>Moyenne Semestre {{ sem }}</mat-label>
+                        <input matInput [formControlName]="'averageYear' + data.type + 'Sem' + sem">
+                    </mat-form-field>
+                    <p align="center" class="mb-2"><mat-icon>description</mat-icon>Bulletin du semestre {{ sem }}</p>
+                    <div class="mb-5" align="center">
+                        <div *ngIf="data.admissionData['year' + data.type + 'Sem' + sem + 'Url']; else noDocument">
+                            <p class="text-success">Nous avons reçu votre justificatif.</p>
+                            <button mat-raised-button class="full-width mt-3" style="background: #1e3c72; color: white;" (click)="viewDocument(sem)">
+                                <mat-icon>download</mat-icon> Consulter
+                            </button>
+                            <button mat-raised-button class="full-width mt-3" color="warn" (click)="deleteDocument(sem)">
+                                <mat-icon>delete</mat-icon> Retirer
+                            </button>
+                        </div>
+                        <ng-template #noDocument>
+                            <p class="text-danger">* Vous n'avez pas joint de justificatif</p>
+                            <!-- Pour Semestre 1 & 2 -->
+                            <div *ngIf="sem === 1"><input type="file" hidden (change)="onFileSelected($event, sem)" #fileInputSem1></div>
+                            <div *ngIf="sem === 2"><input type="file" hidden (change)="onFileSelected($event, sem)" #fileInputSem2></div>
+                            <button *ngIf="!isLoading"  mat-raised-button class="full-width mt-3" style="background: #1e3c72; color: white;" (click)="replaceDocument(sem)">
+                                <mat-icon>cloud_upload</mat-icon> Importer
+                            </button>
+                            <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                        </ng-template>
+                    </div>
+
+                    <mat-divider></mat-divider>
+                </div>
+            </div>
+
+            <!-- Other Admission Type -->
+
+            <ng-template #otherAdmissionType>
+                <div *ngIf="data.type === '2nd' || data.type === 'Premiere' || data.type === 'Terminale'; else universityCursus">
+                    <div *ngFor="let term of [1,2,3]" class="semester-group">
+                        <h4 align="center" class="mt-2">Trimestre {{ term }}</h4>
+                        <mat-form-field appearance="outline" floatLabel="always" class="full-width mt-2 mb-2">
+                            <mat-label>Moyenne Trimestre {{ term }}</mat-label>
+                            <input matInput [formControlName]="'termAverage' + data.type + term">
+                        </mat-form-field>
+                        <p align="center" class="mb-2"><mat-icon>description</mat-icon>Bulletin du trimestre {{ term }}</p>
+                        <div class="mb-5" align="center">
+                            <div *ngIf="data.admissionData['term' + data.type  + term + 'Url']; else noDocument">
+                                <p class="text-success">Nous avons reçu votre justificatif.</p>
+                                <button mat-raised-button class="full-width mt-3" style="background: #1e3c72; color: white;" (click)="viewDocument(term)">
+                                    <mat-icon>download</mat-icon> Consulter
+                                </button>
+                                <button mat-raised-button class="full-width mt-3" color="warn" (click)="deleteDocument(term)">
+                                    <mat-icon>delete</mat-icon> Retirer
+                                </button>
+                            </div>
+                            <ng-template #noDocument>
+                                <p class="text-danger">* Vous n'avez pas joint de justificatif</p>
+                                <!-- Pour Semestre 1 & 2 -->
+                                <div *ngIf="term === 1"><input type="file" hidden (change)="onFileSelectedCollege($event, term)" #fileInputTerm1></div>
+                                <div *ngIf="term === 2"><input type="file" hidden (change)="onFileSelectedCollege($event, term)" #fileInputTerm2></div>
+                                <div *ngIf="term === 3"><input type="file" hidden (change)="onFileSelectedCollege($event, term)" #fileInputTerm3></div>
+                                <button *ngIf="!isLoading"  mat-raised-button class="full-width mt-3" style="background: #1e3c72; color: white;" (click)="replaceDocumentCollege(term)">
+                                    <mat-icon>cloud_upload</mat-icon> Importer
+                                </button>
+                                <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                            </ng-template>
+                        </div>
+
+                        <mat-divider></mat-divider>
+                    </div>
+                </div>
+                <ng-template #universityCursus>
+                    <div *ngFor="let sem of [1, 2]" class="semester-group">
+                        <h4 align="center" class="mt-2">Semestre {{ sem }}</h4>
+                        <mat-form-field appearance="outline" floatLabel="always" class="full-width mt-2 mb-2">
+                            <mat-label>Moyenne Semestre {{ sem }}</mat-label>
+                            <input matInput [formControlName]="'averageYear' + data.type + 'Sem' + sem">
+                        </mat-form-field>
+                        <p align="center" class="mb-2"><mat-icon>description</mat-icon>Bulletin du semestre {{ sem }}</p>
+                        <div class="mb-5" align="center">
+                            <div *ngIf="data.admissionData['year' + data.type + 'Sem' + sem + 'Url']; else noDocument">
+                                <p class="text-success">Nous avons reçu votre justificatif.</p>
+                                <button mat-raised-button class="full-width mt-3" style="background: #1e3c72; color: white;" (click)="viewDocument(sem)">
+                                    <mat-icon>download</mat-icon> Consulter
+                                </button>
+                                <button mat-raised-button class="full-width mt-3" color="warn" (click)="deleteDocument(sem)">
+                                    <mat-icon>delete</mat-icon> Retirer
+                                </button>
+                            </div>
+                            <ng-template #noDocument>
+                                <p class="text-danger">* Vous n'avez pas joint de justificatif</p>
+                                <!-- Pour Semestre 1 & 2 -->
+                                <div *ngIf="sem === 1"><input type="file" hidden (change)="onFileSelected($event, sem)" #fileInputSem1></div>
+                                <div *ngIf="sem === 2"><input type="file" hidden (change)="onFileSelected($event, sem)" #fileInputSem2></div>
+                                <button *ngIf="!isLoading"  mat-raised-button class="full-width mt-3" style="background: #1e3c72; color: white;" (click)="replaceDocument(sem)">
+                                    <mat-icon>cloud_upload</mat-icon> Importer
+                                </button>
+                                <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                            </ng-template>
+                        </div>
+
+                        <mat-divider></mat-divider>
+                    </div>
+                </ng-template>
+            </ng-template>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="mt-2">
+    <button mat-button (click)="onCancel()">Annuler</button>
+    <button mat-raised-button style="background: #1e3c72; color: white;" (click)="onSave()">Enregistrer</button>
+</mat-dialog-actions>

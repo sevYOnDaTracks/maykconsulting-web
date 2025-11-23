@@ -1,0 +1,108 @@
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h1 class="modal-title fs-5  text-xs text-uppercase text-dark" id="exampleModalLabel" align="center">Formulaire de demande de garant Financier</h1>
+        <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <form class="example-form" [formGroup]="financeForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="modal-body">
+
+            <div *ngIf="isLoading" align="center" class="overlay">
+                <mat-spinner diameter="90"></mat-spinner>
+                <p class="text-center mt-5">Veuillez patienter et ne pas fermer la page ...</p>
+            </div>
+
+            <div *ngIf="!isLoading">
+                <p *ngIf="successMessage">{{ successMessage }}</p>
+                <p *ngIf="errorMessage" class="text-danger text-center"><strong>{{ errorMessage }}</strong></p>
+
+                <div *ngIf="!isSubmitting" class="spinner-overlay">
+                    <p class="text-dark">* Lien utile pour convertion :
+                        <a href="https://www.ilovepdf.com/fr" target="blank"><u>IlovePDF</u></a>
+                    </p>
+
+                    <!-- CONTENT -->
+
+                    <div class="mb-3">
+                        <label class="mb-1" for="country">Le pays:</label>
+                        <select style="background: #f6f6f6; border: none; color: black" formControlName="country" id="country" class="form-select">
+                            <option value="France">France</option>
+                            <option value="Canada">Canada</option>
+                            <option value="Belgique">Belgique</option>
+                        </select>
+                        <div *ngIf="financeForm.get('country').invalid ">
+                            <small class="text-danger">Ce champ est requis.</small>
+                        </div>
+                        <div *ngIf="financeForm.get('country').valid ">
+                            <small class="text-success " style="margin-left: 3px">Ok.</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="mb-1" for="city">La ville:</label>
+                        <input formControlName="city" id="city" type="text" class="form-control">
+                        <div *ngIf="financeForm.get('city').invalid">
+                            <small class="text-danger">Ce champ est requis.</small>
+                        </div>
+                        <div *ngIf="financeForm.get('city').valid ">
+                            <small class="text-success " style="margin-left: 3px">Ok.</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="mb-1" for="passport">Document d'identité (Passeport ou CNI):</label>
+                        <input (change)="onFileSelected($event, 'passport')" type="file" class="form-control" id="passport">
+                        <div *ngIf="financeForm.get('passport').invalid ">
+                            <small class="text-danger">Ce champ est requis.</small>
+                        </div>
+                        <div *ngIf="financeForm.get('passport').valid ">
+                            <small class="text-success " style="margin-left: 3px">Ok.</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="mb-1" for="admissionFile">Preuve d'admission:</label>
+                        <input (change)="onFileSelected($event, 'admissionFile')" type="file" class="form-control" id="admissionFile">
+                        <div *ngIf="financeForm.get('admissionFile').invalid">
+                            <small class="text-danger">Ce champ est requis.</small>
+                        </div>
+                        <div *ngIf="financeForm.get('admissionFile').valid ">
+                            <small class="text-success " style="margin-left: 3px">Ok.</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="mb-1" for="exampleFormControlTextarea1" class="form-label">Autres informations (facultatif) :</label>
+                        <textarea formControlName="other" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    </div>
+                    <div class="form-check">
+                        <input formControlName="certification" class="form-check-input" type="checkbox" id="flexCheckDefault" required>
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Je certifie l'authenticité de mes documents et des informations que j'ai fournies.
+                        </label>
+                        <div *ngIf="financeForm.get('certification').invalid">
+                            <small class="text-danger">Vous devez certifier l'authenticité pour soumettre le formulaire.</small>
+                        </div>
+                        <div *ngIf="financeForm.get('certification').valid">
+                            <small class="text-success " style="margin-left: 3px">Ok.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div  *ngIf="!isLoading"  class="modal-footer">
+            <div align="center"><button type="submit" mat-raised-button class="full-width" type="button" style="background: #cd376c; color: white; width: 100%; border-radius: 15px" (click)="onSubmit()" >Soumettre ma demande</button></div>
+        </div>
+    </form>
+</ng-template>
+
+<mat-dialog-content>
+    <h5 align="center">Vous êtes sur le point de soumettre une demande de garant Financier.</h5>
+
+    <p align="center"> Voulez-vous continuer ?</p>
+    <div align="center"><button mat-raised-button class="full-width" type="button" style="background: #cd376c; color: white; width: 50%; border-radius: 15px; margin-bottom: 7px"  (click)="open(content)" mat-dialog-close>Oui</button></div>
+    <div align="center"><button mat-raised-button class="full-width" type="button" style="background: #1e3c72; color: white; width: 50%; border-radius: 15px" mat-dialog-close>Non</button></div>
+
+</mat-dialog-content>
+
+
+

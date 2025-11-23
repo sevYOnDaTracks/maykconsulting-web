@@ -1,0 +1,391 @@
+<mat-card appearance="raised" class="card" >
+    <mat-card-content>
+        <div class="d-flex justify-content-between align-items-center">
+            <button routerLink="/admin/admission/gestion" mat-flat-button>
+                <mat-icon>arrow_left</mat-icon> Les admissions <mat-icon>school</mat-icon>
+            </button>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<div class="container">
+    <mat-tab-group>
+        <!-- Informations Utilisateur -->
+        <mat-tab label="{{ user?.firstName }} - {{ user?.lastName }}">
+            <div align="center" class="mt-4"><p><strong>Consulter les informations du candidat.</strong></p></div>
+            <mat-card appearance="outlined" class="card mt-4 mb-3" style="margin: 25px">
+                <div class="card-body">
+                    <div align="center" class="mb-2">
+                        <img *ngIf="user" [src]="user?.identityPhotoUrl ? user.identityPhotoUrl : 'assets/images/landing/lOGO_d/consulting.png'" alt="User Photo" class="identity-photo rounded-circle">
+                    </div>
+                    <div align="center">
+                        <h6 class="text-uppercase" style="color: #39408f"><strong>{{ user?.firstName }} {{ user?.lastName }}</strong></h6>
+                    </div>
+                    <div class="row mt-5" align="center">
+                        <div class="col-md-6">
+                            <p><strong><i class="fas fa-message"></i> :</strong> {{ user?.email }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong><i class="fas fa-calendar"></i> Naissance :</strong> {{ formattedBirthDate }}</p>
+                        </div>
+                    </div>
+                    <div class="row" align="center">
+                        <div class="col-md-6">
+                            <p><strong><i class="fas fa-graduation-cap"></i> :</strong> {{ user?.degreeLevel }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong><i class="fas fa-phone"></i> :</strong> {{ user?.phone }}</p>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+
+
+            <!-- Documents d'identité -->
+            <div align="center" class="mt-4"><p><strong>Consulter les documents d'identité du candidat.</strong></p></div>
+            <div class="row">
+                <div class="col-md-4">
+                    <mat-card appearance="outlined" class="card mt-2 mb-2 p-4" style="margin: 25px">
+                        <div class="card-body">
+                            <div class="row">
+                                <table>
+                                    <tr class="import-item" style="display: flex; justify-content: space-between; align-items: center;">
+                                        <td><p><strong><i class="fas fa-camera"></i> Photo </strong></p></td>
+                                        <td>
+                                            <button *ngIf="user?.identityPhotoUrl" style="color: #1e3c72" mat-stroked-button (click)="viewDocument(user.identityPhotoUrl)">
+                                                <mat-icon>visibility</mat-icon> Voir
+                                            </button>
+                                            <p *ngIf="user?.identityPhotoUrl === ''" style="color: #d9006e">Aucun document joint</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-md-4">
+                    <mat-card appearance="outlined" class="card mt-2 mb-2 p-4" style="margin: 25px">
+                        <div class="card-body">
+                            <div class="row">
+                                <table>
+                                    <tr class="import-item" style="display: flex; justify-content: space-between; align-items: center;">
+                                        <td><p><strong><i class="fas fa-id-card"></i> CNI </strong></p></td>
+                                        <td>
+                                            <button *ngIf="user?.cniUrl" style="color: #1e3c72" mat-stroked-button (click)="viewDocument(user?.cniUrl)">
+                                                <mat-icon>visibility</mat-icon> Voir
+                                            </button>
+                                            <p *ngIf="user?.cniUrl === ''" style="color: #d9006e">Aucun document joint</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-md-4">
+                    <mat-card appearance="outlined" class="card mt-2 mb-2 p-4" style="margin: 25px">
+                        <div class="card-body">
+                            <div class="row">
+                                <table>
+                                    <tr class="import-item" style="display: flex; justify-content: space-between; align-items: center;">
+                                        <td><p><strong><i class="fas fa-passport"></i> Passeport </strong></p></td>
+                                        <td>
+                                            <button *ngIf="user?.passportUrl" style="color: #1e3c72" mat-stroked-button (click)="viewDocument(user?.passportUrl)">
+                                                <mat-icon>visibility</mat-icon> Voir
+                                            </button>
+                                            <p *ngIf="user?.passportUrl === ''" style="color: #d9006e">Vide</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+
+            <mat-card appearance="outlined" class="card mt-4 mb-2 p-4" style="margin: 25px" *ngIf="userAdmission?.comments">
+                <p><strong>Message du candidat </strong>: " {{  userAdmission?.comments  }} "</p>
+            </mat-card>
+        </mat-tab>
+
+        <!-- Admissions -->
+        <mat-tab label="Admissions">
+            <div align="center" class="mt-4"><p><strong>Éditer l'état de la demande du candidat.</strong></p></div>
+            <mat-card appearance="outlined" class="card mt-2 mb-2 p-4" style="margin: 25px">
+                    <div class="card-body">
+                        <h5><strong><i class="fa fa-file-alt"></i> Etat de la demande :</strong> </h5> <br>
+                        <mat-form-field style="width: 100%" appearance="outline">
+                            <mat-label>Etat :</mat-label>
+                            <mat-select [(ngModel)]="userAdmission.etatDemande" (selectionChange)="changeAdmissionState();">
+                                <mat-option [value]="0">En attente de paiement pour prise en charge</mat-option>
+                                <mat-option [value]="1">En cours de traitement : Campus France , Canada , Ecole Privée</mat-option>
+                                <mat-option [value]="2">Traitement terminée : En attente de réponse</mat-option>
+                                <mat-option [value]="3">Traitement terminée : Candidature acceptée</mat-option>
+                                <mat-option [value]="4">Traitement terminée : Candidature réfusé globalement (Dans tous les établissements)</mat-option>
+                                <mat-option [value]="5">Traitement terminée : Demande Archivée</mat-option>
+                                <mat-option [value]="6">Candidature acceptée par le passé</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                </div>
+
+                <div class="card-body" *ngIf="userAdmission.etatDemande === 3" style="display: flex; align-items: center; gap: 10px;">
+                    <mat-form-field appearance="outline" style="flex: 1;">
+                        <mat-label>Nom de l'université</mat-label>
+                        <input
+                                matInput
+                                [(ngModel)]="userAdmission.nomUniversite"
+                                (ngModelChange)="onUniversityNameChange()"
+                                placeholder="Ex: Université Laval"
+                        >
+                    </mat-form-field>
+
+                    <button
+                            mat-stroked-button
+                            color="primary"
+                            (click)="saveUniversityName()"
+                            [disabled]="!universityNameChanged"
+                    >
+                        OK
+                    </button>
+                </div>
+
+
+                <div class="card-body">
+                <div><h5>* Document d'admission (Accord préalable ou tout autre justificatif relatif à l'admission du candidat :</h5></div>
+                <div class="card-body" *ngIf="userAdmission?.admissionFileOfi; else noAdmissionDoc">
+
+                        <button style="color: #1e3c72" mat-stroked-button (click)="viewDocument(userAdmission?.admissionFileOfi)"> <mat-icon>visibility</mat-icon> Consulter </button>
+                    <button style="color: #388e3c;margin-left: 2px" mat-stroked-button (click)="updateDocument('admissionFileOfi')">
+                        <mat-icon>edit</mat-icon> Modifier
+                    </button>
+                    <button style="color: #d32f2f;margin-left: 2px" mat-stroked-button (click)="deleteDocument('admissionFileOfi')">
+                        <mat-icon>delete</mat-icon> Supprimer
+                    </button>
+                </div>
+                <ng-template #noAdmissionDoc>
+                    <button style="color: #1e3c72" mat-stroked-button (click)="attachDocument('admissionFileOfi')">
+                        <mat-icon>attach_file</mat-icon> Joindre le Document
+                    </button>
+                </ng-template>
+                </div>
+            </mat-card>
+            <mat-card appearance="outlined" class="card mt-2 mb-2 p-4" style="margin: 25px">
+                <div class="card-body">
+                    <div><h5>Pays : {{ userAdmission?.country }}</h5></div>
+                    <div><h5>Type d'admission : {{ userAdmission?.admissionType }}</h5></div>
+                    <div><h5>Date demande : {{ formattedASkDemande }}</h5></div>
+                    <div><h5>Bac Type : <strong> {{ userAdmission?.bacType }} </strong></h5></div>
+                    <div><h5>Filière : {{ userAdmission?.fieldOfStudy }}</h5></div>
+                </div>
+            </mat-card>
+
+            <mat-card appearance="outlined" class="card mt-2 mb-2 p-4" style="margin: 25px">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">Justificatif de paiement</h5>
+                        <button mat-stroked-button color="primary" *ngIf="userAdmission?.justificatifPaiement" (click)="viewDocument(userAdmission?.justificatifPaiement)">
+                            <mat-icon>visibility</mat-icon> Consulter
+                        </button>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Service de paiement</mat-label>
+                                <mat-select [(ngModel)]="paymentDetails.service">
+                                    <mat-option value="Western Union">Western Union</mat-option>
+                                    <mat-option value="Ria">Ria</mat-option>
+                                    <mat-option value="MoneyGram">MoneyGram</mat-option>
+                                    <mat-option value="Autres">Autres</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Code de paiement</mat-label>
+                                <input matInput [(ngModel)]="paymentDetails.code" placeholder="Code / référence">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Montant (€)</mat-label>
+                                <input matInput type="number" min="0" step="0.01" [(ngModel)]="paymentDetails.amount">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Date de paiement</mat-label>
+                                <input matInput type="datetime-local" [(ngModel)]="paymentDetails.date">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                        <button mat-flat-button color="primary" (click)="savePaymentDetails()">Enregistrer les infos paiement</button>
+                        <button mat-stroked-button color="primary" (click)="updateDocument('justificatifPaiement')">
+                            <mat-icon>upload</mat-icon> Mettre à jour le justificatif
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="mb-2"><strong>Argent retiré ? :</strong></h6>
+                        <mat-form-field style="width: 100%" appearance="outline">
+                            <mat-select [(ngModel)]="userAdmission.cashout" (selectionChange)="changeCashoutStatus()">
+                                <mat-option [value]="0">No</mat-option>
+                                <mat-option [value]="1">Yes</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="!userAdmission?.justificatifPaiement" class="mt-2">
+                        <strong class="text-danger">Aucun justificatif déposé.</strong>
+                        <button mat-stroked-button class="ms-2" color="primary" (click)="updateDocument('justificatifPaiement')">
+                            <mat-icon>attach_file</mat-icon> Joindre
+                        </button>
+                    </div>
+                </div>
+            </mat-card>
+            <mat-card appearance="outlined" class="card mt-2 mb-2 p-4" style="margin: 25px">
+                <div class="card-body" *ngIf="userAdmission?.justificatifInscription; else noInscriptionDocument">
+                    <div><h5>Certificat d'inscription de l'année en cours :
+                        <button style="color: #1e3c72" mat-stroked-button (click)="viewDocument(userAdmission?.justificatifInscription)" >  <mat-icon>visibility</mat-icon> Consulter</button>
+                    </h5></div>
+                    <button style="color: #388e3c" mat-stroked-button (click)="updateDocument('justificatifInscription')">
+                        <mat-icon>edit</mat-icon> Modifier
+                    </button>
+                    <button style="color: #d32f2f;margin-left: 2px" mat-stroked-button (click)="deleteDocument('justificatifInscription')">
+                        <mat-icon>delete</mat-icon> Supprimer
+                    </button>
+                </div>
+                <ng-template #noInscriptionDocument>
+                    <div><h5>Certificat d'inscription de l'année en cours : <strong style="color: #d9006e">Aucun document joint</strong></h5></div>
+                    <button style="color: #1e3c72" mat-stroked-button (click)="attachDocument('justificatifInscription')">
+                        <mat-icon>attach_file</mat-icon> Joindre Document
+                    </button>
+                </ng-template>
+            </mat-card>
+            <mat-card appearance="outlined" class="card mt-2 mb-2 p-4" style="margin: 25px">
+                <div class="card-body" *ngIf="userAdmission?.cvUrl; else noCvDocument">
+                    <div><h5>CV et justificatif(s) de stage :
+                        <button mat-stroked-button style="color: #1e3c72" (click)="viewDocument(userAdmission?.cvUrl)" >  <mat-icon>visibility</mat-icon> Consulter</button>
+                    </h5></div>
+                    <button style="color: #388e3c" mat-stroked-button (click)="updateDocument('cvUrl')">
+                        <mat-icon>edit</mat-icon> Modifier
+                    </button>
+                    <button style="color: #d32f2f; margin-left: 2px" mat-stroked-button (click)="deleteDocument('cvUrl')">
+                        <mat-icon>delete</mat-icon> Supprimer
+                    </button>
+                </div>
+                <ng-template #noCvDocument>
+                    <div><h5>CV et justificatif(s) de stage : <strong style="color: #d9006e">Aucun document joint</strong></h5></div>
+                    <button style="color: #1e3c72" mat-stroked-button (click)="attachDocument('cvUrl')">
+                        <mat-icon>attach_file</mat-icon> Joindre Document
+                    </button>
+                </ng-template>
+            </mat-card>
+
+
+<mat-card appearance="outlined" class="card mt-2 mb-2 p-4" style="margin: 25px">
+            <div align="center" class="mt-4"><p><strong>Éditer les bulletins et le cursus du candidat.</strong></p></div>
+
+            <!-- Cursus -->
+            <div *ngIf="userAdmission">
+                <div align="center">
+                    <h3>Études Secondaires</h3>
+                </div>
+                <div *ngFor="let year of ['2nd', 'Première', 'Terminale']">
+                    <div align="center" class="mt-3 mb-4" style="background-color: rgba(216,216,216,0.31); border-radius: 10px">
+                        <h4>{{ year }}</h4>
+                    </div>
+                    <div *ngFor="let term of [1, 2, 3]" class="row mb-5">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <p>Justificatif Trimestre {{ term }} :</p>
+                            <ng-container *ngIf="userAdmission['term' + year + term + 'Url']; else noDocument">
+                                <button style="color: #1e3c72" mat-stroked-button (click)="viewDocument(userAdmission['term' + year + term + 'Url'])">
+                                    <mat-icon>visibility</mat-icon> Voir
+                                </button>
+                                <button style="color: #388e3c" mat-stroked-button (click)="updateDocument('term' + year + term + 'Url')">
+                                    <mat-icon>edit</mat-icon> Modifier
+                                </button>
+                                <button style="color: #d32f2f" mat-stroked-button (click)="deleteDocument('term' + year + term + 'Url')">
+                                    <mat-icon>delete</mat-icon> Supprimer
+                                </button>
+                            </ng-container>
+                            <ng-template #noDocument>
+                                <p style="color: #d9006e">Aucun document joint</p>
+                                <button style="color: #1e3c72" mat-stroked-button (click)="attachDocument('term' + year + term + 'Url')">
+                                    <mat-icon>attach_file</mat-icon> Joindre Document
+                                </button>
+                            </ng-template>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <p>Moyenne Trimestre {{ term }} : {{ userAdmission['termAverage' + year + term] }} /20</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div align="center">
+                    <h3>Baccalauréat</h3>
+                </div>
+                <div class="row mb-5">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <p>Justificatif BAC :</p>
+                        <ng-container *ngIf="userAdmission?.bacUrl; else noBacDocument">
+                            <button style="color: #1e3c72" mat-stroked-button (click)="viewDocument(userAdmission.bacUrl)">
+                                <mat-icon>visibility</mat-icon> Voir
+                            </button>
+                            <button style="color: #388e3c" mat-stroked-button (click)="updateDocument('bacUrl')">
+                                <mat-icon>edit</mat-icon> Modifier
+                            </button>
+                            <button style="color: #d32f2f" mat-stroked-button (click)="deleteDocument('bacUrl')">
+                                <mat-icon>delete</mat-icon> Supprimer
+                            </button>
+                        </ng-container>
+                        <ng-template #noBacDocument>
+                            <p style="color: #d9006e">Aucun document joint</p>
+                            <button style="color: #1e3c72" mat-stroked-button (click)="attachDocument('bacUrl')">
+                                <mat-icon>attach_file</mat-icon> Joindre Document
+                            </button>
+                        </ng-template>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <p>Moyenne générale BAC : {{ userAdmission.bacAverage }} pts</p>
+                    </div>
+                </div>
+
+                <div align="center">
+                    <h3>Études Supérieures</h3>
+                </div>
+                <div *ngFor="let year of getYears(userAdmission.educationLevel)">
+                    <div align="center" class="mb-4" style="background-color: rgba(216,216,216,0.31); border-radius: 10px">
+                        <h4 class="mb-2">Année {{ year }} <mat-icon>school</mat-icon></h4>
+                    </div>
+                    <div *ngFor="let Sem of [1, 2]" class="row mb-5">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <p>Justificatif Semestre {{ Sem }} :</p>
+                            <ng-container *ngIf="userAdmission['year' + year + 'Sem' + Sem + 'Url']; else noDocument">
+                                <button style="color: #1e3c72; " mat-stroked-button (click)="viewDocument(userAdmission['year' + year + 'Sem' + Sem + 'Url'])">
+                                    <mat-icon>visibility</mat-icon> Voir
+                                </button>
+                                <button style="color: #388e3c;margin-left: 4px" mat-stroked-button (click)="updateDocument('year' + year + 'Sem' + Sem + 'Url')">
+                                    <mat-icon>edit</mat-icon> Modifier
+                                </button>
+                                <button style="color: #d32f2f;margin-left: 4px" mat-stroked-button (click)="deleteDocument('year' + year + 'Sem' + Sem + 'Url')">
+                                    <mat-icon>delete</mat-icon> Supprimer
+                                </button>
+                            </ng-container>
+                            <ng-template #noDocument>
+                                <p style="color: #d9006e">Aucun document joint</p>
+                                <button style="color: #1e3c72" mat-stroked-button (click)="attachDocument('year' + year + 'Sem' + Sem + 'Url')">
+                                    <mat-icon>attach_file</mat-icon> Joindre Document
+                                </button>
+                            </ng-template>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <p>Moyenne Semestre {{ Sem }} : {{ userAdmission['averageYear' + year + 'Sem' + Sem] }} /20</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</mat-card>
+        </mat-tab>
+    </mat-tab-group>
+</div>

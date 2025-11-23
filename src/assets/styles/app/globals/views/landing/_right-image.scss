@@ -1,0 +1,22 @@
+.right-image-wrap {
+    .card {}
+    img.card {
+        background: transparent;
+    }
+    .ngucarousel {
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        text-align: center;
+        .leftRs {
+            // position: relative;
+            // left: 0%;
+            left: 29%;
+        }
+        .rightRs {
+            // position: relative;
+            // right: -3%;
+            
+        }
+    }
+}

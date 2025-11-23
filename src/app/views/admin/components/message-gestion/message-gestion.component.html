@@ -1,0 +1,94 @@
+<div class="message-dashboard">
+  <h1>Gestion de la messagerie</h1>
+
+  <mat-form-field appearance="outline" class="filter-field">
+    <mat-label>Filtrer</mat-label>
+    <input matInput type="text" placeholder="Rechercher un message..." (input)="applyFilter($event.target.value)">
+  </mat-form-field>
+
+  <div class="table-container mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
+        <td mat-cell *matCellDef="let msg">{{ msg.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let msg">{{ msg.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="subject">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Objet</th>
+        <td mat-cell *matCellDef="let msg">{{ msg.subject }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Réception</th>
+        <td mat-cell *matCellDef="let msg">
+          {{ msg.createdAt?.toDate ? (msg.createdAt.toDate() | date:'short') : (msg.createdAt | date:'short') }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="responded">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+        <td mat-cell *matCellDef="let msg">
+          <span class="chip" [class.chip-success]="msg.responded" [class.chip-muted]="!msg.responded">
+            {{ msg.responded ? 'Répondu' : 'En attente' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let msg">
+          <button mat-icon-button color="primary" matTooltip="Voir / répondre" (click)="openMessage(msg)">
+            <mat-icon>mail</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deleteMessage(msg)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[10,25,50,100]"></mat-paginator>
+  </div>
+</div>
+
+<!-- Dialog lecture / réponse -->
+<ng-template #viewMessageDialog>
+  <h2 mat-dialog-title>Message</h2>
+  <mat-dialog-content>
+    <div *ngIf="selectedMessage">
+      <p><strong>Nom :</strong> {{ selectedMessage.name }}</p>
+      <p><strong>Email :</strong> {{ selectedMessage.email }}</p>
+      <p><strong>Objet :</strong> {{ selectedMessage.subject }}</p>
+      <p><strong>Message :</strong></p>
+      <p class="message-body">{{ selectedMessage.message }}</p>
+    </div>
+    <form [formGroup]="replyForm" class="reply-form">
+      <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+        <mat-label>Destinataire</mat-label>
+        <input matInput formControlName="to">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+        <mat-label>Objet</mat-label>
+        <input matInput formControlName="subject">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+        <mat-label>Message</mat-label>
+        <textarea matInput rows="6" formControlName="message"></textarea>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Fermer</button>
+    <button mat-raised-button color="primary" (click)="sendReply()" [disabled]="replyForm.invalid || isSending">
+      Envoyer
+    </button>
+  </mat-dialog-actions>
+</ng-template>

@@ -1,0 +1,131 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "projects",
+    "projects": {
+        "dexam": {
+            "root": "",
+            "sourceRoot": "src",
+            "projectType": "application",
+            "prefix": "app",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "prefix": "app",
+                    "style": "scss"
+                },
+                "@schematics/angular:directive": {
+                    "prefix": "app"
+                }
+            },
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+            "aot": true,
+                        "outputPath": "dist/dexam",
+                      "allowedCommonJsDependencies": [
+                        "lodash",
+                        "core-js/modules/es.promise.js",
+                        "core-js/modules/web.dom-collections.iterator.js",
+                        "raf",
+                        "rgbcolor",
+                        "html2canvas",
+                        "canvg/lib/index.es.js"
+                      ],
+                        "index": "src/index.html",
+                        "main": "src/main.ts",
+                        "polyfills": "src/polyfills.ts",
+                        "tsConfig": "src/tsconfig.app.json",
+                        "assets": [
+                            "src/favicon.ico",
+                            "src/assets"
+                        ],
+                        "styles": [
+                          "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+                          "src/assets/styles/app/_app.scss",
+                          "src/styles.css",
+                          "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+                        ],
+                        "scripts": [
+
+                        ]
+                    },
+                    "configurations": {
+                        "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+                            "fileReplacements": [{
+                                "replace": "src/environments/environment.ts",
+                                "with": "src/environments/environment.prod.ts"
+                            }],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                      "buildTarget": "dexam:build"
+                    },
+                    "configurations": {
+                        "production": {
+                          "buildTarget": "dexam:build:production"
+                        }
+                    }
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                      "buildTarget": "dexam:build"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "src/test.ts",
+                        "polyfills": "src/polyfills.ts",
+                        "tsConfig": "src/tsconfig.spec.json",
+                        "karmaConfig": "src/karma.conf.js",
+                        "styles": [
+                          "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+                          "src/styles.css",
+                          "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+                        ],
+                        "scripts": [],
+                        "assets": [
+                            "src/favicon.ico",
+                            "src/assets"
+                        ]
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "src/tsconfig.app.json",
+                            "src/tsconfig.spec.json"
+                        ],
+                        "exclude": [
+                            "**/node_modules/**"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "cli": {
+      "analytics": false
+    }
+}

@@ -1,0 +1,18 @@
+.custom-toolbar {
+  background: #384d77;
+  /* Ajouté pour uniformité */
+  /* Ajouté pour uniformité */
+  box-shadow: 10px 10px 5px rgba(243, 243, 243, 0.5);
+  color: #fff; /* Texte en blanc */
+  border: none; /* Assurez-vous que les bordures n'interfèrent pas */
+  /* Bordures transparentes pour cacher les artefacts potentiels */
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+}
+
+
+@media (max-width: 768px) {
+  .custom-toolbar h1 {
+    margin-bottom: 40px;
+  }
+}

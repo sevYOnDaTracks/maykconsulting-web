@@ -1,0 +1,636 @@
+<div class="container mt-4 p-3">
+    <div class="d-sm-flex justify-content-between align-items-center mb-2">
+        <h4 class="mb-4 text-uppercase text-xl text-uppercase  fw-bold ">Mes Dossiers : Admissions</h4>
+        <button class="btn btn-dark d-none d-sm-inline-block" type="button" (click)="generateReport()">
+            <i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Générer un rapport
+        </button>
+    </div>
+
+
+    <!-- Status Cards -->
+
+    <div class="row mb-2">
+        <div class="col-md-3 col-xl-3 mb-3">
+            <div class="card shadow border-start-primary py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col me-2">
+                            <div class="text-uppercase text-warning fw-bold text-xs mb-1">
+                                <span>En Attente</span>
+                            </div>
+                            <div class="text-dark fw-bold h-5 mb-0">
+								<span>
+									{{ pendingRequestCount }}</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-hourglass-half fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-xl-3 mb-3">
+            <div class="card shadow border-start-primary py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col me-2">
+                            <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                <span>En Traitement</span>
+                            </div>
+                            <div class="text-dark fw-bold h-5 mb-0">
+								<span>
+									{{ inProgressRequestCount }}</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-sync fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-xl-3 mb-3">
+            <div class="card shadow border-start-primary py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col me-2">
+                            <div class="text-uppercase text-gray fw-bold text-xs mb-1">
+                                <span>Traité : Attente </span>
+                            </div>
+                            <div class="text-dark fw-bold h-5 mb-0">
+								<span>
+									{{ validateRequestCount }}</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-thumbs-up fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-xl-3 mb-3">
+            <div class="card shadow border-start-primary py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col me-2">
+                            <div class="text-uppercase text-success fw-bold text-xs mb-1">
+                                <span>Acceptations</span>
+                            </div>
+                            <div class="text-dark fw-bold h-5 mb-0">
+								<span>
+									{{ acceptedRequestCount }} / {{  acceptedRequestCount +  validateRequestCount + refusedRequestCount}}</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <!-- Angular Material Card -->
+    <div class="card mb-4">
+        <div class="card-header text-warning text-uppercase text-xs">En attente </div>
+
+        <!-- Search Input -->
+        <div class="input-group mb-1 mt-2 p-4">
+            <input type="text" class="form-control" placeholder="Rechercher ..." aria-label="Rechercher ..." aria-describedby="search-icon" (keyup)="applyFilter($event, dataSource)">
+            <div class="input-group-append">
+            </div>
+        </div>
+
+        <!-- Table -->
+        <table mat-table [dataSource]="dataSource" matSort class="">
+
+            <!-- Photo Column -->
+            <ng-container matColumnDef="photo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>P. Identité</th>
+                <td mat-cell *matCellDef="let element"><img [src]="element.photo ? element.photo : 'assets/images/landing/lOGO_d/logo.png'" alt="User Photo" class="user-photo"/></td>
+            </ng-container>
+
+            <!-- Demandeur Column -->
+            <ng-container matColumnDef="demandeur">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Demandeur </th>
+                <td mat-cell *matCellDef="let element">{{element.demandeur}} </td>
+            </ng-container>
+
+            <!-- Pays Column -->
+            <ng-container matColumnDef="pays">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Pays </th>
+                <td mat-cell *matCellDef="let element"> {{element.country}} </td>
+            </ng-container>
+
+            <!-- Téléphone Column -->
+            <ng-container matColumnDef="telephone">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Téléphone </th>
+                <td mat-cell *matCellDef="let element"> {{element.telephone}} </td>
+            </ng-container>
+
+            <!-- Date Demande Column -->
+            <ng-container matColumnDef="dateDemande">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date demande </th>
+                <td mat-cell *matCellDef="let element"> {{element.dateDemande | date: 'dd/MM/yyyy'}} à {{element.dateDemande | date: 'HH:mm'}} </td>
+            </ng-container>
+
+            <!-- Payé Column -->
+            <ng-container matColumnDef="paye">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Payé ? </th>
+                <td  [ngStyle]="{'color': element.justificatifPaiement ? 'green' : 'red'}" mat-cell *matCellDef="let element"> <strong> {{element.justificatifPaiement ? 'Oui' : 'Non'}} </strong>  </td>
+            </ng-container>
+
+            <!-- Cashout Column -->
+            <ng-container matColumnDef="cashout">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cash out ? </th>
+                <td
+                        mat-cell
+                        *matCellDef="let element"
+                        [ngStyle]="{'color': element.cashout === 1 ? 'green' : 'red'}">
+                  <strong>{{element.cashout === 1 ? 'Oui' : 'Non'}}</strong>
+                </td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-button style="color: #d9006e" (click)="openEditAdmissionDemande(element.userId)"><mat-icon>edit</mat-icon></button>
+                    <button mat-button style="color: #1e3c72" (click)="sendMessageTo()"><mat-icon>message</mat-icon></button>
+                    <button mat-button color="warn" (click)="deleteAdmission(element)"><mat-icon>delete</mat-icon></button>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Empty State -->
+            <tr *matNoDataRow>
+                <td mat-cell colspan="6" class="text-center">Aucune donnée disponible</td>
+            </tr>
+        </table>
+
+        <!-- Pagination Controls -->
+        <mat-paginator [pageSizeOptions]="[5, 10, 20 , 100 , 500 , 1000]" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header text-primary text-uppercase text-xs">En traitement</div>
+
+        <!-- Search Input -->
+        <div class="input-group mb-1 mt-2 p-4">
+            <input type="text" class="form-control" placeholder="Rechercher ..." aria-label="Rechercher ..." aria-describedby="search-icon" (keyup)="applyFilter($event, dataSourceInProgress)">
+            <div class="input-group-append">
+            </div>
+        </div>
+
+        <!-- Table -->
+        <table mat-table [dataSource]="dataSourceInProgress" matSort class="mat-elevation-z2">
+
+            <!-- Photo Column -->
+            <ng-container matColumnDef="photo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>P. Identité  </th>
+                <td mat-cell *matCellDef="let element"><img [src]="element.photo ? element.photo : 'assets/images/landing/lOGO_d/logo.png'" alt="User Photo" class="user-photo"/></td>
+            </ng-container>
+
+            <!-- Demandeur Column -->
+            <ng-container matColumnDef="demandeur">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Demandeur </th>
+                <td mat-cell *matCellDef="let element">  {{element.demandeur}} </td>
+            </ng-container>
+
+            <!-- Pays Column -->
+            <ng-container matColumnDef="pays">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Pays </th>
+                <td mat-cell *matCellDef="let element"> {{element.country}} </td>
+            </ng-container>
+
+            <!-- Téléphone Column -->
+            <ng-container matColumnDef="telephone">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Téléphone </th>
+                <td mat-cell *matCellDef="let element"> {{element.telephone}} </td>
+            </ng-container>
+
+            <!-- Date Demande Column -->
+            <ng-container matColumnDef="dateDemande">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date demande </th>
+                <td mat-cell *matCellDef="let element"> {{element.dateDemande | date: 'dd/MM/yyyy'}} à {{element.dateDemande | date: 'HH:mm'}} </td>
+            </ng-container>
+
+            <!-- Payé Column -->
+            <ng-container matColumnDef="paye">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Payé ? </th>
+                <td  [ngStyle]="{'color': element.justificatifPaiement ? 'green' : 'red'}" mat-cell *matCellDef="let element"> <strong> {{element.justificatifPaiement ? 'Oui' : 'Non'}} </strong>  </td>
+            </ng-container>
+
+            <!-- Cashout Column -->
+            <ng-container matColumnDef="cashout">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cash out ? </th>
+                <td
+                        mat-cell
+                        *matCellDef="let element"
+                        [ngStyle]="{'color': element.cashout === 1 ? 'green' : 'red'}">
+                    <strong>{{element.cashout === 1 ? 'Oui' : 'Non'}}</strong>
+                </td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-button style="color: #d9006e" (click)="openEditAdmissionDemande(element.userId)"><mat-icon>edit</mat-icon></button>
+                    <button mat-button style="color: #1e3c72"><mat-icon>message</mat-icon></button>
+                    <button mat-button color="warn" (click)="deleteAdmission(element)"><mat-icon>delete</mat-icon></button>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Empty State -->
+            <tr *matNoDataRow>
+                <td mat-cell colspan="6" class="text-center">Aucune donnée disponible</td>
+            </tr>
+        </table>
+
+        <!-- Pagination Controls -->
+        <mat-paginator [pageSizeOptions]="[5, 10, 20 , 100 , 500 , 1000]" showFirstLastButtons #inProgressPaginator></mat-paginator>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header text-uppercase text-xs">Traitement terminé : Attente de Reponse</div>
+
+        <!-- Search Input -->
+        <div class="input-group mb-1 mt-2 p-4">
+            <input type="text" class="form-control" placeholder="Rechercher ..." aria-label="Rechercher ..." aria-describedby="search-icon" (keyup)="applyFilter($event, dataSourceFinish)">
+            <div class="input-group-append">
+            </div>
+        </div>
+
+        <!-- Table -->
+        <table mat-table [dataSource]="dataSourceFinish" matSort class="mat-elevation-z2">
+            <!-- Photo Column -->
+            <ng-container matColumnDef="photo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>P. Identité  </th>
+                <td mat-cell *matCellDef="let element"><img [src]="element.photo ? element.photo : 'assets/images/landing/lOGO_d/logo.png'" alt="User Photo" class="user-photo"/></td>
+            </ng-container>
+
+            <!-- Demandeur Column -->
+            <ng-container matColumnDef="demandeur">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Demandeur </th>
+                <td mat-cell *matCellDef="let element">{{element.demandeur}} </td>
+            </ng-container>
+
+            <!-- Pays Column -->
+            <ng-container matColumnDef="pays">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Pays </th>
+                <td mat-cell *matCellDef="let element"> {{element.country}} </td>
+            </ng-container>
+
+            <!-- Téléphone Column -->
+            <ng-container matColumnDef="telephone">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Téléphone </th>
+                <td mat-cell *matCellDef="let element"> {{element.telephone}} </td>
+            </ng-container>
+
+            <!-- Date Demande Column -->
+            <ng-container matColumnDef="dateDemande">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date demande </th>
+                <td mat-cell *matCellDef="let element"> {{element.dateDemande | date: 'dd/MM/yyyy'}} à {{element.dateDemande | date: 'HH:mm'}} </td>
+            </ng-container>
+
+            <!-- Payé Column -->
+            <ng-container matColumnDef="paye">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Payé ? </th>
+                <td  [ngStyle]="{'color': element.justificatifPaiement ? 'green' : 'red'}" mat-cell *matCellDef="let element"> <strong> {{element.justificatifPaiement ? 'Oui' : 'Non'}} </strong>  </td>
+            </ng-container>
+
+            <!-- Cashout Column -->
+            <ng-container matColumnDef="cashout">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cash out ? </th>
+                <td
+                        mat-cell
+                        *matCellDef="let element"
+                        [ngStyle]="{'color': element.cashout === 1 ? 'green' : 'red'}">
+                    <strong>{{element.cashout === 1 ? 'Oui' : 'Non'}}</strong>
+                </td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-button style="color: #d9006e" (click)="openEditAdmissionDemande(element.userId)"><mat-icon>edit</mat-icon></button>
+                    <button mat-button style="color: #1e3c72"><mat-icon>message</mat-icon></button>
+                    <button mat-button style="color: #2e7d32" (click)="moveToPast(element)" matTooltip="Vers historiques"><mat-icon>history</mat-icon></button>
+                    <button mat-button color="warn" (click)="deleteAdmission(element)"><mat-icon>delete</mat-icon></button>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Empty State -->
+            <tr *matNoDataRow>
+                <td mat-cell colspan="6" class="text-center">Aucune donnée disponible</td>
+            </tr>
+        </table>
+
+
+
+        <!-- Pagination Controls -->
+        <mat-paginator [pageSizeOptions]="[5, 10, 20 , 100 , 500 , 1000]" showFirstLastButtons #finishPaginator></mat-paginator>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header text-success text-uppercase text-xs">Candidatures acceptées </div>
+
+        <!-- Search Input -->
+        <div class="input-group mb-1 mt-2 p-4">
+            <input type="text" class="form-control" placeholder="Rechercher ..." aria-label="Rechercher ..." aria-describedby="search-icon" (keyup)="applyFilter($event, dataSourceAccepted)">
+            <div class="input-group-append">
+            </div>
+        </div>
+
+        <!-- Table -->
+        <table mat-table [dataSource]="dataSourceAccepted" matSort class="mat-elevation-z2">
+            <!-- Photo Column -->
+            <ng-container matColumnDef="photo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>P. Identité  </th>
+                <td mat-cell *matCellDef="let element"><img [src]="element.photo ? element.photo : 'assets/images/landing/lOGO_d/logo.png'" alt="User Photo" class="user-photo"/></td>
+            </ng-container>
+
+            <!-- Demandeur Column -->
+            <ng-container matColumnDef="demandeur">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Demandeur </th>
+                <td mat-cell *matCellDef="let element">{{element.demandeur}} </td>
+            </ng-container>
+
+            <!-- Pays Column -->
+            <ng-container matColumnDef="pays">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Pays </th>
+                <td mat-cell *matCellDef="let element"> {{element.country}} </td>
+            </ng-container>
+
+
+            <!-- Date Demande Column -->
+            <ng-container matColumnDef="Universite">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Université / Ecole</th>
+                <td mat-cell *matCellDef="let element">  {{element.nomUniversite}} </td>
+            </ng-container>
+
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-button style="color: #d9006e" (click)="openEditAdmissionDemande(element.userId)"><mat-icon>edit</mat-icon></button>
+                    <button mat-button style="color: #1e3c72"><mat-icon>message</mat-icon></button>
+                    <button mat-button color="warn" (click)="deleteAdmission(element)"><mat-icon>delete</mat-icon></button>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsAccepted"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsAccepted;"></tr>
+
+            <!-- Empty State -->
+            <tr *matNoDataRow>
+                <td mat-cell colspan="6" class="text-center">Aucune donnée disponible</td>
+            </tr>
+        </table>
+
+
+
+        <!-- Pagination Controls -->
+        <mat-paginator [pageSizeOptions]="[5, 10, 20 , 100 , 500 , 1000]" showFirstLastButtons #acceptedPaginator></mat-paginator>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header text-secondary text-uppercase text-xs">Candidats admis par le passé</div>
+
+        <!-- Search Input -->
+        <div class="input-group mb-1 mt-2 p-4">
+            <input type="text" class="form-control" placeholder="Rechercher ..." aria-label="Rechercher ..." aria-describedby="search-icon" (keyup)="applyFilter($event, dataSourcePast)">
+            <div class="input-group-append">
+            </div>
+        </div>
+
+        <!-- Table -->
+        <table mat-table [dataSource]="dataSourcePast" matSort class="mat-elevation-z2">
+            <ng-container matColumnDef="photo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>P. Identité  </th>
+                <td mat-cell *matCellDef="let element"><img [src]="element.photo ? element.photo : 'assets/images/landing/lOGO_d/logo.png'" alt="User Photo" class="user-photo"/></td>
+            </ng-container>
+
+            <ng-container matColumnDef="demandeur">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Demandeur </th>
+                <td mat-cell *matCellDef="let element">{{element.demandeur}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="pays">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Pays </th>
+                <td mat-cell *matCellDef="let element"> {{element.country}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dateDemande">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Session </th>
+                <td mat-cell *matCellDef="let element"> {{element.dateDemande | date: 'yyyy'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-button style="color: #d9006e" (click)="openEditAdmissionDemande(element.userId)"><mat-icon>visibility</mat-icon></button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsPast"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsPast;"></tr>
+
+            <tr *matNoDataRow>
+                <td mat-cell colspan="6" class="text-center">Aucune donnée disponible</td>
+            </tr>
+        </table>
+
+        <!-- Pagination Controls -->
+        <mat-paginator [pageSizeOptions]="[5, 10, 20 , 100 , 500 , 1000]" showFirstLastButtons #pastPaginator></mat-paginator>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header text-danger text-uppercase text-xs">Candidature refusée Globalement ( 7 Refus / 7 ) </div>
+
+        <!-- Search Input -->
+        <div class="input-group mb-1 mt-2 p-4">
+            <input type="text" class="form-control" placeholder="Rechercher ..." aria-label="Rechercher ..." aria-describedby="search-icon" (keyup)="applyFilter($event, dataSourceArchived)">
+            <div class="input-group-append">
+            </div>
+        </div>
+
+        <!-- Table -->
+        <table mat-table [dataSource]="dataSourceRefuse" matSort class="mat-elevation-z2">
+            <!-- Photo Column -->
+            <ng-container matColumnDef="photo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>P. Identité  </th>
+                <td mat-cell *matCellDef="let element"><img [src]="element.photo ? element.photo : 'assets/images/landing/lOGO_d/logo.png'" alt="User Photo" class="user-photo"/></td>
+            </ng-container>
+
+            <!-- Demandeur Column -->
+            <ng-container matColumnDef="demandeur">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Demandeur </th>
+                <td mat-cell *matCellDef="let element">{{element.demandeur}} </td>
+            </ng-container>
+
+            <!-- Pays Column -->
+            <ng-container matColumnDef="pays">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Pays </th>
+                <td mat-cell *matCellDef="let element"> {{element.country}} </td>
+            </ng-container>
+
+            <!-- Téléphone Column -->
+            <ng-container matColumnDef="telephone">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Téléphone </th>
+                <td mat-cell *matCellDef="let element"> {{element.telephone}} </td>
+            </ng-container>
+
+            <!-- Date Demande Column -->
+            <ng-container matColumnDef="dateDemande">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date demande </th>
+                <td mat-cell *matCellDef="let element"> {{element.dateDemande | date: 'dd/MM/yyyy'}} à {{element.dateDemande | date: 'HH:mm'}} </td>
+            </ng-container>
+
+            <!-- Payé Column -->
+            <ng-container matColumnDef="paye">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Payé ? </th>
+                <td  [ngStyle]="{'color': element.justificatifPaiement ? 'green' : 'red'}" mat-cell *matCellDef="let element"> <strong> {{element.justificatifPaiement ? 'Oui' : 'Non'}} </strong>  </td>
+            </ng-container>
+
+            <!-- Cashout Column -->
+            <ng-container matColumnDef="cashout">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cash out ? </th>
+                <td
+                        mat-cell
+                        *matCellDef="let element"
+                        [ngStyle]="{'color': element.cashout === 1 ? 'green' : 'red'}">
+                    <strong>{{element.cashout === 1 ? 'Oui' : 'Non'}}</strong>
+                </td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-button style="color: #d9006e" (click)="openEditAdmissionDemande(element.userId)"><mat-icon>edit</mat-icon></button>
+                    <button mat-button style="color: #1e3c72"><mat-icon>message</mat-icon></button>
+                    <button mat-button color="warn" (click)="deleteAdmission(element)"><mat-icon>delete</mat-icon></button>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Empty State -->
+            <tr *matNoDataRow>
+                <td mat-cell colspan="6" class="text-center">Aucune donnée disponible</td>
+            </tr>
+        </table>
+
+
+
+        <!-- Pagination Controls -->
+        <mat-paginator [pageSizeOptions]="[5, 10, 20 , 100 , 500 , 1000]" showFirstLastButtons #refusePaginator></mat-paginator>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header text-danger text-uppercase text-xs">Dossiers Archivés </div>
+
+        <!-- Search Input -->
+        <div class="input-group mb-1 mt-2 p-4">
+            <input type="text" class="form-control" placeholder="Rechercher ..." aria-label="Rechercher ..." aria-describedby="search-icon" (keyup)="applyFilter($event, dataSourceArchived)">
+            <div class="input-group-append">
+            </div>
+        </div>
+
+        <!-- Table -->
+        <table mat-table [dataSource]="dataSourceArchived" matSort class="mat-elevation-z2">
+            <!-- Photo Column -->
+            <ng-container matColumnDef="photo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>P. Identité  </th>
+                <td mat-cell *matCellDef="let element"><img [src]="element.photo ? element.photo : 'assets/images/landing/lOGO_d/logo.png'" alt="User Photo" class="user-photo"/></td>
+            </ng-container>
+
+            <!-- Demandeur Column -->
+            <ng-container matColumnDef="demandeur">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Demandeur </th>
+                <td mat-cell *matCellDef="let element">{{element.demandeur}} </td>
+            </ng-container>
+
+            <!-- Pays Column -->
+            <ng-container matColumnDef="pays">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Pays </th>
+                <td mat-cell *matCellDef="let element"> {{element.country}} </td>
+            </ng-container>
+
+            <!-- Téléphone Column -->
+            <ng-container matColumnDef="telephone">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Téléphone </th>
+                <td mat-cell *matCellDef="let element"> {{element.telephone}} </td>
+            </ng-container>
+
+            <!-- Date Demande Column -->
+            <ng-container matColumnDef="dateDemande">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date demande </th>
+                <td mat-cell *matCellDef="let element"> {{element.dateDemande | date: 'dd/MM/yyyy'}} à {{element.dateDemande | date: 'HH:mm'}} </td>
+            </ng-container>
+
+            <!-- Payé Column -->
+            <ng-container matColumnDef="paye">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Payé ? </th>
+                <td  [ngStyle]="{'color': element.justificatifPaiement ? 'green' : 'red'}" mat-cell *matCellDef="let element"> <strong> {{element.justificatifPaiement ? 'Oui' : 'Non'}} </strong>  </td>
+            </ng-container>
+
+            <!-- Cashout Column -->
+            <ng-container matColumnDef="cashout">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cash out ? </th>
+                <td
+                        mat-cell
+                        *matCellDef="let element"
+                        [ngStyle]="{'color': element.cashout === 1 ? 'green' : 'red'}">
+                    <strong>{{element.cashout === 1 ? 'Oui' : 'Non'}}</strong>
+                </td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-button style="color: #d9006e" (click)="openEditAdmissionDemande(element.userId)"><mat-icon>edit</mat-icon></button>
+                    <button mat-button style="color: #1e3c72"><mat-icon>message</mat-icon></button>
+                     <button mat-button color="warn" (click)="deleteAdmission(element)"><mat-icon>delete</mat-icon></button>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Empty State -->
+            <tr *matNoDataRow>
+                <td mat-cell colspan="6" class="text-center">Aucune donnée disponible</td>
+            </tr>
+        </table>
+
+
+
+        <!-- Pagination Controls -->
+        <mat-paginator [pageSizeOptions]="[5, 10, 20 , 100 , 500 , 1000]" showFirstLastButtons #archivedPaginator></mat-paginator>
+    </div>
+</div>

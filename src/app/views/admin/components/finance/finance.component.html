@@ -1,0 +1,290 @@
+
+<div class="container" >
+
+    <div *ngIf="isLoading" class="overlay">
+        <mat-spinner diameter="90"></mat-spinner>
+    </div>
+    <div *ngIf="!isLoading">
+
+        <div class="mt-2 mb-1 ">
+            <mat-card appearance="outlined"  class="custom-card text-dark mt-2">
+                <mat-card-content>
+                    <div align="center" >
+                        <h1 class="text-dark">Finance <mat-icon>work</mat-icon></h1>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+        </div>
+
+    <div class="row justify-content-center"  *ngIf="!hasExistingFinance; else financeInProgress">
+        <div class="col-lg-12 col-md-12">
+            <mat-card class="mt-2 mb-2 custom-card" appearance="outlined">
+                <mat-card-title class="text-center mb-3 mt-3"></mat-card-title>
+                <mat-card-content>
+                    <div align="center">
+                        <ul class="flex justify-content-center">
+                            Suivez les étapes ci-dessous pour soumettre votre demande de garant financier sur <br><strong>Mayk - Consulting</strong><br>
+                        </ul>
+                    </div>
+                    <ul>
+                        <li>Choisissez votre pays de destination pour les études (France ou Canada) 🇫🇷 🇨🇦.</li>
+                        <li>Précisez la ville où vous êtes admis pour étude.</li>
+                        <li>Joignez votre attestation ou preuve d'admission ainsi que votre passeport ou autres documents d'identité le cas échéant.</li>
+                        <li class="text-danger"><strong>Attention, les documents illisibles seront rejetés ! Veuillez fournir des scans de très bonne qualité.</strong></li>
+                        <li>Enfin, révisez votre demande et soumettez-la. </li>
+                    </ul>
+                    <br>
+                    <ul>
+                        <p>Notre service de consulting fournira les documents nécessaires pour les garanties financières de votre demande de visa pour études après paiement des frais de service : <strong class="text-danger">400 000 FCFA</strong> pour la France et <strong class="text-danger">1 000 000 FCFA</strong> pour le Canada. Ces frais ne sont pas remboursables, même en cas de refus de visa.</p>
+                    </ul>
+                    <div align="center" class="mt-4 mb-2"><button mat-raised-button style="color: white;   background: #072150; border-radius: 10px; width: 65%" (click)="openFinanceNewComponent()">Faire une demande</button></div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    </div>
+
+
+<!-- Finance in progress -->
+
+    <ng-template #financeInProgress>
+        <div class="mt-3 mb-4">
+            <div class="card text-center mt-2">
+                <div class="card-header" style="  color: white;   background: #072150;">
+                    Etat de la demande
+                </div>
+                <div class="card-body">
+                    <div class="progress-container d-flex justify-content-between align-items-center">
+                        <div class="progress-step text-center">
+                            <div class="step-circle bg-danger mx-auto mb-2"></div>
+                            <p class="step-label fw-bold text-xs text-uppercase" style="color:#df3671 "><strong>En attente</strong></p>
+                        </div>
+                        <div class="progress-step text-center">
+                            <div class="step-circle bg-primary mx-auto mb-2"></div>
+                            <p class="step-label fw-bold text-xs text-uppercase" style="color: #1e3c72"><strong>En cours</strong></p>
+                        </div>
+                        <div class="progress-step text-center">
+                            <div class="step-circle bg-success mx-auto mb-2"></div>
+                            <p class="step-label  fw-bold text-xs text-uppercase" style="color: rgb(21,108,63);"><strong>Terminée</strong></p>
+                        </div>
+                    </div>
+                    <div>
+                        <div *ngIf="financeData.etatDemande === 0" class="" >
+                            <div class="progress mb-4" role="progressbar" aria-label="Animated striped example" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated " style="width: 33%;background:#df3671; color: white ">En attente ...</div>
+                            </div>
+                            <p *ngIf="!financeData.justificatifPaiement">Demande en <strong class="text-secondary fw-bold text-xs text-uppercase">attente de paiement.</strong></p>
+                        </div>
+                        <div *ngIf="financeData.etatDemande === 1" class="" >
+                            <div class="progress mb-4" role="progressbar" aria-label="Animated striped example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated " style="width: 50%; color: white;   background: #072150;">En cours de traitement ..</div>
+                            </div>
+                            <p>Votre demande est cours de traitement ...</p>
+                        </div>
+                        <div *ngIf="financeData.etatDemande === 2" class="" >
+                            <div class="progress mb-4" role="progressbar" aria-label="Animated striped example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated " style="width: 100%; background: rgb(21,108,63); color: white">Traitement terminé..</div>
+                            </div>
+                            <p>Le traitement de votre demande est terminée. Merci de nous avoir fait confiance ...</p>
+                        </div>
+                        <div *ngIf="!financeData.justificatifPaiement">
+                            <p align="center" class="alert alert-danger">Nous n'avons pas encore reçu votre justificatif de paiement. Ajouter le en cliquant sur le bouton "Paiement"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            Devis et Paiement
+                        </div>
+                        <div class="card-body">
+                            <div *ngIf="financeData.justificatifPaiement && financeData.etatDemande === 0 ">
+                                <p align="center" class="alert alert-success">Nous avons reçu votre justificatif de paiement le statut de votre demande changera  dès que votre justificatif sera approuvé par le système</p>
+                            </div>
+                            <div *ngIf="financeData.justificatifPaiement && financeData.etatDemande !== 0 ">
+                                <p align="center" class="alert alert-success">Votre justificatif de paiement a été validé par notre service.</p>
+                            </div>
+                            <p  *ngIf="!financeData.justificatifPaiement"><strong class="text-danger"><u>NB</u>:</strong>Télécharger votre Devis généré automatiquement par le système.Vous pouvez joindre le justificatif de paiement en cliquant sur le bouton "Paiement".Votre demande changera de statut automatiquement et sera traitée par nos agents.</p>
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <!-- (click)="openDevisAdmissionComponent()" -->
+                                    <button routerLink="/admin/finance/devis" mat-stroked-button style="color: #072150;">
+                                        Votre devis ici ! <mat-icon>description</mat-icon>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button mat-stroked-button  style="margin-left: 10px; color: #072150" (click)="goToPaymentPage()">
+                                        Paiement <mat-icon>payment</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 doc-heb ">
+                <div class="card text-center mb-2">
+                    <div class="card-header">
+                        Documents Relatifs au garant financier
+                    </div>
+                    <div class="card-body">
+                        <div *ngIf="financeData.garantFile">
+                            <h5 class="card-title">Document Garant Financier</h5>
+                            <p class="card-text">Cliquez ici pour télécharger votre document !</p>
+                            <button (click)="viewDocument(financeData.garantFile)"   style="color: white ; background: #096a38" class="btn"><mat-icon>download</mat-icon></button>
+                        </div>
+                        <div *ngIf="!financeData.garantFile">
+                            <p class="card-text"><strong class="text-danger"><u>Document indisponible pour l'instant.</u></strong></p>
+                            <p>Une fois le traitement terminé ce dernier apparaitra ici ! Surveillez attentivement vos mails.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mt-2 mb-4">
+                    <div class="card">
+                        <div class="card-header" style="background: #072150; color: white">
+                            <div align="center">Mes informations communiqués</div>
+
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Pour votre demande de garant financier soumise le {{ dateDemande }} vous nous avez communiqué les informations suivantes :</p>
+
+                            <!-- content -->
+
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <table class="table text-center">
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">Pays </th>
+                                                <td>{{ financeData.country }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Ville </th>
+                                                <td>{{ financeData.city }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Passport </th>
+                                                <td>
+                                                    <button *ngIf="financeData.passport" (click)="viewDocument(financeData.passport)" mat-flat-button  style="  background: #072150; color: white"  class="btn btn-sm" >
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <div *ngIf="!financeData.passport">Aucun justificatif</div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Admission </th>
+                                                <td>
+                                                    <button *ngIf="financeData.admissionFile" (click)="viewDocument(financeData.admissionFile)" mat-flat-button  style="  background: #072150; color: white"  class="btn btn-sm" >
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <div *ngIf="!financeData.admissionFile">Aucun justificatif</div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">
+                                                    Paiement
+                                                </th>
+                                                <td>
+                                                    <button mat-flat-button (click)="viewDocument(financeData.justificatifPaiement)"  style="background: #072150; color: white"   *ngIf="financeData.justificatifPaiement" class="btn btn-sm" >
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+
+                                                    <div *ngIf="!financeData.justificatifPaiement">Aucun justificatif <strong class="text-danger">(Obligatoire pour le traitement de votre demande)</strong> </div>
+                                                </td>
+                                            </tr>
+
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <br>
+                            <strong style="color: #d9006e"><u>NB</u> :</strong> En cas d'erreur, veuillez contacter l'agent de Maykconsulting, ou bien retirer votre demande et en soumettre une nouvelle.
+                            <div align="center" class="mt-4"> <button mat-flat-button style="background: #df3671; color: white" class="btn " (click)="onWithdrawRequest()">Retirer ma demande</button></div>
+
+                        </div>
+                        <div class="card-footer text-body-secondary">
+                            <br>
+                        </div>
+                    </div>
+
+                    <div *ngIf="financeData.country === 'France'" class="card text-center mt-4">
+                        <div class="card-header">
+                            Documents à fournir pour le visa
+                        </div>
+                        <div class="card-body">
+                            <div >
+                                <h5 class="card-title">Document du consulat Français</h5>
+                                <p class="card-text">Vous trouverez la liste des justificatifs nécessaires pour votre demande de visa !</p>
+                                <button (click)="viewDocument('https://firebasestorage.googleapis.com/v0/b/maykconsulting-7e0c1.appspot.com/o/divers%2Fliste_ls_etudiants_galbv.pdf?alt=media&token=6c952503-bdba-4512-a342-abc6523bdc4e')" style="color: white ; background: #072150;" class="btn"><mat-icon>download</mat-icon></button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 doc-heb">
+                <div class="card text-center mb-2" *ngIf="financeData.country === 'France'">
+                    <div class="card-header">
+                        Astuces : Prendre son rendez-vous pour visa France
+                    </div>
+                    <div class="card-body">
+                        <iframe *ngIf="youtubeUrl" [src]="youtubeUrl" width="100%" height="315" frameborder="0" allowfullscreen></iframe>
+                        <p *ngIf="!youtubeUrl">Aucune vidéo disponible pour l'instant.</p>
+                    </div>
+                </div>
+
+                <div class="card text-center mt-4" *ngIf="financeData.country === 'France'">
+                    <div class="card-header">
+                        Astuces : Comment remplir son formulaire pour visa France
+                    </div>
+                    <div class="card-body">
+                        <iframe *ngIf="youtubeUrl2" [src]="youtubeUrl2" width="100%" height="315" frameborder="0" allowfullscreen></iframe>
+                        <p *ngIf="!youtubeUrl2">Aucune vidéo disponible pour l'instant.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-5 mb-4">
+            <div class="col-md-12 text-center">
+                <p>Pour toutes questions veuillez nous contacter par mail sur : <a href="mailto:maykconsulting@gmail.com" style="color: #1e3c72">{{ 'maykconsulting@gmail.com' }}</a> ou au + 33 6 21 35 86 92 (également disponible par Whatsapp)</p>
+            </div>
+        </div>
+
+    </ng-template>
+</div>
+
+
+<style>
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(197, 197, 197, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+</style>
+

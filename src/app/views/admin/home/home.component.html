@@ -1,0 +1,98 @@
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+    <mat-toolbar class="fixed-toolbar mat-elevation-z2">
+        <button   mat-icon-button (click)="snav.toggle()">
+            <mat-icon>menu</mat-icon>
+        </button>
+
+        <img style="cursor: pointer" routerLink="/admin" src="assets/images/logoB.png" class="logo">
+        <span class="example-spacer"></span>
+
+       <!-- <span *ngIf="user" class="user-name">{{ user.firstName }} {{ user.lastName }}</span> -->
+          <img *ngIf="user" [src]="user.identityPhotoUrl ? user.identityPhotoUrl : 'assets/images/landing/lOGO_d/consulting.png'" alt="User Photo" class="user-photo">
+
+        <button style="margin-left: 10px" mat-icon-button [matMenuTriggerFor]="notificationMenu" >
+            <mat-icon matBadge="{{demandesCount}}" [matBadgeColor]="demandesCount === 0 ? 'primary' : 'warn'">notifications</mat-icon>
+        </button>
+        <!-- Menu déroulant -->
+        <mat-menu #notificationMenu="matMenu">
+            <button *ngIf="hebergementData" mat-menu-item routerLink="/admin/hebergement">
+                <mat-icon>weekend</mat-icon>
+                <span >Hébergement : {{hebergementData?.dateDemande ? 'Ouvert ...' : 'Aucune demande'}}</span>
+            </button>
+            <button *ngIf="admissionData" mat-menu-item routerLink="/admin/admission">
+                <mat-icon>school</mat-icon>
+                <span>Admission : {{admissionData?.dateDemande ? 'Ouvert ...' : 'Aucune demande'}}</span>
+            </button>
+            <button *ngIf="financeData" mat-menu-item routerLink="/admin/finance">
+                <mat-icon>work</mat-icon>
+                <span>Garant : {{financeData?.dateDemande ? 'Ouvert ...' : 'Aucune demande'}}</span>
+            </button>
+            <span *ngIf="demandesCount === 0">  Rien par ici ... <br></span>
+        </mat-menu>
+
+         <button mat-icon-button [matMenuTriggerFor]="menu">
+             <mat-icon>more_vert</mat-icon>
+         </button>
+         <mat-menu #menu="matMenu">
+             <button  mat-menu-item  routerLink="/admin">
+                 <mat-icon>home</mat-icon>
+                 <span>Accueil</span>
+             </button>
+             <button mat-menu-item routerLink="/admin/user">
+                 <mat-icon>person</mat-icon>
+                 <span>Mon Compte</span>
+             </button>
+             <button (click)="signOut()" mat-menu-item>
+                 <mat-icon>power</mat-icon>
+                 <span>Déconnexion</span>
+             </button>
+         </mat-menu>
+     </mat-toolbar>
+
+     <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 0 : 0">
+         <mat-sidenav #snav class="custom-sidenav" [mode]="mobileQuery.matches ? 'over' : 'side'"
+                      [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" [opened]="isSidenavOpened">
+             <mat-nav-list>
+                 <ng-container *ngFor="let nav of fillerNav; trackBy: trackByFn">
+                     <a mat-list-item (click)="snav.toggle()" [routerLink]="nav.path" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
+                         <span style="margin-right: 3px"><mat-icon>{{ nav.icon }}</mat-icon></span>
+                         {{ nav.label }}
+                     </a>
+                 </ng-container>
+                <!-- Administration Section -->
+                <mat-list-item *ngIf="isAdmin" (click)="toggleAdminMenu()">
+                    <span style="margin-right: 3px"> <mat-icon>admin_panel_settings</mat-icon></span>
+                     Administration
+                   <span> <mat-icon>{{ showAdminMenu ? 'expand_less' : 'expand_more' }}</mat-icon></span>
+                 </mat-list-item>
+                 <div *ngIf="showAdminMenu && isAdmin">
+                         <a mat-list-item style="margin-left: 25px"  routerLink="/admin/hebergement/gestion" (click)="snav.toggle()">
+                            <span style="margin-right: 3px"></span> Hébergement
+                         </a>
+                     <a mat-list-item style="margin-left: 25px" routerLink="/admin/finance/gestion" (click)="snav.toggle()">
+                         <span style="margin-right: 3px"></span> Garant Financier
+                     </a>
+                     <a mat-list-item style="margin-left: 25px" routerLink="admission/gestion" (click)="snav.toggle()">
+                         <span style="margin-right: 3px"></span> Admission
+                     </a>
+                     <a mat-list-item style="margin-left: 25px"  routerLink="/admin/user/gestion" (click)="snav.toggle()">
+                         <span style="margin-right: 3px"></span> Gestion Utilisateurs
+                     </a>
+                     <a mat-list-item style="margin-left: 25px"  routerLink="/admin/messagerie" (click)="snav.toggle()">
+                         <span style="margin-right: 3px"></span> Gestion Messagerie
+                     </a>
+                     <a mat-list-item style="margin-left: 25px"  routerLink="/admin/rapports" (click)="snav.toggle()">
+                        <span style="margin-right: 3px"></span> Rapports
+                     </a>
+                 </div>
+             </mat-nav-list>
+         </mat-sidenav>
+
+         <mat-sidenav-content>
+             <router-outlet></router-outlet>
+             <footer>
+
+             </footer>
+         </mat-sidenav-content>
+     </mat-sidenav-container>
+ </div>

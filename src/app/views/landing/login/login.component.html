@@ -1,0 +1,49 @@
+<div class="container-fluid d-flex flex-column vh-100">
+    <div class="row no-gutter flex-grow-1 d-flex justify-content-center align-items-center">
+        <div class="col-md-6 d-flex align-items-center justify-content-center p-5">
+            <div class="login-card">
+                <div align="center" routerLink="/" style="cursor: pointer"><img  alt="Image not load" src="assets/images/landing/lOGO_d/logo.png"  style="width: 150px"/></div>
+                <div class="text-center mt-2">
+                    <div class="d-flex justify-content-center">
+                        <button mat-stroked-button  (click)="loginWithGoogle()" class="btn" style="color: #7c7c7c; width: 100%">Continuer avec <img src="assets/images/google.webp" style="" alt="Google" class="social-icon"></button>
+                    </div>
+                </div>
+                <p class="text-muted mt-3" align="center">ou<p></p>
+                <mat-divider class="mt-4 mb-4"></mat-divider>
+                <form [formGroup]="loginForm" (ngSubmit)="loginWithEmail()" class=" ">
+                    <div class="form-floating form-floating-custom mb-3 position-relative">
+                        <i class="uil uil-users-alt icon"></i>
+                        <input type="email" class="form-control" formControlName="email" id="email" placeholder="Email">
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="form-floating form-floating-custom mb-3 position-relative">
+                        <input type="password" class="form-control" formControlName="password" id="password" placeholder="Mot de passe">
+                        <label for="password">Mot de passe</label>
+                        <i class="fa fa-eye icon-eye" (click)="togglePasswordVisibility()"></i>
+                    </div>
+                    <div class="form-check text-center form-check-primary py-1 text-right">
+                        <a routerLink="/password-forget" class="text-muted text-decoration-underline font-size-14">Mot de passe oublié ?</a>
+                    </div>
+                    <div class="mt-3 d-flex flex-column align-items-center">
+                        <button class="btn btn-primary mb-4" type="submit" [disabled]="loading">
+                            <ng-container *ngIf="!loading; else loadingTemplate">Connexion</ng-container>
+                            <ng-template #loadingTemplate>
+                                <div class="spinner">
+                                    <mat-spinner diameter="24" class="spinner" color=""></mat-spinner>
+                                </div>
+                            </ng-template>
+                        </button>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-muted mb-0">Vous n'avez pas de compte ? <a class="text-decoration-underline" routerLink="/register">S'inscrire</a></p>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <p class="text-muted mb-0">Revenir sur la page <a class="text-decoration-underline" style="color: #0c0c3c" routerLink="/">d'accueil</a></p>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+.tututu {
+  background: #072150;
+}
+
+.intro-ten-RightSection {
+  max-height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center; /* Center the image horizontally */
+}
+
+.intro-ten-ProductImage img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover; /* This ensures the image covers the container without stretching */
+}
+
+@media (max-width: 768px) {
+  .intro-ten-RightSection {
+    max-height: 50vh; /* Example adjustment for smaller screens */
+  }
+
+  .intro-ten-ProductImage img {
+    max-height: 50vh; /* Example adjustment for smaller screens */
+  }
+}

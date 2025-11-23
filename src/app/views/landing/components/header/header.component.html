@@ -1,0 +1,47 @@
+<nav
+        id="home-header"
+        [ngClass]="{ 'header-fixed': true }"
+        class="navbar  navbar-expand-lg text-16"
+>
+    <div class="container">
+        <div class="d-flex justify-content-between flex-grow-1 mobile_menu">
+            <div class="text-center">
+                <button
+                        class="navbar-toggler"
+                        type="button"
+                        (click)="isCollapsed = !isCollapsed"
+                        [attr.aria-expanded]="!isCollapsed"
+                        aria-controls="collapseExample"
+                >
+                    <i class="eva eva-menu-outline text-30 text-white d-none d-md-block"></i>
+                    <span class="navbar-toggler-icon d-block d-md-none"></span>
+                    <span class="navbar-toggler-icon d-block d-md-none"></span>
+                    <span class="navbar-toggler-icon d-block d-md-none"></span>
+                </button>
+            </div>
+        </div>
+        <div
+                class="collapse navbar-collapse flex-grow-1 text-end"
+                id="collapseExample"
+                [ngbCollapse]="isCollapsed"
+        >
+            <ul class="navbar-nav ms-auto flex-nowrap">
+                <li class="nav-item" (click)="hidemenu()">
+                    <a href="#" scrollTo="intro-wrap" class="nav-link m-2 menu-item nav-active">Accueil</a>
+                </li>
+                <li (click)="hidemenu()" class="nav-item">
+                    <a href="#" scrollTo="features-wrap" class="nav-link m-2 menu-item nav-active">Nos services</a>
+                </li>
+                <li (click)="hidemenu()" class="nav-item">
+                    <a href="#" scrollTo="pricing-wrap" class="nav-link m-2 menu-item">Nos tarifs</a>
+                </li>
+                <li (click)="hidemenu()" class="nav-item">
+                    <a href="#" scrollTo="contacts-wrap" class="nav-link m-2 menu-item">Contact</a>
+                </li>
+                <li (click)="hidemenu()" class="nav-item">
+                    <a routerLink="/login" class="nav-link m-2 menu-item"><mat-icon>person</mat-icon></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

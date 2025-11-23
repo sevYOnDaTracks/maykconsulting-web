@@ -1,0 +1,27 @@
+.form-container {
+  max-width: 800px;
+  margin: auto;
+  background-color: #f9f9f9;
+}
+
+.dialog-scroll {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.form-label {
+  font-weight: bold;
+  color: #333;
+}
+
+.form-control, .form-select {
+  border: none;
+  border-bottom: 2px solid #ddd;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.form-control:focus, .form-select:focus {
+  border-bottom-color: #1e3c72;
+  box-shadow: none;
+}

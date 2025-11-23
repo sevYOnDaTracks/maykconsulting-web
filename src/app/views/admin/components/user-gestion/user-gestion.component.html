@@ -1,0 +1,150 @@
+<div class="user-dashboard">
+    <h1>Gestion des utilisateurs <mat-icon>people</mat-icon></h1>
+
+    <!-- Barre de recherche -->
+    <mat-form-field class="example-full-width mt-4" appearance="outline" floatLabel="always">
+        <mat-label>Un mot clé ?</mat-label>
+        <input
+                matInput
+                type="text"
+                placeholder="Rechercher un utilisateur ..."
+                (input)="applyFilter($event.target.value)"
+        />
+    </mat-form-field>
+
+    <!-- Tableau d'utilisateurs avec Angular Material -->
+    <div class="table-container mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+            <!-- Colonne Photo -->
+            <ng-container matColumnDef="photo">
+                <th mat-header-cell *matHeaderCellDef> Photo </th>
+                <td mat-cell *matCellDef="let user"> <img [src]="user.identityPhotoUrl ? user.identityPhotoUrl : 'assets/images/landing/lOGO_d/logo.png'" alt="User Photo" class="user-photo"/> </td>
+            </ng-container>
+
+            <!-- Colonne Prénom -->
+            <ng-container matColumnDef="firstName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom </th>
+                <td mat-cell *matCellDef="let user"> {{ user.firstName }} </td>
+            </ng-container>
+
+            <!-- Colonne Nom -->
+            <ng-container matColumnDef="lastName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Prénoms </th>
+                <td mat-cell *matCellDef="let user"> {{ user.lastName }} </td>
+            </ng-container>
+
+            <!-- Colonne Email -->
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+                <td mat-cell *matCellDef="let user"> {{ user.email }} </td>
+            </ng-container>
+
+            <!-- Colonne Niveau d'études -->
+            <ng-container matColumnDef="degreeLevel">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Niveau </th>
+                <td mat-cell *matCellDef="let user"> {{ user.degreeLevel }} </td>
+            </ng-container>
+
+            <!-- Colonne Rôles -->
+            <ng-container matColumnDef="roles">
+                <th mat-header-cell *matHeaderCellDef> Roles </th>
+                <td mat-cell *matCellDef="let user"> {{ user.roles }} </td>
+            </ng-container>
+
+            <!-- Colonne Actions -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let user">
+                    <button mat-icon-button color="primary" (click)="goToDetail(user)" class="action-button" matTooltip="Détails">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" (click)="openEditUser(user)" class="action-button" matTooltip="Modifier">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="accent" (click)="openEmailUser(user)" class="action-button" matTooltip="Envoyer un mail">
+                        <mat-icon>mail</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="onDeleteUser(user)" class="action-button" matTooltip="Supprimer">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <!-- Header du tableau -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <!-- Lignes du tableau -->
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSize]="10" [pageSizeOptions]="[25, 50, 75 , 100 , 500 ]"></mat-paginator>
+    </div>
+
+    <br>
+
+</div>
+
+<!-- Dialog - Edition utilisateur -->
+<ng-template #editUserDialog>
+    <h2 mat-dialog-title>Modifier l'utilisateur</h2>
+    <mat-dialog-content>
+        <form [formGroup]="editForm" class="dialog-form">
+            <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+                <mat-label>Prénom</mat-label>
+                <input matInput formControlName="firstName">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+                <mat-label>Nom</mat-label>
+                <input matInput formControlName="lastName">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+                <mat-label>Téléphone</mat-label>
+                <input matInput formControlName="phone">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+                <mat-label>Niveau d'études</mat-label>
+                <input matInput formControlName="degreeLevel">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+                <mat-label>Rôles</mat-label>
+                <input matInput formControlName="roles">
+            </mat-form-field>
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Annuler</button>
+        <button mat-raised-button color="primary" (click)="saveUser()" [disabled]="editForm.invalid || isSavingUser">
+            Sauvegarder
+        </button>
+    </mat-dialog-actions>
+</ng-template>
+
+<!-- Dialog - Envoi d'email -->
+<ng-template #emailUserDialog>
+    <h2 mat-dialog-title>Envoyer un mail</h2>
+    <mat-dialog-content>
+        <form [formGroup]="emailForm" class="dialog-form">
+            <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+                <mat-label>Destinataire</mat-label>
+                <input matInput formControlName="to">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+                <mat-label>Objet</mat-label>
+                <input matInput formControlName="subject">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+                <mat-label>Message</mat-label>
+                <textarea matInput formControlName="message" rows="6"></textarea>
+            </mat-form-field>
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Annuler</button>
+        <button mat-raised-button color="primary" (click)="sendEmailToUser()" [disabled]="emailForm.invalid || isSendingEmail">
+            Envoyer
+        </button>
+    </mat-dialog-actions>
+</ng-template>

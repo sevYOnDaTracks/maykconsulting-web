@@ -1,0 +1,76 @@
+<section id="contacts-wrap" class="contact-form-wrap light-gray p-t-b-80">
+    <div class="container">
+        <div class="row">
+            <div class="form-wrap col-md-6 ">
+                <div class="section-header mb-2">
+                    <h2 class="fw-bold">Laissez-nous un message ?</h2>
+                    <p>
+                        Merci de nous laisser un message, nous vous répondrons dans les plus brefs délais. Vos commentaires et questions sont importants pour nous.
+                    </p>
+                </div>
+
+                <div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong style="margin-right: 5px">Votre message a été envoyé avec succès !</strong>
+                </div>
+                <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong style="margin-right: 5px">{{ error }}</strong>
+                </div>
+                <form class="row form mt-2" #contactForm="ngForm" (ngSubmit)="submitForm(contactForm)" role="form">
+                    <div class="mb-4 col-md-6 form-group d-flex flex-nowrap">
+                        <label for="">
+                            <mat-icon>person</mat-icon>
+                        </label>
+                        <input type="text" name="name" id="" class="form-control" placeholder="Votre nom" required ngModel />
+                    </div>
+                    <div class="form-group mb-4 d-flex flex-nowrap col-md-6">
+                        <label for="">
+                            <mat-icon>email</mat-icon>
+                        </label>
+                        <input type="email" required name="email" ngModel class="form-control" placeholder="Votre email" aria-describedby="helpId" />
+                    </div>
+                    <div class="form-group mb-4 d-flex flex-nowrap col-md-12">
+                        <label for="">
+                            <mat-icon>subject</mat-icon>
+                        </label>
+                        <input type="text" required name="subject" ngModel class="form-control" placeholder="Le motif ici !" aria-describedby="helpId" />
+                    </div>
+                    <div class="form-group mb-4 d-flex flex-nowrap col-md-12">
+                        <label for="">
+                            <mat-icon>message</mat-icon>
+                        </label>
+                        <textarea class="form-control" placeholder="Votre message ici !" required name="message" ngModel rows="5"></textarea>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <button type="submit" [disabled]="!contactForm.valid" class="btn btn-block half-button form-submit-button btn-large btn-gradient">
+                            Envoyer
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="form-wrap col-md-6 ">
+                <div class="right-contact-wrap mt-5" style="margin-top: 20px">
+                    <div class="d-flex flex-wrap flex-md-column">
+                        <div class="d-flex align-items-center p-3">
+                            <div class="d-flex flex-shrink-0 justify-content-center">
+                                <mat-icon>phone</mat-icon>
+                            </div>
+                            <div class="">
+                                <h6 class="fw-bold mb-0">Téléphone</h6>
+                                <p class="text-muted mb-0"> +33 6 21 35 86 92 (également par Whatsapp)</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center p-3">
+                            <div class="d-flex flex-shrink-0 justify-content-center align-items-center">
+                                <mat-icon>email</mat-icon>
+                            </div>
+                            <div class="px-2">
+                                <h6 class="fw-bold mb-0">Email</h6>
+                                <p class="text-muted mb-0">{{ 'maykconsulting@gmail.com' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
