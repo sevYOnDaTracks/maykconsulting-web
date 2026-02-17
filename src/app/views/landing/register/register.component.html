@@ -1,103 +1,98 @@
-<div class="container-fluid d-flex flex-column min-vh-100">
-    <div class="row no-gutter flex-grow-1 d-flex justify-content-center align-items-center">
-        <div class="col-md-6 d-flex align-items-center justify-content-center p-5">
-            <div class="register-card">
-                <div align="center" routerLink="/"  style="cursor: pointer"><img  alt="Image not load" src="assets/images/landing/lOGO_d/logo.png"  style="width: 150px"/></div>
-                <div class="text-center mt-2 ">
-                    <div class="d-flex justify-content-center">
-                        <button mat-stroked-button  (click)="loginWithGoogle()" class="btn " style="color: #858484; width: 100%">S'inscrire avec <img src="assets/images/google.webp" style="" alt="Google" class="social-icon"></button>
-                    </div>
-                </div>
-                <p class="text-muted mt-3" align="center">Ou <p></p>
-                <mat-divider class="mt-4 mb-4"></mat-divider>
-                <form [formGroup]="registerForm" (ngSubmit)="register()">
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <div class="form-floating form-floating-custom mb-3 position-relative">
-                                <input type="text" class="form-control" formControlName="lastName" id="lastName" placeholder="Nom">
-                                <label for="lastName">Nom</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <div class="form-floating form-floating-custom mb-3 position-relative">
-                                <i class="uil uil-user icon"></i>
-                                <input type="text" class="form-control" formControlName="firstName" id="firstName" placeholder="Prénom">
-                                <label for="firstName">Prénom</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <div class="form-floating form-floating-custom mb-3 position-relative">
-                                <i class="uil uil-phone icon"></i>
-                                <input type="text" class="form-control" formControlName="phone" id="phone" placeholder="Téléphone">
-                                <label for="phone">Téléphone</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <div class="form-floating form-floating-custom mb-3 position-relative">
-                                <i class="uil uil-calendar-alt icon"></i>
-                                <input type="date" class="form-control" formControlName="birthDate" id="birthDate" placeholder="Date de naissance">
-                                <label for="birthDate">Date de naissance</label>
-                            </div>
-                        </div>
-                        <div class="col-md-12 col-12">
-                            <div class="form-floating form-floating-custom mb-3 position-relative">
-                                <i class="uil uil-graduation-cap icon"></i>
-                                <select class="form-control" formControlName="degreeLevel" id="degreeLevel" placeholder="votre niveau d'étude">
-                                    <option value="BAC+1">BAC +1</option>
-                                    <option value="BAC+2">BAC +2</option>
-                                    <option value="BAC+3">BAC +3</option>
-                                    <option value="BAC+4">BAC +4</option>
-                                    <option value="BAC+5">BAC +5</option>
-                                </select>
-                                <label for="degreeLevel">Niveau d'étude actuel</label>
-                            </div>
-                        </div>
-                        <div class="col-md-12 col-12">
-                            <div class="form-floating form-floating-custom mb-3 position-relative">
-                                <i class="uil uil-envelope icon"></i>
-                                <input type="email" class="form-control" formControlName="email" id="email" placeholder="Adresse Email">
-                                <label for="email">Adresse email</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <div class="form-floating form-floating-custom mb-3 position-relative">
-                                <input type="password" class="form-control" formControlName="password" id="password" placeholder="Mot de passe">
-                                <label for="password">Mot de passe</label>
-                                <i class="fa fa-eye icon-eye" (click)="togglePasswordVisibility()"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <div class="form-floating form-floating-custom mb-3 position-relative">
-                                <input type="password" class="form-control" formControlName="confirmPassword" id="confirmPassword" placeholder="Confirmer le mot de passe">
-                                <label for="confirmPassword">Retaper le mot de passe</label>
-                                <i class="fa fa-eye icon-eye" (click)="togglePasswordVisibility()"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-3 d-flex flex-column align-items-center">
-                        <button class="btn btn-primary mb-4" type="submit" [disabled]="loading">
-                            <ng-container *ngIf="!loading; else loadingTemplate">OK</ng-container>
-                            <ng-template #loadingTemplate>
-                                <div class="spinner">
-                                    <mat-spinner diameter="24" class="spinner" color=""></mat-spinner>
-                                </div>
-                            </ng-template>
-                        </button>
-                    </div>
-                    <div class="mt-4 text-center">
-                        <p class="text-muted mb-0">J'ai déjà un compte ? <a class="text-decoration-underline" routerLink="/login">Je me connecte</a></p>
-                    </div>
-                    <div class="mt-4 text-center">
-                        <p class="text-muted mb-0">Revenir sur la page <a class="text-decoration-underline" style="color: #0c0c3c" routerLink="/">d'accueil</a></p>
-                    </div>
-                </form>
-            <!--  <div class="text-center mt-4">
-                    <p>ou continuer avec</p>
-                    <div class="d-flex justify-content-center">
-                        <a (click)="loginWithGoogle()" class="btn-social"><img src="assets/images/google.webp" alt="Google" class="social-icon"></a>
-                    </div>
-                </div> -->
+<section class="flex min-h-screen items-center px-4 py-6">
+  <div class="mx-auto w-full max-w-3xl">
+    <div class="glass-card p-6 sm:p-7">
+      <div class="mb-5 flex justify-center">
+        <a routerLink="/" class="inline-flex">
+          <img src="assets/images/landing/lOGO_d/logo.png" alt="Maykconsulting logo" class="h-14 w-14 rounded-xl border border-slate-300/70 bg-white/95 p-1.5 object-contain shadow-[0_10px_28px_rgba(0,0,0,0.28)]" />
+        </a>
+      </div>
+
+      <h1 class="text-center text-3xl font-semibold text-white">Inscription</h1>
+      <p class="mt-1 text-center text-sm text-white/95">Creez votre espace client en 1 minute.</p>
+
+      <button type="button" (click)="loginWithGoogle()" class="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-500/45 bg-slate-900/70 py-2.5 text-sm font-semibold text-slate-100 transition hover:bg-slate-800">
+        S'inscrire avec Google
+        <img src="assets/images/google.webp" alt="Google" class="h-6 w-6" />
+      </button>
+
+      <div class="relative my-5 text-center text-xs font-semibold uppercase tracking-[0.16em] text-white/95">
+        <span class="relative z-10 bg-slate-900 px-3">ou</span>
+        <span class="absolute left-0 right-0 top-1/2 -z-0 border-t border-slate-500/35"></span>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="register()" class="mt-6">
+        <div class="grid gap-3 sm:grid-cols-2">
+          <label class="block">
+            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Nom</span>
+            <input type="text" class="input-dark" formControlName="lastName" id="lastName" placeholder="Nom" />
+          </label>
+
+          <label class="block">
+            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Prenom</span>
+            <input type="text" class="input-dark" formControlName="firstName" id="firstName" placeholder="Prenom" />
+          </label>
+
+          <label class="block">
+            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Telephone</span>
+            <input type="text" class="input-dark" formControlName="phone" id="phone" placeholder="Telephone" />
+          </label>
+
+          <label class="block">
+            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Date de naissance</span>
+            <input type="date" class="input-dark" formControlName="birthDate" id="birthDate" />
+          </label>
+
+          <label class="block sm:col-span-2">
+            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Niveau d'etude actuel</span>
+            <select class="input-dark" formControlName="degreeLevel" id="degreeLevel">
+              <option value="BAC+1">BAC +1</option>
+              <option value="BAC+2">BAC +2</option>
+              <option value="BAC+3">BAC +3</option>
+              <option value="BAC+4">BAC +4</option>
+              <option value="BAC+5">BAC +5</option>
+            </select>
+          </label>
+
+          <label class="block sm:col-span-2">
+            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Email</span>
+            <input type="email" class="input-dark" formControlName="email" id="email" placeholder="Adresse email" />
+          </label>
+
+          <label class="block">
+            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Mot de passe</span>
+            <div class="relative">
+              <input type="password" class="input-dark pr-20" formControlName="password" id="password" placeholder="Mot de passe" />
+              <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold uppercase tracking-wide text-cyan-300" (click)="togglePasswordVisibility()">Afficher</button>
             </div>
+          </label>
+
+          <label class="block">
+            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Confirmer</span>
+            <div class="relative">
+              <input type="password" class="input-dark pr-20" formControlName="confirmPassword" id="confirmPassword" placeholder="Confirmer le mot de passe" />
+              <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold uppercase tracking-wide text-cyan-300" (click)="togglePasswordVisibility()">Afficher</button>
+            </div>
+          </label>
         </div>
+
+        <button class="mk-btn-primary mt-5 w-full" type="submit" [disabled]="loading">
+          <ng-container *ngIf="!loading; else loadingTemplate">Creer mon compte</ng-container>
+          <ng-template #loadingTemplate>
+            <div class="flex items-center justify-center">
+              <mat-spinner diameter="22"></mat-spinner>
+            </div>
+          </ng-template>
+        </button>
+      </form>
+
+      <p class="mt-4 text-center text-sm">
+        <a routerLink="/login" class="font-semibold text-cyan-300 hover:text-cyan-200">J'ai deja un compte</a>
+      </p>
+
+      <p class="mt-2 text-center text-sm">
+        <a routerLink="/" class="font-semibold text-white/95 hover:text-white">Retour a l'accueil</a>
+      </p>
     </div>
-</div>
+  </div>
+</section>
+

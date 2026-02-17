@@ -1,74 +1,45 @@
-<section
-  id="intro-wrap"
-  class="intro-ten-Wrap tututu text-start text-white"
->
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 intro-ten-LeftSection pb-3">
-        <h1 class="fw-bold text-white text-42 mb-3 t-shadow">
-          Maykconsulting
-        </h1>
-        <p class="text-20 mb-4">
-          Votre procédure, notre priorité ..
-        </p>
-        <div class="mb-5 lead">
-          <ul class="list-inline">
-            <li class="mb-3">
-              <i class="eva eva-checkmark-outline me-2 text-warning"></i
-              >Admission pour étude à l'étranger garantie
-            </li>
-            <li class="mb-3">
-              <i class="eva eva-checkmark-outline me-2 text-warning"></i>
-              Procédure de Visa (Garant & logement )
-            </li>
-          </ul>
-        </div>
-        <div class="intro-ten-Buttons">
-          <a
-            name=""
-            id=""
-            routerLink="/login"
-            class="btn btn-outline-white btn-lg ps-5 pe-5 pb-2 me-2 mb-4 text-uppercase half-button"
-            role="button"
-          >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
-                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm4-3a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/>
-                  <path fill-rule="evenodd" d="M8 9a6.002 6.002 0 0 0-5.917 5h11.834A6.002 6.002 0 0 0 8 9zm-7 5a7 7 0 1 1 14 0H1z"/>
-              </svg>
+<section id="intro-wrap" class="px-4 pb-16 pt-52 sm:pb-20 sm:pt-52">
+  <div class="mx-auto grid max-w-7xl items-center gap-8 lg:grid-cols-[1.02fr_0.98fr]">
+    <div>
+      <h1 class="mt-4 max-w-[12ch] text-4xl font-semibold leading-[1.05] text-white sm:text-5xl lg:text-[3.8rem]">
+        Etudiez en France, Canada ou Belgique.
+      </h1>
 
-          </a>
-          <a
-            id=""
-            class="btn btn-warning btn-lg ps-5 pe-5 pb-2 mb-4 text-uppercase half-button"
-            routerLink="/register"
-            role="button"
-          >
-            M'inscrire
-          </a>
-        </div>
+      <p class="mt-5 max-w-2xl text-lg leading-8 text-white/90">
+        Un accompagnement clair vers une admission, le visa,  des logements et/ou une garantie financiere.
+      </p>
+
+      <div class="mt-7 flex flex-wrap gap-3">
+        <a routerLink="/register" class="mk-btn-primary">Demarrer maintenant</a>
+        <a href="#" scrollTo="contacts-wrap" class="btn-ghost">Parler a un conseiller</a>
       </div>
-      <div class="col-md-6 intro-ten-RightSection d-flex align-items-center">
-          <br>
-          <br>
-          <br><br>
-        <div class="intro-ten-ProductImage">
-          <img
-            src="./assets/images/home.png"
-            class="img-responsive"
-            alt=""
-            [@animate]="{
-              value: '*',
-              params: {
-                x: '200px',
-                opacity: '0',
-                delay: '100ms',
-                duration: '1500ms'
-              }
-            }"
-          />
+
+      <div class="mt-7 grid max-w-xl gap-3 sm:grid-cols-2">
+        <div class="glass-card px-4 py-3">
+          <p class="text-2xl font-bold text-white">+3 pays</p>
+          <p class="text-sm text-white/95">Destinations principales</p>
+        </div>
+        <div class="glass-card px-4 py-3">
+          <p class="text-2xl font-bold text-white">4 offres</p>
+          <p class="text-sm text-white/95">Admission, Visa, Logement, Garant</p>
         </div>
       </div>
     </div>
+
+    <div class="relative">
+      <div class="pointer-events-none absolute inset-0 -z-10 rounded-[2rem] bg-gradient-to-tr from-cyan-300/30 to-indigo-300/25 blur-2xl"></div>
+      <div class="glass-card p-4 sm:p-4">
+        <img
+          src="./assets/images/home.png"
+          alt="Presentation Maykconsulting"
+          class="w-full rounded-xl object-cover"
+          [@animate]="{
+            value: '*',
+            params: { x: '100px', opacity: '0', delay: '100ms', duration: '1000ms' }
+          }"
+        />
+      </div>
+    </div>
   </div>
-  <div class="overlay"></div>
 </section>
+

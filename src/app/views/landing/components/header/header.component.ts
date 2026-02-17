@@ -2,13 +2,10 @@ import {
   Component,
   OnInit,
   HostListener,
-  HostBinding,
-  Inject,
-  Input
+  Inject
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {WINDOW_PROVIDERS, WINDOW} from '../../helpers/window.helpers';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {WINDOW} from '../../helpers/window.helpers';
 
 @Component({
   selector: 'app-header',
@@ -21,12 +18,18 @@ export class HeaderComponent implements OnInit {
     @Inject(WINDOW) private window: Window,
   ) {}
 
-  isFixed;
+  isFixed = false;
   public isCollapsed = true;
 
-  @HostBinding('class.menu-opened') menuOpened = false;
+  ngOnInit() {
+    this.syncMenuState();
+  }
 
-  ngOnInit() {}
+  @HostListener('window:resize')
+  onWindowResize() {
+    this.syncMenuState();
+  }
+
   @HostListener('window:scroll', [])
   onWindowScroll() {
     const offset =
@@ -41,12 +44,14 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  toggleMenu() {
-    this.menuOpened = !this.menuOpened;
-  }
   hidemenu() {
-    this.isCollapsed = true;
+    if (this.window.innerWidth < 992) {
+      this.isCollapsed = true;
+    }
   }
 
+  private syncMenuState() {
+    this.isCollapsed = this.window.innerWidth < 992;
+  }
 
 }

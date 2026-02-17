@@ -1,0 +1,35 @@
+:host {
+  display: block;
+}
+
+.fd-page {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 5% 8%, rgba(56, 189, 248, 0.2), transparent 32%),
+    radial-gradient(circle at 92% 28%, rgba(0, 194, 168, 0.2), transparent 28%),
+    linear-gradient(140deg, #071018, #0c222f 55%, #0a1a26);
+}
+
+.bg-orb {
+  position: fixed;
+  width: 34vw;
+  height: 34vw;
+  border-radius: 50%;
+  filter: blur(85px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.orb-a {
+  top: -12vw;
+  left: -10vw;
+  background: rgba(56, 189, 248, 0.22);
+}
+
+.orb-b {
+  right: -8vw;
+  bottom: -10vw;
+  background: rgba(0, 194, 168, 0.2);
+}
