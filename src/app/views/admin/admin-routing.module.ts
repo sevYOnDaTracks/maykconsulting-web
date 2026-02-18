@@ -20,6 +20,7 @@ import {AdminGuard} from './guards/admin.guard';
 import {UserDetailComponent} from './components/user-detail/user-detail.component';
 import {PaymentPageComponent} from './components/payment-page/payment-page.component';
 import {RapportsComponent} from './components/rapports/rapports.component';
+import {ReceptionAgentGestionComponent} from './components/reception-agent-gestion/reception-agent-gestion.component';
 
 const routes: Routes = [
   {
@@ -41,6 +42,7 @@ const routes: Routes = [
       { path: 'admission/gestion', component: AdmissionAdministrationComponent, canActivate: [AdminGuard] },
       { path: 'admission/gestion/user/:id', component: AdmissionUserDetailComponent, canActivate: [AdminGuard] },
       { path: 'rapports', component: RapportsComponent, canActivate: [AdminGuard] },
+      { path: 'reception-agents', component: ReceptionAgentGestionComponent, canActivate: [AdminGuard] },
       { path: 'parcours', component: ParcoursComponent },
       { path: 'messagerie', component: MessageGestionComponent, canActivate: [AdminGuard] },
       { path: 'paiement/:module', component: PaymentPageComponent },

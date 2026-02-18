@@ -6,6 +6,8 @@ import {AdmissionService} from '../../../services/admission.service';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {ReceptionAgentService} from '../../../services/reception-agent.service';
+import {ReceptionAgent} from '../../../model/reception-agent';
 
 @Component({
   selector: 'app-devis-admission',
@@ -16,10 +18,12 @@ export class DevisAdmissionComponent implements OnInit {
 
   constructor(private auth: AuthenticationService,
               private admissionService: AdmissionService,
+              private receptionAgentService: ReceptionAgentService,
               private snack: MatSnackBar
               ) {
   }
   user$: Observable<User | null>;
+  receptionAgent$: Observable<ReceptionAgent | null>;
   user: User;
   userBirth: string;
   admissionData: any;
@@ -29,6 +33,7 @@ export class DevisAdmissionComponent implements OnInit {
   isLoading = true; // Indicateur de chargement
 
   ngOnInit(): void {
+    this.receptionAgent$ = this.receptionAgentService.getActiveAgentForEntity('admission');
     this.user$ = this.auth.authenticatedUser$;
     this.user$.subscribe(user => {
       if (user) {

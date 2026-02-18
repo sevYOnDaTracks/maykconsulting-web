@@ -7,6 +7,8 @@ import {jsPDF} from 'jspdf';
 import {HebergementService} from '../../../services/hebergement.service';
 import {PdfGeneratorService} from '../../../services/pdf-generator.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {ReceptionAgentService} from '../../../services/reception-agent.service';
+import {ReceptionAgent} from '../../../model/reception-agent';
 
 @Component({
   selector: 'app-hebergement-devis',
@@ -19,10 +21,12 @@ export class HebergementDevisComponent implements OnInit {
     constructor(private auth: AuthenticationService,
                 private hebergementService: HebergementService,
                 private pdfService: PdfGeneratorService,
+                private receptionAgentService: ReceptionAgentService,
                 private snack: MatSnackBar
     ) {
     }
     user$: Observable<User | null>;
+    receptionAgent$: Observable<ReceptionAgent | null>;
     user: User;
     userBirth: string;
     hebergementData: any;
@@ -31,6 +35,7 @@ export class HebergementDevisComponent implements OnInit {
     hasExistingAdmission = false;  // Pour vérifier l'existence d'une admission
     isLoading = true; // Indicateur de chargement
     ngOnInit(): void {
+        this.receptionAgent$ = this.receptionAgentService.getActiveAgentForEntity('hebergement');
         this.user$ = this.auth.authenticatedUser$;
         this.user$.subscribe(user => {
             if (user) {

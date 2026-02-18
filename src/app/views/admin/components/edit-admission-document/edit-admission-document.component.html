@@ -3,7 +3,7 @@
     <form [formGroup]="editForm">
         <div *ngIf="this.data.type === 'bac'">
             <p align="start" class="mt-2 mb-4">Type de Bac : {{ data.admissionData.bacType }}</p>
-            <mat-form-field class="full-width" floatLabel="always" appearance="outline">
+            <mat-form-field class="full-width doc-field" floatLabel="always" appearance="outline">
                 <mat-label>Type de baccalauréat</mat-label>
                 <mat-select formControlName="bacType">
                     <mat-option *ngFor="let bactype of BacType" [value]="bactype.value">{{ bactype.viewValue }}</mat-option>
@@ -11,7 +11,7 @@
             </mat-form-field>
             <mat-divider></mat-divider>
             <p align="start" class="mt-2">Nombre de points :</p>
-            <mat-form-field appearance="outline" class="full-width mt-4">
+            <mat-form-field appearance="outline" class="full-width doc-field mt-4">
                 <mat-label>Nombre de points au Bac</mat-label>
                 <input matInput formControlName="bacAverage">
             </mat-form-field>
@@ -43,7 +43,7 @@
             <div *ngIf="data.admissionData.admissionType === 'CAMPUS_FRANCE'; else otherAdmissionType">
                 <div *ngFor="let sem of [1, 2]" class="semester-group">
                     <h4 align="center" class="mt-2">Semestre {{ sem }}</h4>
-                    <mat-form-field appearance="outline" floatLabel="always" class="full-width mt-2 mb-2">
+                    <mat-form-field appearance="outline" floatLabel="always" class="full-width doc-field mt-2 mb-2">
                         <mat-label>Moyenne Semestre {{ sem }}</mat-label>
                         <input matInput [formControlName]="'averageYear' + data.type + 'Sem' + sem">
                     </mat-form-field>
@@ -80,7 +80,7 @@
                 <div *ngIf="data.type === '2nd' || data.type === 'Premiere' || data.type === 'Terminale'; else universityCursus">
                     <div *ngFor="let term of [1,2,3]" class="semester-group">
                         <h4 align="center" class="mt-2">Trimestre {{ term }}</h4>
-                        <mat-form-field appearance="outline" floatLabel="always" class="full-width mt-2 mb-2">
+                        <mat-form-field appearance="outline" floatLabel="always" class="full-width doc-field mt-2 mb-2">
                             <mat-label>Moyenne Trimestre {{ term }}</mat-label>
                             <input matInput [formControlName]="'termAverage' + data.type + term">
                         </mat-form-field>
@@ -114,7 +114,7 @@
                 <ng-template #universityCursus>
                     <div *ngFor="let sem of [1, 2]" class="semester-group">
                         <h4 align="center" class="mt-2">Semestre {{ sem }}</h4>
-                        <mat-form-field appearance="outline" floatLabel="always" class="full-width mt-2 mb-2">
+                        <mat-form-field appearance="outline" floatLabel="always" class="full-width doc-field mt-2 mb-2">
                             <mat-label>Moyenne Semestre {{ sem }}</mat-label>
                             <input matInput [formControlName]="'averageYear' + data.type + 'Sem' + sem">
                         </mat-form-field>

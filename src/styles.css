@@ -169,3 +169,22 @@
   background: #b91c1c;
   color: #fff;
 }
+
+/* Global fix: remove vertical separator inside outline form fields (MDC + legacy) */
+.mat-mdc-form-field-appearance-outline .mdc-notched-outline__notch {
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+
+.mat-mdc-form-field-appearance-outline .mdc-notched-outline__leading {
+  border-right: 0 !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-gap {
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-start {
+  border-right: 0 !important;
+}

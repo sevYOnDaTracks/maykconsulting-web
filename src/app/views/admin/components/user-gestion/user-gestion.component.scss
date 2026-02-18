@@ -59,6 +59,30 @@ example-form {
   width: 100%;
 }
 
+:host ::ng-deep .user-search-field .mat-mdc-text-field-wrapper {
+  border-radius: 10px;
+  background: #fff !important;
+}
+
+:host ::ng-deep .user-search-field .mdc-line-ripple::before,
+:host ::ng-deep .user-search-field .mdc-line-ripple::after {
+  border-bottom-width: 0 !important;
+}
+
+:host ::ng-deep .user-dialog-content {
+  overflow-x: hidden !important;
+}
+
+:host ::ng-deep .dialog-field .mat-mdc-text-field-wrapper {
+  border-radius: 10px;
+  background: #fff !important;
+}
+
+:host ::ng-deep .dialog-field .mdc-line-ripple::before,
+:host ::ng-deep .dialog-field .mdc-line-ripple::after {
+  border-bottom-width: 0 !important;
+}
+
 .table-container {
   width: 100%;
   overflow-x: auto;

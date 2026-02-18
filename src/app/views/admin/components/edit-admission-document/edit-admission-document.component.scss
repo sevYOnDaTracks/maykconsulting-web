@@ -1,5 +1,6 @@
 .mat-dialog-content {
-  min-width: 400px;
+  min-width: min(420px, 88vw);
+  max-width: 92vw;
 }
 
 .full-width {
@@ -23,4 +24,33 @@ mat-form-field {
 mat-dialog-actions {
   justify-content: space-between;
   padding: 10px 24px;
+}
+
+:host ::ng-deep .doc-field .mat-mdc-text-field-wrapper {
+  border-radius: 8px;
+}
+
+:host ::ng-deep .doc-field .mdc-notched-outline__notch {
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+
+:host ::ng-deep .doc-field .mdc-notched-outline__leading {
+  border-right: 0 !important;
+}
+
+:host ::ng-deep .doc-field .mdc-notched-outline__leading,
+:host ::ng-deep .doc-field .mdc-notched-outline__notch,
+:host ::ng-deep .doc-field .mdc-notched-outline__trailing {
+  border-color: rgba(30, 60, 114, 0.35) !important;
+}
+
+:host ::ng-deep .doc-field.mdc-text-field--focused .mdc-notched-outline__leading,
+:host ::ng-deep .doc-field.mdc-text-field--focused .mdc-notched-outline__notch,
+:host ::ng-deep .doc-field.mdc-text-field--focused .mdc-notched-outline__trailing,
+:host ::ng-deep .doc-field.mat-focused .mdc-notched-outline__leading,
+:host ::ng-deep .doc-field.mat-focused .mdc-notched-outline__notch,
+:host ::ng-deep .doc-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #1e3c72 !important;
+  border-width: 2px !important;
 }

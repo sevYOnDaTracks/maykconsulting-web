@@ -1,4 +1,4 @@
-<div class="payment-page">
+﻿<div class="payment-page">
   <div class="header">
     <button mat-stroked-button color="primary" [routerLink]="returnRoute">
       <mat-icon>arrow_back</mat-icon>
@@ -9,16 +9,16 @@
 
   <form [formGroup]="paymentForm" class="form-card mat-elevation-z2">
     <div class="form-grid">
-      <mat-form-field appearance="outline">
-        <mat-label>Service demandé</mat-label>
+      <mat-form-field appearance="outline" class="payment-field" floatLabel="always">
+        <mat-label>Service demande</mat-label>
         <mat-select formControlName="module">
           <mat-option value="admission">Admission</mat-option>
-          <mat-option value="hebergement">Hébergement</mat-option>
+          <mat-option value="hebergement">Hebergement</mat-option>
           <mat-option value="finance">Garant financier</mat-option>
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="payment-field" floatLabel="always">
         <mat-label>Service de paiement</mat-label>
         <mat-select formControlName="servicePaiement">
           <mat-option value="Western Union">Western Union</mat-option>
@@ -29,18 +29,18 @@
       </mat-form-field>
 
       <ng-container *ngIf="!isOtherServiceSelected(paymentForm.value.servicePaiement); else noCodeNeeded">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="payment-field" floatLabel="always">
           <mat-label>Code de retrait</mat-label>
-          <input matInput formControlName="codeRetrait" placeholder="XXXX XXX XXX">
+          <input matInput formControlName="codeRetrait" placeholder="XXXX XXX XXX" />
         </mat-form-field>
       </ng-container>
       <ng-template #noCodeNeeded>
-        <div class="mat-body-2" style="align-self: center;">Pas de code requis pour ce service.</div>
+        <div class="mat-body-2 no-code">Pas de code requis pour ce service.</div>
       </ng-template>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Montant en (€)</mat-label>
-        <input matInput type="number" step="0.01" inputmode="decimal" formControlName="montantPaiement" min="1" placeholder="Ex: 250">
+      <mat-form-field appearance="outline" class="payment-field" floatLabel="always">
+        <mat-label>Montant en (EUR)</mat-label>
+        <input matInput type="number" step="0.01" inputmode="decimal" formControlName="montantPaiement" min="1" placeholder="Ex: 250" />
       </mat-form-field>
     </div>
 
@@ -52,17 +52,18 @@
           <mat-icon>visibility</mat-icon> Voir
         </button>
       </div>
-      <input type="file" (change)="onFileSelected($event)" hidden #fileInput accept="image/*,application/pdf">
+
+      <input type="file" (change)="onFileSelected($event)" hidden #fileInput accept="image/*,application/pdf" />
       <button mat-stroked-button color="primary" (click)="fileInput.click()">
         <mat-icon>cloud_upload</mat-icon> Justificatif
       </button>
-      <p class="muted">Image ou PDF · max 8 Mo</p>
+      <p class="muted">Image ou PDF - max 8 Mo</p>
 
       <div *ngIf="file || filePreview" class="preview">
-        <img *ngIf="filePreview" [src]="filePreview" alt="Justificatif">
+        <img *ngIf="filePreview" [src]="filePreview" alt="Justificatif" />
         <div *ngIf="!filePreview && file" class="pdf-box">
-          <img src="assets/images/pdf.png" alt="PDF">
-          <span>PDF sélectionné</span>
+          <img src="assets/images/pdf.png" alt="PDF" />
+          <span>PDF selectionne</span>
         </div>
         <button mat-button color="accent" (click)="removeFile()">
           <mat-icon>delete</mat-icon> Retirer

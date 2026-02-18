@@ -47,10 +47,16 @@ export class AdmissionUserDetailComponent implements OnInit {
 
   loadUserAdmission(userId: string): void {
     this.admissionService.getAdmissionByUserId(userId).then(data => {
+      if (!data) {
+        this.userAdmission = null;
+        this.formattedASkDemande = 'Non renseignee';
+        return;
+      }
       this.userAdmission = {
         ...data,
         nomUniversite: data.nomUniversite || ''
       };
+      this.formattedASkDemande = this.formatAnyDate(data?.dateDemande);
       this.paymentDetails = {
         service: data?.paiementService || '',
         code: data?.paiementCode || '',
@@ -82,6 +88,39 @@ export class AdmissionUserDetailComponent implements OnInit {
       return date.toLocaleDateString('fr-FR');
     }
     return '';
+  }
+
+  private formatAnyDate(value: any): string {
+    if (!value) {
+      return 'Non renseignee';
+    }
+
+    let date: Date | null = null;
+
+    if (value?.seconds) {
+      date = new Date(value.seconds * 1000);
+    } else if (typeof value?.toDate === 'function') {
+      date = value.toDate();
+    } else if (value instanceof Date) {
+      date = value;
+    } else {
+      const parsed = new Date(value);
+      if (!Number.isNaN(parsed.getTime())) {
+        date = parsed;
+      }
+    }
+
+    if (!date) {
+      return 'Non renseignee';
+    }
+
+    return date.toLocaleString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 
   viewDocument(url: string): void {

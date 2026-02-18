@@ -6,6 +6,8 @@ import html2canvas from 'html2canvas';
 import {jsPDF} from 'jspdf';
 import {FinanceService} from '../../../services/finance.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {ReceptionAgentService} from '../../../services/reception-agent.service';
+import {ReceptionAgent} from '../../../model/reception-agent';
 
 @Component({
   selector: 'app-garant',
@@ -17,10 +19,12 @@ export class GarantComponent implements OnInit {
 
   constructor(private auth: AuthenticationService,
               private financeService: FinanceService,
+              private receptionAgentService: ReceptionAgentService,
               private snack: MatSnackBar
   ) {
   }
   user$: Observable<User | null>;
+  receptionAgent$: Observable<ReceptionAgent | null>;
   user: User;
   userBirth: string;
   financeData: any;
@@ -29,6 +33,7 @@ export class GarantComponent implements OnInit {
   hasExistingAdmission = false;  // Pour vérifier l'existence d'une admission
   isLoading = true; // Indicateur de chargement
   ngOnInit(): void {
+    this.receptionAgent$ = this.receptionAgentService.getActiveAgentForEntity('finance');
     this.user$ = this.auth.authenticatedUser$;
     this.user$.subscribe(user => {
       if (user) {

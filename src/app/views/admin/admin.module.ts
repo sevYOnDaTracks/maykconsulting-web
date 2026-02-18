@@ -64,6 +64,7 @@ import {MessageGestionComponent} from './components/message-gestion/message-gest
 import {UserDetailComponent} from './components/user-detail/user-detail.component';
 import {PaymentPageComponent} from './components/payment-page/payment-page.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {ReceptionAgentGestionComponent} from './components/reception-agent-gestion/reception-agent-gestion.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
       AdmissionUserDetailComponent,
       MessageGestionComponent,
       UserDetailComponent,
-      PaymentPageComponent
+      PaymentPageComponent,
+      ReceptionAgentGestionComponent
   ],
     imports: [
         CommonModule,

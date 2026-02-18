@@ -117,5 +117,48 @@
   color: #fff; /* Assure que le titre est en blanc */
 }
 
+/* Supprime le trait vertical de l'encoche du label sur les champs outline */
+:host ::ng-deep .mat-mdc-form-field-appearance-outline .mdc-notched-outline__notch {
+  border-right: none !important;
+  border-left: none !important;
+}
 
+/* Supprime aussi la séparation entre le segment gauche et l'encoche */
+:host ::ng-deep .mat-mdc-form-field-appearance-outline .mdc-notched-outline__leading {
+  border-right: none !important;
+}
 
+/* Version robuste: retire totalement l'encoche sur le select Pays */
+:host ::ng-deep .country-select-no-notch .mdc-notched-outline__notch {
+  max-width: 0 !important;
+  border-right: 0 !important;
+  border-left: 0 !important;
+  padding: 0 !important;
+}
+
+:host ::ng-deep .country-select-no-notch .mdc-notched-outline__leading {
+  border-right: 0 !important;
+}
+
+/* Compatibilite champs outline legacy Angular Material */
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-gap {
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-start {
+  border-right: 0 !important;
+}
+
+.admission-overview-card .card-body {
+  padding: 1rem 1.25rem;
+}
+
+.admission-overview-card .info-line {
+  margin: 0 0 0.55rem;
+  line-height: 1.35;
+}
+
+.admission-overview-card .info-line:last-child {
+  margin-bottom: 0;
+}

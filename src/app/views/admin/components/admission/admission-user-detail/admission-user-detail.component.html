@@ -114,7 +114,7 @@
             <mat-card appearance="outlined" class="card mt-2 mb-2 p-4" style="margin: 25px">
                     <div class="card-body">
                         <h5><strong><i class="fa fa-file-alt"></i> Etat de la demande :</strong> </h5> <br>
-                        <mat-form-field style="width: 100%" appearance="outline">
+                        <mat-form-field style="width: 100%" appearance="fill">
                             <mat-label>Etat :</mat-label>
                             <mat-select [(ngModel)]="userAdmission.etatDemande" (selectionChange)="changeAdmissionState();">
                                 <mat-option [value]="0">En attente de paiement pour prise en charge</mat-option>
@@ -129,7 +129,7 @@
                 </div>
 
                 <div class="card-body" *ngIf="userAdmission.etatDemande === 3" style="display: flex; align-items: center; gap: 10px;">
-                    <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-form-field appearance="fill" style="flex: 1;">
                         <mat-label>Nom de l'université</mat-label>
                         <input
                                 matInput
@@ -169,13 +169,31 @@
                 </ng-template>
                 </div>
             </mat-card>
-            <mat-card appearance="outlined" class="card mt-2 mb-2 p-4" style="margin: 25px">
+            <mat-card appearance="outlined" class="card mt-2 mb-2 p-4 summary-card" style="margin: 25px">
                 <div class="card-body">
-                    <div><h5>Pays : {{ userAdmission?.country }}</h5></div>
-                    <div><h5>Type d'admission : {{ userAdmission?.admissionType }}</h5></div>
-                    <div><h5>Date demande : {{ formattedASkDemande }}</h5></div>
-                    <div><h5>Bac Type : <strong> {{ userAdmission?.bacType }} </strong></h5></div>
-                    <div><h5>Filière : {{ userAdmission?.fieldOfStudy }}</h5></div>
+                    <h5 class="summary-title">Synthèse de la demande</h5>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="summary-label">Pays</span>
+                            <strong class="summary-value">{{ userAdmission?.country || 'Non renseigné' }}</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Type d'admission</span>
+                            <strong class="summary-value">{{ userAdmission?.admissionType || 'Non renseigné' }}</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Date de demande</span>
+                            <strong class="summary-value">{{ formattedASkDemande }}</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Type de Bac</span>
+                            <strong class="summary-value">{{ userAdmission?.bacType || 'Non renseigné' }}</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Filière</span>
+                            <strong class="summary-value">{{ userAdmission?.fieldOfStudy || 'Non renseignée' }}</strong>
+                        </div>
+                    </div>
                 </div>
             </mat-card>
 
@@ -189,7 +207,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <mat-form-field appearance="outline" class="w-100">
+                            <mat-form-field appearance="fill" class="w-100">
                                 <mat-label>Service de paiement</mat-label>
                                 <mat-select [(ngModel)]="paymentDetails.service">
                                     <mat-option value="Western Union">Western Union</mat-option>
@@ -200,7 +218,7 @@
                             </mat-form-field>
                         </div>
                         <div class="col-md-6">
-                            <mat-form-field appearance="outline" class="w-100">
+                            <mat-form-field appearance="fill" class="w-100">
                                 <mat-label>Code de paiement</mat-label>
                                 <input matInput [(ngModel)]="paymentDetails.code" placeholder="Code / référence">
                             </mat-form-field>
@@ -208,13 +226,13 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <mat-form-field appearance="outline" class="w-100">
+                            <mat-form-field appearance="fill" class="w-100">
                                 <mat-label>Montant (€)</mat-label>
                                 <input matInput type="number" min="0" step="0.01" [(ngModel)]="paymentDetails.amount">
                             </mat-form-field>
                         </div>
                         <div class="col-md-6">
-                            <mat-form-field appearance="outline" class="w-100">
+                            <mat-form-field appearance="fill" class="w-100">
                                 <mat-label>Date de paiement</mat-label>
                                 <input matInput type="datetime-local" [(ngModel)]="paymentDetails.date">
                             </mat-form-field>
@@ -228,7 +246,7 @@
                     </div>
                     <div class="card-body">
                         <h6 class="mb-2"><strong>Argent retiré ? :</strong></h6>
-                        <mat-form-field style="width: 100%" appearance="outline">
+                        <mat-form-field style="width: 100%" appearance="fill">
                             <mat-select [(ngModel)]="userAdmission.cashout" (selectionChange)="changeCashoutStatus()">
                                 <mat-option [value]="0">No</mat-option>
                                 <mat-option [value]="1">Yes</mat-option>

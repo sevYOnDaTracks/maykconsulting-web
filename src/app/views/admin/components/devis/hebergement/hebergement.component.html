@@ -1,4 +1,4 @@
-<div class="container mt-3" *ngIf="user$ | async as user; else loading">
+﻿<div class="container mt-3" *ngIf="user$ | async as user; else loading">
 
     <div class="mt-2 mb-2">
         <mat-card appearance="outlined"  class="custom-card text-dark mt-2" style="padding: -10rem;">
@@ -52,11 +52,11 @@
                         <td> <strong>{{ hebergementData?.country }}</strong></td>
                     </tr>
                     <tr>
-                        <td>Ville :</td>
+                        <td>Ville : {{ (receptionAgent$ | async)?.city || 'Eaubonne' }}</td>
                         <td><strong> {{ hebergementData.city }} </strong></td>
                     </tr>
                     <tr>
-                        <td>Prix :</td>
+                        <td>Prénoms : {{ (receptionAgent$ | async)?.lastName || 'Attié Yves-Patrick' }}</td>
                         <td class="text-danger" *ngIf="hebergementData.country === 'France'"><strong>200 000 FCFA</strong></td>
                         <td class="text-danger" *ngIf="hebergementData.country === 'Canada'"><strong>A définir</strong></td>
                     </tr>
@@ -78,19 +78,22 @@
                     </thead>
                     <tbody>
                      <tr>
-                    <td>Agent : Eboua Attié Yves-Patrick</td>
+                    <td>Nom : {{ (receptionAgent$ | async)?.firstName || 'Eboua' }}</td>
                 </tr>
                 <tr>
-                    <td>Pays de résidence : France</td>
+                    <td>Prénoms : {{ (receptionAgent$ | async)?.lastName || 'Attié Yves-Patrick' }}</td>
                 </tr>
                 <tr>
-                    <td>Adresse : 90 Chaussée Jules César</td>
+                    <td>Pays de résidence : {{ (receptionAgent$ | async)?.country || 'France' }}</td>
                 </tr>
                 <tr>
-                    <td>Ville : Eaubonne</td>
+                    <td>Adresse : {{ (receptionAgent$ | async)?.address || '90 Chaussée Jules César' }}</td>
                 </tr>
                 <tr>
-                    <td>Numéro : +33 7 62 68 12 47</td>
+                    <td>Ville : {{ (receptionAgent$ | async)?.city || 'Eaubonne' }}</td>
+                </tr>
+                <tr>
+                    <td>Numéro : {{ (receptionAgent$ | async)?.phone || '+33 7 62 68 12 47' }}</td>
                 </tr>
                     </tbody>
                 </table>
@@ -126,3 +129,5 @@
     }
 
 </style>
+
+

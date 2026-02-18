@@ -25,7 +25,7 @@
                 <mat-card-content>
                    <div align="center"> <ul class=" flexjustify-content-center">Suivez les étapes ci-dessous pour soumettre votre demande d'admission sur <br> <strong>Mayk - Consulting</strong> </ul></div>
                     <ul>
-                        <li>Choisissez votre pays de destination pour les études (France ou Canada) 🇫🇷 🇨🇦   .</li>
+                        <li>Choisissez votre pays de destination pour les études (France ou Canada).</li>
                         <li>Sélectionnez le type d'admission qui correspond à votre situation.</li>
                         <li>Indiquez votre filière d'étude et votre niveau d'éducation actuel.</li>
                         <li>Fournissez les informations demandées pour chaque étape, y compris les justificatifs et moyennes (Trimestre, Semestre, nombre de points au BAC.)</li>
@@ -37,6 +37,7 @@
                     <br>
                     <ul>
                         <p>Notre service de consulting se chargera de tout votre processus d'admission une fois que vous aurez payé la somme nécessaire faisant office de frais de service pour le traitement de votre demande, qui s'élève à <strong class="text-danger">200 000 FCFA</strong> pour la France et <strong class="text-danger">1 000 000 FCFA</strong> Pour le Canada (Comprenant tout les frais d'admissions ainsi que les frais du CAQ : Certificat d'admission au Québec si admission au Québec). Cette somme est non remboursable, même en cas de refus d'admission, ce qui ne sera probablement pas le cas grâce à la qualité des services que nous proposons.</p>
+                        <br><br> <strong class="flex justify-content-center">Attention, Ces frais ne sont pas remboursables, même en cas de refus.</strong>
                     </ul>
                 </mat-card-content>
             </mat-card>
@@ -49,9 +50,8 @@
                 <mat-card-title class="text-center mb-4 mt-3"></mat-card-title>
                 <mat-card-content>
                     <form [formGroup]="educationForm">
-                        <mat-form-field appearance="outline" class="full-width">
-                            <mat-label>Pays</mat-label>
-                            <mat-select formControlName="country" (selectionChange)="onCountryChange($event.value)">
+                        <mat-form-field appearance="fill" class="full-width country-select-no-notch">
+                            <mat-select placeholder="Pays*" formControlName="country" (selectionChange)="onCountryChange($event.value)">
                                 <mat-option *ngFor="let country of countries" [value]="country.value">
                                     {{ country.viewValue }}
                                 </mat-option>
@@ -61,7 +61,7 @@
                         <mat-vertical-stepper linear>
                             <mat-step *ngIf="selectedCountry" [stepControl]="educationForm?.get('admissionType')">
                                 <ng-template matStepLabel>Type d'Admission ({{ selectedAdmissionType || 'Sélectionnez' }})</ng-template>
-                                <mat-form-field appearance="outline" class="full-width">
+                                <mat-form-field appearance="fill" class="full-width">
                                     <mat-select formControlName="admissionType" (selectionChange)="onAdmissionTypeChange($event.value)">
                                         <mat-option *ngFor="let type of admissionTypes" [value]="type.value">
                                             {{ type.viewValue }}
@@ -75,7 +75,7 @@
 
                             <mat-step *ngIf="selectedAdmissionType && selectedCountry" [stepControl]="educationForm?.get('fieldOfStudy')">
                                 <ng-template matStepLabel>Filière ({{ selectedField || 'Renseignez' }})</ng-template>
-                                <mat-form-field appearance="outline" class="full-width">
+                                <mat-form-field appearance="fill" class="full-width">
                                     <input matInput placeholder="Filière" formControlName="fieldOfStudy" (input)="onFieldOfStudyChange($event.target.value)">
                                 </mat-form-field>
                                 <div class="stepper-buttons">
@@ -86,7 +86,7 @@
 
                             <mat-step *ngIf="selectedAdmissionType && selectedCountry" [stepControl]="educationForm?.get('educationLevel')">
                                 <ng-template matStepLabel>Niveau d'étude actuel ({{ selectedLevel || 'Sélectionnez' }})</ng-template>
-                                <mat-form-field appearance="outline" class="full-width">
+                                <mat-form-field appearance="fill" class="full-width">
                                     <mat-select formControlName="educationLevel" (selectionChange)="onEducationLevelChange($event.value)">
                                         <mat-option *ngFor="let level of educationLevels" [value]="level.value">
                                             {{ level.viewValue }}
@@ -121,7 +121,7 @@
                                                 <input type="file" #fileInput hidden (change)="onFileSelected($event, 'term' + year + term + 'Url')">
                                                 <span *ngIf="fileNames['term' + year + term + 'Url']">{{ fileNames['term' + year + term + 'Url'] }}</span>
                                             </div>
-                                            <mat-form-field appearance="outline" floatLabel="always" class="col-lg-6 col-md-6 col-sm-12">
+                                            <mat-form-field appearance="fill"  class="col-lg-6 col-md-6 col-sm-12">
                                                 <mat-label>Moyenne Trimestre {{ term }}</mat-label>
                                                 <input type="number" matInput [formControlName]="'termAverage' + year + term">
                                                 <mat-hint>Moyenne du Trimestre {{term}} obtenue /20</mat-hint>
@@ -148,7 +148,7 @@
                                             <input type="file" #bacFileInput hidden (change)="onBacFileSelected($event)">
                                             <span *ngIf="bacFileName">{{ bacFileName }}</span>
                                         </div>
-                                        <mat-form-field appearance="outline" floatLabel="always" class="col-lg-6 col-md-6 col-sm-12">
+                                        <mat-form-field appearance="fill"  class="col-lg-6 col-md-6 col-sm-12">
                                             <mat-label>Moyenne générale</mat-label>
                                             <input type="number" matInput formControlName="bacAverage">
                                             <mat-hint>Mettre le nombre de points obtenu</mat-hint>
@@ -170,7 +170,7 @@
                                             <input type="file" #fileInput hidden (change)="onFileSelected($event, 'year' + year + 'Sem' + Sem )">
                                             <span *ngIf="fileNames['year' + year + 'Sem' + Sem ]">{{ fileNames['year' + year + 'Sem' + Sem ] }}</span>
                                         </div>
-                                        <mat-form-field appearance="outline" floatLabel="always" class="col-lg-6 col-md-6 col-sm-12">
+                                        <mat-form-field appearance="fill"  class="col-lg-6 col-md-6 col-sm-12">
                                             <mat-label>Moyenne Semestre {{ Sem }}</mat-label>
                                             <input matInput type="number" [formControlName]="'averageYear' + year + 'Sem' + Sem ">
                                             <mat-hint>Moyenne du semestre {{Sem}} obtenue /20</mat-hint>
@@ -206,7 +206,7 @@
                                             <span *ngIf="campusFranceFileName" class="file-name">{{ campusFranceFileName }}</span>
                                             <br>
                                         </div>
-                                        <mat-form-field appearance="outline" floatLabel="always" class="col-lg-6 col-md-6 col-sm-12">
+                                        <mat-form-field appearance="fill"  class="col-lg-6 col-md-6 col-sm-12">
                                             <mat-label>Nombre de point </mat-label>
                                             <input matInput type="number" formControlName="bacAverage">
                                             <mat-hint>Mettre le nombre de points obtenu</mat-hint>
@@ -229,7 +229,7 @@
                                                 <input type="file" #fileInput hidden (change)="onFileSelected($event, 'year' + year + 'Sem' + Sem )">
                                                 <span *ngIf="fileNames['year' + year + 'Sem' + Sem ]">{{ fileNames['year' + year + 'Sem' + Sem ] }}</span>
                                             </div>
-                                            <mat-form-field appearance="outline" floatLabel="always" class="col-lg-6 col-md-6 col-sm-12">
+                                            <mat-form-field appearance="fill"  class="col-lg-6 col-md-6 col-sm-12">
                                                 <mat-label>Moyenne Semestre {{ Sem }}</mat-label>
                                                 <input matInput type="number" [formControlName]="'averageYear' + year + 'Sem' + Sem ">
                                                 <mat-hint>Moyenne du semestre {{Sem}} obtenue /20</mat-hint>
@@ -293,7 +293,7 @@
                                     <br>
                                     <p>Merci de joindre votre CV ainsi que tous les justificatif de stage associés à votre parcours <u style="color: #e80564">dans le même fichier PDF.</u></p>
                                     <br>
-                                    <mat-form-field appearance="outline" floatLabel="always" class="full-width">
+                                    <mat-form-field appearance="fill"  class="full-width">
                                         <input type="file" matInput (change)="onCVFileSelected($event)" />
                                         <mat-hint>Joindre votre CV</mat-hint>
                                     </mat-form-field>
@@ -314,7 +314,7 @@
                             <!-- Commentaire et message particulier Relatif à votre candidature -->
                             <mat-step *ngIf="selectedLevel" [stepControl]="educationForm.get('comments')">
                                 <ng-template matStepLabel>Un commentaire ?</ng-template>
-                                <mat-form-field appearance="outline" floatLabel="always" class="full-width">
+                                <mat-form-field appearance="fill"  class="full-width">
                                     <textarea matInput formControlName="comments" rows="5"></textarea>
                                     <mat-hint>Vous pouvez nous laisser des consignes</mat-hint>
                                 </mat-form-field>
@@ -499,26 +499,26 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <div class="card mb-4">
+                <div class="card mb-4 admission-overview-card">
                     <div class="card-header text-center" >
                         Votre demande
                     </div>
                     <div class="card-body">
-                        <p class="mt-2"><strong>Pays d'étude :</strong> {{ admissionData.country }}</p>
-                        <p><strong>Admission :</strong> {{ admissionData.admissionType }}</p>
-                        <p><strong>Date de la demande :</strong> {{ formattedDate }} </p>
+                        <p class="info-line"><strong>Pays d'étude :</strong> {{ admissionData.country }}</p>
+                        <p class="info-line"><strong>Admission :</strong> {{ admissionData.admissionType }}</p>
+                        <p class="info-line"><strong>Date de la demande :</strong> {{ formattedDate }} </p>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card mb-4">
+                <div class="card mb-4 admission-overview-card">
                     <div class="card-header text-center" >
                         Votre Cursus
                     </div>
                     <div class="card-body">
-                        <p class="mt-2"><strong>Type de Baccalauréat :</strong> {{ admissionData.bacType }}</p>
-                        <p class="mt-2"><strong>Filière d'étude :</strong> {{ admissionData.fieldOfStudy }}</p>
-                        <p class="mt-2"><strong>Niveau d'étude :</strong> {{ admissionData.educationLevel }}</p>
+                        <p class="info-line"><strong>Type de Baccalauréat :</strong> {{ admissionData.bacType }}</p>
+                        <p class="info-line"><strong>Filière d'étude :</strong> {{ admissionData.fieldOfStudy }}</p>
+                        <p class="info-line"><strong>Niveau d'étude :</strong> {{ admissionData.educationLevel }}</p>
                     </div>
                 </div>
             </div>
@@ -663,3 +663,4 @@
         z-index: 1000;
     }
 </style>
+

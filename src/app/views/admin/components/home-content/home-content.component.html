@@ -1,7 +1,7 @@
-<div class="container p-3 mt-5" *ngIf="user$ | async as user; else loading">
+﻿<div class="container p-3 mt-5" *ngIf="user$ | async as user; else loading">
     <div class="row justify-content-center">
         <div class="text-center">
-            <h2>Hello  {{ user.firstName }} {{ user.lastName }} !</h2>
+            <h1 class="welcome-title">Hello {{ user.firstName }} {{ user.lastName }} !</h1>
         </div>
     </div>
     <div *ngIf="emailVerified === false" class="alert alert-danger text-center mt-4 mb-4">
@@ -74,8 +74,31 @@
                     <mat-card-subtitle *ngIf="!user.identityPhotoUrl" class=" alert alert-warn p-2" style="background-color: #fff3cd;justify-content: center">
                         Hey, nous n'avons toujours pas reçu ta photo d'identité.
                     </mat-card-subtitle>
+                    <input
+                            #quickIdentityInput
+                            type="file"
+                            accept="image/*"
+                            hidden
+                            (change)="onQuickIdentityPhotoSelected($event, user)"
+                    />
                     <p class="mt-2">Souhaitez-vous gérer vos informations ? C'est par ici !</p>
-                    <button mat-stroked-button routerLink="/admin/user" style="color:#1e3c72">Profil<mat-icon>person</mat-icon></button>
+                    <div class="profile-actions-row">
+                        <button
+                                *ngIf="!user.identityPhotoUrl"
+                                mat-flat-button
+                                class="quick-upload-btn"
+                                type="button"
+                                [disabled]="isUploadingIdentityPhoto"
+                                (click)="triggerQuickIdentityUpload(quickIdentityInput)"
+                        >
+                            {{ isUploadingIdentityPhoto ? 'Chargement...' : 'Mettre une photo' }}
+                            <mat-icon>cloud_upload</mat-icon>
+                        </button>
+                        <button mat-stroked-button routerLink="/admin/user" style="color:#1e3c72">
+                            Profil
+                            <mat-icon>person</mat-icon>
+                        </button>
+                    </div>
                 </mat-card-content>
             </mat-card>
         </div>
@@ -94,3 +117,5 @@
         <mat-spinner diameter="90"></mat-spinner>
     </div>
 </ng-template>
+
+

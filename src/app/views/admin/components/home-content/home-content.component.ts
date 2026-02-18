@@ -19,6 +19,7 @@ export class HomeContentComponent implements OnInit {
   images = [200, 533, 807, 124].map((n) => `https://picsum.photos/id/${n}/900/500`);
 
   user$: Observable<User | null>;
+  isUploadingIdentityPhoto = false;
   emailVerified = false;
   hasExistingAdmissionNotPay = false;
   hasExistingAdmission = false;
@@ -84,5 +85,41 @@ export class HomeContentComponent implements OnInit {
             });
       }
     });
+  }
+
+  triggerQuickIdentityUpload(fileInput: HTMLInputElement): void {
+    fileInput.click();
+  }
+
+  async onQuickIdentityPhotoSelected(event: Event, user: User): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files && input.files[0];
+    if (!file) {
+      return;
+    }
+
+    const maxSize = 8 * 1024 * 1024;
+    if (!file.type.startsWith('image/')) {
+      this.snackBar.open('Le fichier doit etre une image.', 'Fermer', { duration: 3000 });
+      input.value = '';
+      return;
+    }
+    if (file.size > maxSize) {
+      this.snackBar.open('Le fichier doit etre inferieur a 8 Mo.', 'Fermer', { duration: 3000 });
+      input.value = '';
+      return;
+    }
+
+    this.isUploadingIdentityPhoto = true;
+    try {
+      const documentUrl = await this.auth.uploadDocument(file, user.uid, 'identityPhoto');
+      await this.auth.updateUserDocument(user.uid, 'identityPhoto', documentUrl);
+      this.snackBar.open('Photo de profil mise a jour.', 'OK', { duration: 2500 });
+    } catch (error) {
+      this.snackBar.open('Echec du telechargement. Reessayez.', 'Fermer', { duration: 3500 });
+    } finally {
+      this.isUploadingIdentityPhoto = false;
+      input.value = '';
+    }
   }
 }

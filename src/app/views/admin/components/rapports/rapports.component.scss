@@ -21,6 +21,16 @@
   flex-wrap: wrap;
 }
 
+/* Supprime la ligne verticale interne du champ date-range (outline notch) */
+:host ::ng-deep .report-range-field .mdc-notched-outline__notch {
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+
+:host ::ng-deep .report-range-field .mdc-notched-outline__leading {
+  border-right: 0 !important;
+}
+
 .graphs {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

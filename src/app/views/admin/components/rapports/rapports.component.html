@@ -5,7 +5,7 @@
   </div>
 
   <div class="filters">
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="report-range-field">
       <mat-label>Filtrer par période</mat-label>
       <mat-date-range-input [formGroup]="dateForm" [rangePicker]="picker" (dateChange)="onDateChange()">
         <input matStartDate formControlName="start" placeholder="Début">
