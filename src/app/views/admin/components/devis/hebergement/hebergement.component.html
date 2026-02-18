@@ -14,7 +14,7 @@
     <mat-card appearance="outlined" class="mb-2">
         <mat-card-content>
             <div class="d-flex justify-content-between align-items-center">
-                <button routerLink="/admin/hebergement/" mat-flat-button>
+                <button routerLink="/admin/hebergement/" mat-flat-button class="mk-nav-gradient-btn">
                     <mat-icon>arrow_left</mat-icon> Revenir
                 </button>
                 <button (click)="downloadPDF()" mat-stroked-button>
@@ -48,15 +48,15 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>Hébergement </td>
+                        <td>Hébergement : </td>
                         <td> <strong>{{ hebergementData?.country }}</strong></td>
                     </tr>
                     <tr>
-                        <td>Ville : {{ (receptionAgent$ | async)?.city || 'Eaubonne' }}</td>
+                        <td>Ville : </td>
                         <td><strong> {{ hebergementData.city }} </strong></td>
                     </tr>
                     <tr>
-                        <td>Prénoms : {{ (receptionAgent$ | async)?.lastName || 'Attié Yves-Patrick' }}</td>
+                        <td>Montant à payer : </td>
                         <td class="text-danger" *ngIf="hebergementData.country === 'France'"><strong>200 000 FCFA</strong></td>
                         <td class="text-danger" *ngIf="hebergementData.country === 'Canada'"><strong>A définir</strong></td>
                     </tr>

@@ -204,10 +204,28 @@ export class AdmissionComponent implements OnInit , AfterViewInit {
     return Array.from({ length: year }, (_, i) => i + 1);
   }
 
+  private isAllowedUploadType(file: File): boolean {
+    return file.type.startsWith('image/') || file.type === 'application/pdf';
+  }
+
+  private ensureAllowedUploadFile(file: File): boolean {
+    if (!this.isAllowedUploadType(file)) {
+      this.snackBar.open('Le fichier doit etre une image ou un PDF.', 'Fermer', {
+        duration: 3000,
+      });
+      return false;
+    }
+    return true;
+  }
+
   async onFileSelected(event: Event, key: string): Promise<void> {
     const input = event.target as HTMLInputElement;
     if (input.files.length > 0) {
       const file = input.files[0];
+      if (!this.ensureAllowedUploadFile(file)) {
+        input.value = '';
+        return;
+      }
       this.fileNames[key] = file.name;
       const fileUrl = await this.uploadFile(file, key);
       this.educationForm.patchValue({ [key]: fileUrl }); // Update form group with documentUrl
@@ -218,6 +236,10 @@ export class AdmissionComponent implements OnInit , AfterViewInit {
   onCVFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
+      if (!this.ensureAllowedUploadFile(file)) {
+        (event.target as HTMLInputElement).value = '';
+        return;
+      }
       this.cvFileName = file.name;
       // Appelle la méthode d'upload pour le fichier CV
       this.uploadFile(file, 'cv');
@@ -228,6 +250,10 @@ export class AdmissionComponent implements OnInit , AfterViewInit {
     const input = event.target as HTMLInputElement;
     if (input.files.length > 0) {
       const file = input.files[0];
+      if (!this.ensureAllowedUploadFile(file)) {
+        input.value = '';
+        return;
+      }
       this.bacFileName = file.name;
       this.uploadFile(file, 'bac');
     }
@@ -237,6 +263,10 @@ export class AdmissionComponent implements OnInit , AfterViewInit {
     const input = event.target as HTMLInputElement;
     if (input.files.length > 0) {
       const file = input.files[0];
+      if (!this.ensureAllowedUploadFile(file)) {
+        input.value = '';
+        return;
+      }
       this.campusFranceFileName = file.name;
       this.uploadFile(file, 'bac');
     }
@@ -244,6 +274,9 @@ export class AdmissionComponent implements OnInit , AfterViewInit {
 
   async uploadFile(file: File, documentType: string): Promise<string> {
     try {
+      if (!this.ensureAllowedUploadFile(file)) {
+        throw new Error('Invalid file type');
+      }
       const currentUser = await this.auth.getCurrentUser();
       if (currentUser) {
         const userId = currentUser.uid;
@@ -398,13 +431,17 @@ export class AdmissionComponent implements OnInit , AfterViewInit {
     // Crée un élément de fichier dynamique
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
-    fileInput.accept = '.pdf, .doc, .docx';  // Limite les types de fichiers si nécessaire
+    fileInput.accept = 'image/*,application/pdf';
 
     // Ajoute un écouteur d'événement pour gérer la sélection du fichier
     fileInput.onchange = async (event: Event) => {
       const input = event.target as HTMLInputElement;
       if (input.files && input.files.length > 0) {
         const file = input.files[0];
+        if (!this.ensureAllowedUploadFile(file)) {
+          input.value = '';
+          return;
+        }
         this.cvFileName = file.name;
 
         try {
@@ -438,13 +475,17 @@ export class AdmissionComponent implements OnInit , AfterViewInit {
     // Crée un élément de fichier dynamique
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
-    fileInput.accept = '.pdf, .doc, .docx';  // Limite les types de fichiers si nécessaire
+    fileInput.accept = 'image/*,application/pdf';
 
     // Ajoute un écouteur d'événement pour gérer la sélection du fichier
     fileInput.onchange = async (event: Event) => {
       const input = event.target as HTMLInputElement;
       if (input.files && input.files.length > 0) {
         const file = input.files[0];
+        if (!this.ensureAllowedUploadFile(file)) {
+          input.value = '';
+          return;
+        }
         this.cvFileName = file.name;
 
         try {
@@ -537,6 +578,10 @@ export class AdmissionComponent implements OnInit , AfterViewInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
+      if (!this.ensureAllowedUploadFile(file)) {
+        input.value = '';
+        return;
+      }
       this.justificatifInscription = file.name;
 
       // Appelle la méthode d'upload pour le fichier justificatif d'inscription

@@ -1,6 +1,7 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminRoutingModule } from './admin-routing.module';
+import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { HomeComponent } from './home/home.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -59,7 +60,7 @@ import {FinanceEditDemandeComponent} from './components/finance/finance-edit-dem
 import {AdmissionAdministrationComponent} from './components/admission/admission-administration/admission-administration.component';
 import {AdmissionEditDemandeComponent} from './components/admission/admission-edit-demande/admission-edit-demande.component';
 import {AdmissionUserDetailComponent} from './components/admission/admission-user-detail/admission-user-detail.component';
-import {MatBadge} from '@angular/material/badge';
+import { MatBadgeModule } from '@angular/material/badge';
 import {MessageGestionComponent} from './components/message-gestion/message-gestion.component';
 import {UserDetailComponent} from './components/user-detail/user-detail.component';
 import {PaymentPageComponent} from './components/payment-page/payment-page.component';
@@ -133,8 +134,9 @@ import {ReceptionAgentGestionComponent} from './components/reception-agent-gesti
         MatTableModule,
         MatPaginatorModule,
         MatSortModule,
-        MatBadge,
+        MatBadgeModule,
         DragDropModule,
+        RouterModule,
 
     ],
   providers: [

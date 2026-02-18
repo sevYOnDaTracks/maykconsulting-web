@@ -1,153 +1,288 @@
-.example-container {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+:host {
+  display: block;
 }
 
-.custom-sidenav {
-  width: 300px; /* Définissez la largeur que vous souhaitez */
-
-}
-.example-is-mobile .example-toolbar {
-  position: fixed;
-  /* Make sure the toolbar will stay on top of the content as it scrolls past. */
-  z-index: 2;
+.admin-shell {
+  position: relative;
+  min-height: 100vh;
+  padding-top: 92px;
+  overflow-x: hidden;
+  background: #f4f6fb;
 }
 
-h1.example-app-name {
-  margin-left: 8px;
+.bg-orb {
+  display: none;
 }
 
-.example-sidenav-container {
-  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
-     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
-  flex: 1;
+.orb-a {
+  top: -12vw;
+  left: -10vw;
+  background: rgba(56, 189, 248, 0.2);
 }
 
-.example-is-mobile .example-sidenav-container {
-  /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
-     `<body>` to be our scrolling element for mobile layouts. */
-  flex: 1 0 auto;
+.orb-b {
+  right: -8vw;
+  bottom: -10vw;
+  background: rgba(0, 194, 168, 0.18);
 }
 
-.example-spacer {
-  flex: 1 1 auto;
-}
-
-.active-link {
-  background-color: #e0e0e0; // Couleur de fond gris
-  border-radius: 9px;
-}
-.user-photo {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
-}
-
-.user-name {
-
-  margin-right: 20px;
-}
-
-.example-container {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-.logo {
-  height: auto;
-  width: 180px;
-  margin-left: 0;
-}
-
-.user-photo {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
-}
-
-.example-spacer {
-  flex: 1 1 auto;
-}
-
-.active-link {
-  background-color: #e0e0e0; /* Couleur de fond gris */
-  border-radius: 9px;
-
-}
-
-/* Média query pour les écrans de petite taille (Téléphone) */
-@media screen and (max-width: 600px) {
-
-  .logo {
-    display: block; /* Ensure the logo is displayed as a block element */
-    margin: 0 auto; /* Auto margin for left and right to center */
-  }
-
-  .only-smart {
-    margin-right: 30px
-  }
-
-  .example-container {
-    margin-top: 30px; /* Adjust this value based on the toolbar height */
-  }
-
-
-}
 .fixed-toolbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: #072150;/* Your desired background color */
-  color: white;
-  z-index: 1000; /* Ensures the toolbar is above other content */
+  z-index: 1200;
+  background: transparent;
+  padding: 1rem 1rem 0;
+  height: auto;
 }
 
-.example-container {
-  margin-top: 65px; /* Adjust this value based on the toolbar height */
+.admin-nav-shell {
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 1.1rem;
+  border: 1px solid rgba(148, 163, 184, 0.36);
+  background: linear-gradient(110deg, #072150, #0a2a63 55%, #072047);
+  box-shadow: 0 18px 45px rgba(4, 11, 17, 0.28);
+  backdrop-filter: blur(10px);
 }
 
+.menu-btn {
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 0.7rem;
+  color: #dbeefe;
+  background: rgba(12, 29, 42, 0.78);
+}
 
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  min-width: 200px;
+}
 
+.brand-full-logo {
+  width: 185px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.desktop-nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  height: 44px;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  padding: 0 1rem;
+  color: #e8f3f9;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: transparent;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav-link:hover {
+  background: rgba(15, 42, 58, 0.72);
+  color: #ffffff;
+}
+
+.nav-link mat-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+}
+
+.active-nav-link {
+  background: rgba(20, 84, 116, 0.65);
+  color: #9cf0e5;
+}
+
+.nav-menu-link {
+  border: 1px solid rgba(100, 116, 139, 0.35);
+  color: #f8fdff !important;
+  background: rgba(6, 18, 33, 0.22) !important;
+}
+
+.nav-menu-link mat-icon {
+  color: #f8fdff !important;
+}
+
+:host ::ng-deep .nav-menu-link .mdc-button__label {
+  color: #f8fdff !important;
+}
+
+.actions {
+  margin-left: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.icon-btn {
+  border: none;
+  border-radius: 0.7rem;
+  color: #e6f2fa;
+  background: transparent;
+  box-shadow: none;
+}
+
+.profile-photo-btn {
+  width: 46px;
+  height: 46px;
+  padding: 0;
+}
+
+.user-photo {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid rgba(148, 163, 184, 0.42);
+}
+
+.example-sidenav-container {
+  position: relative;
+  z-index: 1;
+  min-height: calc(100vh - 92px);
+  background: #f4f6fb;
+}
 
 .custom-sidenav {
-  width: 250px;
-  transition: width 0.9s ease;
-
+  width: min(350px, 92vw);
+  border-right: 1px solid rgba(148, 163, 184, 0.32);
+  background: #ffffff;
+  color: #0f172a;
+  padding: 0.85rem 0.45rem;
 }
 
-.sidenav-mini {
-  width: 70px; /* Adjust the width as per your requirement */
+.mobile-nav-title {
+  margin: 0.2rem 0.5rem 0.6rem;
+  color: #475569;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
 
-.mat-icon {
-  font-size: 24px; /* Adjust icon size if needed */
+.active-link {
+  background: rgba(59, 130, 246, 0.14);
+  border-radius: 10px;
 }
 
-.sidenav-mini .mat-list-item span {
-  display: none; /* Hide the text labels when in mini mode */
+.admin-toggle {
+  border-top: 1px solid rgba(148, 163, 184, 0.28);
+  margin-top: 0.55rem;
+  padding-top: 0.3rem;
 }
 
-.sidenav-mini .mat-list-item {
-  justify-content: center; /* Center icons in mini mode */
+.admin-sub-links {
+  padding-left: 0.65rem;
 }
 
-/* Pleine largeur du drawer sur mobile */
-@media (max-width: 768px) {
-  mat-sidenav.custom-sidenav {
-    width: 100vw !important;
-    max-width: 100vw;
+.admin-content {
+  background: #f4f6fb;
+}
+
+.admin-main {
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0.8rem 1rem 2.2rem;
+  color: #0f172a;
+}
+
+:host ::ng-deep .custom-sidenav .mat-list-item,
+:host ::ng-deep .custom-sidenav a[mat-list-item],
+:host ::ng-deep .custom-sidenav .mat-icon {
+  color: #0f172a !important;
+}
+
+.empty-notification {
+  display: block;
+  padding: 0.55rem 0.95rem;
+  color: #94b2c2;
+  font-size: 0.92rem;
+}
+
+@media (min-width: 1101px) {
+  .menu-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 1300px) {
+  .brand-full-logo {
+    width: 165px;
+  }
+
+  .nav-link {
+    padding: 0 0.82rem;
+    font-size: 0.94rem;
+  }
+}
+
+@media (max-width: 1100px) {
+  .desktop-nav {
+    display: none;
+  }
+
+  .brand-link {
+    min-width: 0;
+  }
+
+  .brand-full-logo {
+    width: 150px;
+  }
+}
+
+@media (max-width: 700px) {
+  .fixed-toolbar {
+    padding: 0.7rem 0.65rem 0;
+  }
+
+  .admin-nav-shell {
+    min-height: 66px;
+    padding: 0.45rem 0.6rem;
+    gap: 0.55rem;
+  }
+
+  .brand-full-logo {
+    width: 126px;
+  }
+
+  .actions {
+    gap: 0.28rem;
+  }
+
+  .icon-btn,
+  .profile-photo-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .user-photo {
+    width: 31px;
+    height: 31px;
+  }
+
+  .admin-shell {
+    padding-top: 82px;
   }
 }

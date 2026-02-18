@@ -252,7 +252,7 @@
     </div>
 
     <div class="card mb-4">
-        <div class="card-header text-success text-uppercase text-xs">Traitement terminé</div>
+        <div class="card-header text-success text-uppercase text-xs mk-header-success">Traitement terminé</div>
 
         <!-- Search Input -->
         <div class="input-group mb-1 mt-2 p-4">
@@ -413,15 +413,15 @@
         <h2 mat-dialog-title>Envoyer un mail</h2>
         <mat-dialog-content>
             <form [formGroup]="replyForm" class="reply-form">
-                <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+                <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Destinataire</mat-label>
                     <input matInput formControlName="to">
                 </mat-form-field>
-                <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+                <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Objet</mat-label>
                     <input matInput formControlName="subject">
                 </mat-form-field>
-                <mat-form-field appearance="outline" class="full-width" floatLabel="always">
+                <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Message</mat-label>
                     <textarea matInput rows="6" formControlName="message"></textarea>
                 </mat-form-field>

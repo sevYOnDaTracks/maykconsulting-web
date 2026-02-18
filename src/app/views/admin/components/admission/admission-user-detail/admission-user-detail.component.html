@@ -1,7 +1,7 @@
 <mat-card appearance="raised" class="card" >
     <mat-card-content>
         <div class="d-flex justify-content-between align-items-center">
-            <button routerLink="/admin/admission/gestion" mat-flat-button>
+            <button routerLink="/admin/admission/gestion" mat-flat-button class="mk-nav-gradient-btn">
                 <mat-icon>arrow_left</mat-icon> Les admissions <mat-icon>school</mat-icon>
             </button>
         </div>
@@ -239,8 +239,8 @@
                         </div>
                     </div>
                     <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                        <button mat-flat-button color="primary" (click)="savePaymentDetails()">Enregistrer les infos paiement</button>
-                        <button mat-stroked-button color="primary" (click)="updateDocument('justificatifPaiement')">
+                        <button mat-flat-button class="mk-nav-gradient-btn" (click)="savePaymentDetails()">Enregistrer les infos paiement</button>
+                        <button mat-stroked-button class="mk-nav-gradient-btn" (click)="updateDocument('justificatifPaiement')">
                             <mat-icon>upload</mat-icon> Mettre à jour le justificatif
                         </button>
                     </div>
@@ -255,7 +255,7 @@
                     </div>
                     <div *ngIf="!userAdmission?.justificatifPaiement" class="mt-2">
                         <strong class="text-danger">Aucun justificatif déposé.</strong>
-                        <button mat-stroked-button class="ms-2" color="primary" (click)="updateDocument('justificatifPaiement')">
+                        <button mat-stroked-button class="ms-2 mk-nav-gradient-btn" (click)="updateDocument('justificatifPaiement')">
                             <mat-icon>attach_file</mat-icon> Joindre
                         </button>
                     </div>

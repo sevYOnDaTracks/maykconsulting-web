@@ -1,108 +1,124 @@
-<ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h1 class="modal-title fs-5  text-xs text-uppercase text-dark" id="exampleModalLabel" align="center">Formulaire de demande d'hébergement</h1>
-        <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+<div class="request-dialog">
+  <div class="request-dialog__header">
+    <div>
+      <h2 mat-dialog-title>Demande d'hebergement</h2>
+      <p class="request-dialog__subtitle">Renseignez vos informations pour lancer la procedure.</p>
     </div>
-    <form class="example-form" [formGroup]="hebergementForm" (ngSubmit)="onSubmit()" novalidate>
-        <div class="modal-body">
+    <button mat-icon-button type="button" (click)="closeDialog()" aria-label="Fermer">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 
-            <div *ngIf="isLoading" align="center" class="overlay">
-                <mat-spinner diameter="90"></mat-spinner>
-                <p class="text-center mt-5">Veuillez patienter et ne pas fermer la page ...</p>
-            </div>
+  <mat-dialog-content class="request-dialog__content">
+    <div *ngIf="isLoading" class="request-loading">
+      <mat-spinner diameter="62"></mat-spinner>
+      <p>Veuillez patienter, envoi en cours...</p>
+    </div>
 
-            <div *ngIf="!isLoading">
-            <p *ngIf="successMessage">{{ successMessage }}</p>
-            <p *ngIf="errorMessage" class="text-danger text-center"><strong>{{ errorMessage }}</strong></p>
+    <form *ngIf="!isLoading" class="request-form" [formGroup]="hebergementForm" novalidate>
+      <p class="request-help">
+        Lien utile pour convertir vos fichiers :
+        <a href="https://www.ilovepdf.com/fr" target="_blank" rel="noopener">iLovePDF</a>
+      </p>
 
-            <div *ngIf="!isSubmitting" class="spinner-overlay">
-                <p class="text-dark">* Lien utile pour convertion :
-                    <a href="https://www.ilovepdf.com/fr" target="blank"><u>IlovePDF</u></a>
-                </p>
+      <p *ngIf="errorMessage" class="request-error">{{ errorMessage }}</p>
 
-                <!-- CONTENT -->
-
-                <div class="mb-3">
-                    <label class="mb-1" for="country">Le pays:</label>
-                    <select style="background: #f6f6f6; border: none; color: black" formControlName="country" id="country" class="form-select">
-                        <option value="France">France</option>
-                        <option value="Canada">Canada</option>
-                        <option value="Belgique">Belgique</option>
-                    </select>
-                    <div *ngIf="hebergementForm.get('country').invalid ">
-                        <small class="text-danger">Ce champ est requis.</small>
-                    </div>
-                    <div *ngIf="hebergementForm.get('country').valid ">
-                        <small class="text-success " style="margin-left: 3px">Ok.</small>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="mb-1" for="city">La ville:</label>
-                    <input formControlName="city" id="city" type="text" class="form-control">
-                    <div *ngIf="hebergementForm.get('city').invalid">
-                        <small class="text-danger">Ce champ est requis.</small>
-                    </div>
-                    <div *ngIf="hebergementForm.get('city').valid ">
-                        <small class="text-success " style="margin-left: 3px">Ok.</small>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="mb-1" for="passport">Document d'identité (Passeport ou CNI):</label>
-                    <input (change)="onFileSelected($event, 'passport')" type="file" class="form-control" id="passport">
-                    <div *ngIf="hebergementForm.get('passport').invalid ">
-                        <small class="text-danger">Ce champ est requis.</small>
-                    </div>
-                    <div *ngIf="hebergementForm.get('passport').valid ">
-                        <small class="text-success " style="margin-left: 3px">Ok.</small>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="mb-1" for="admissionFile">Preuve d'admission:</label>
-                    <input (change)="onFileSelected($event, 'admissionFile')" type="file" class="form-control" id="admissionFile">
-                    <div *ngIf="hebergementForm.get('admissionFile').invalid">
-                        <small class="text-danger">Ce champ est requis.</small>
-                    </div>
-                    <div *ngIf="hebergementForm.get('admissionFile').valid ">
-                        <small class="text-success " style="margin-left: 3px">Ok.</small>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="mb-1" for="exampleFormControlTextarea1" class="form-label">Autres informations (facultatif) :</label>
-                    <textarea formControlName="other" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                </div>
-                <div class="form-check">
-                    <input formControlName="certification" class="form-check-input" type="checkbox" id="flexCheckDefault" required>
-                    <label class="form-check-label" for="flexCheckDefault">
-                        Je certifie l'authenticité de mes documents et des informations que j'ai fournies.
-                    </label>
-                    <div *ngIf="hebergementForm.get('certification').invalid">
-                        <small class="text-danger">Vous devez certifier l'authenticité pour soumettre le formulaire.</small>
-                    </div>
-                    <div *ngIf="hebergementForm.get('certification').valid">
-                        <small class="text-success " style="margin-left: 3px">Ok.</small>
-                    </div>
-                </div>
-            </div>
-            </div>
+      <div class="request-grid">
+        <div class="input-block">
+          <label for="hebergementCountry">Pays*</label>
+          <select id="hebergementCountry" class="request-control" formControlName="country">
+            <option value="" disabled>Selectionner un pays</option>
+            <option *ngFor="let country of countries" [value]="country.value">{{ country.viewValue }}</option>
+          </select>
+          <small class="file-field__error" *ngIf="hebergementForm.get('country')?.invalid && hebergementForm.get('country')?.touched">
+            Ce champ est requis.
+          </small>
         </div>
 
-        <div class="modal-footer">
-            <div align="center"><button type="submit" mat-raised-button class="full-width" type="button" style="background: #cd376c; color: white; width: 100%; border-radius: 15px" (click)="onSubmit()" >Soumettre ma demande</button></div>
+        <div class="input-block">
+          <label for="hebergementCity">Ville*</label>
+          <input id="hebergementCity" class="request-control" formControlName="city" type="text" placeholder="Ex: Paris">
+          <small class="file-field__error" *ngIf="hebergementForm.get('city')?.invalid && hebergementForm.get('city')?.touched">
+            Ce champ est requis.
+          </small>
         </div>
+      </div>
+
+      <div class="request-grid">
+        <div class="file-field">
+          <label class="file-field__label">Document d'identite (Passeport ou CNI)</label>
+
+          <div class="file-field__hint" *ngIf="hasStoredIdentityDocument && !selectedFiles['passport']">
+            <span>
+              Document profil detecte :
+              {{ storedIdentityDocumentType === 'passport' ? 'Passeport' : 'CNI' }}.
+              Il sera reutilise automatiquement.
+            </span>
+            <div class="file-field__actions">
+              <button mat-button type="button" class="file-field__view-btn" (click)="viewStoredIdentityDocument()">
+                <mat-icon>visibility</mat-icon>
+                Voir
+              </button>
+              <button mat-stroked-button type="button" (click)="passportInput.click()">
+                Remplacer pour cette demande
+              </button>
+            </div>
+          </div>
+
+          <button mat-stroked-button type="button" (click)="passportInput.click()" *ngIf="!hasStoredIdentityDocument || selectedFiles['passport']">
+            <mat-icon>upload_file</mat-icon>
+            Choisir un fichier
+          </button>
+          <input #passportInput type="file" hidden accept="image/*,application/pdf" (change)="onFileSelected($event, 'passport')">
+          <span class="file-field__name">
+            {{ selectedFiles['passport']?.name || (hasStoredIdentityDocument ? 'Document profil reutilise' : 'Aucun fichier selectionne') }}
+          </span>
+          <button
+            mat-button
+            type="button"
+            class="file-field__restore"
+            *ngIf="hasStoredIdentityDocument && selectedFiles['passport']"
+            (click)="restoreStoredIdentityDocument()"
+          >
+            Utiliser le document profil
+          </button>
+          <small class="file-field__error" *ngIf="hebergementForm.get('passport')?.invalid && (hebergementForm.get('passport')?.touched || isSubmitting)">
+            Ce champ est requis.
+          </small>
+        </div>
+
+        <div class="file-field">
+          <label class="file-field__label">Preuve d'admission</label>
+          <button mat-stroked-button type="button" (click)="admissionInput.click()">
+            <mat-icon>upload_file</mat-icon>
+            Choisir un fichier
+          </button>
+          <input #admissionInput type="file" hidden accept="image/*,application/pdf" (change)="onFileSelected($event, 'admissionFile')">
+          <span class="file-field__name">{{ selectedFiles['admissionFile']?.name || 'Aucun fichier selectionne' }}</span>
+          <small class="file-field__error" *ngIf="hebergementForm.get('admissionFile')?.invalid">Ce champ est requis.</small>
+        </div>
+      </div>
+
+      <div class="input-block">
+        <label for="hebergementOther">Autres informations (facultatif)</label>
+        <textarea id="hebergementOther" class="request-control" formControlName="other" rows="3"></textarea>
+      </div>
+
+      <div class="request-check">
+        <mat-checkbox formControlName="certification">
+          Je certifie l'authenticite de mes documents et des informations fournies.
+        </mat-checkbox>
+        <small class="file-field__error" *ngIf="hebergementForm.get('certification')?.invalid">
+          Vous devez certifier l'authenticite pour soumettre le formulaire.
+        </small>
+      </div>
     </form>
-</ng-template>
+  </mat-dialog-content>
 
-<mat-dialog-content>
-    <h5 align="center">Vous êtes sur le point de soumettre une demande d'hébergement.</h5>
-
-    <p align="center"> Voulez-vous continuer ?</p>
-    <div align="center"><button mat-raised-button class="full-width" type="button" style="background: #072150; color: white; width: 50%; border-radius: 15px; margin-bottom: 7px" (click)="open(content)" mat-dialog-close>Oui</button></div>
-    <div align="center"><button mat-raised-button class="full-width" type="button" style="background: #af174a; color: white; width: 50%; border-radius: 15px" mat-dialog-close>Non</button></div>
-
-</mat-dialog-content>
-
-
-
+  <mat-dialog-actions align="end" class="request-dialog__actions">
+    <button mat-stroked-button type="button" (click)="closeDialog()" [disabled]="isLoading">Annuler</button>
+    <button mat-flat-button type="button" class="submit-btn" [disabled]="isLoading || isSubmitting" (click)="onSubmit()">
+      {{ isLoading ? 'Envoi...' : 'Soumettre ma demande' }}
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -15,7 +15,7 @@
     <mat-card appearance="outlined" class="card mb-2">
         <mat-card-content>
             <div class="d-flex justify-content-between align-items-center">
-                <button routerLink="/admin/finance" mat-flat-button>
+                <button routerLink="/admin/finance" mat-flat-button class="mk-nav-gradient-btn">
                     <mat-icon>arrow_left</mat-icon> Revenir
                 </button>
                 <button (click)="downloadPDF()" mat-stroked-button>
@@ -53,11 +53,11 @@
                         <td> <strong>{{ financeData?.country }}</strong></td>
                     </tr>
                     <tr>
-                        <td>Ville : {{ (receptionAgent$ | async)?.city || 'Eaubonne' }}</td>
+                        <td>Ville : </td>
                         <td><strong> {{ financeData?.city }} </strong></td>
                     </tr>
                     <tr>
-                        <td>Prénoms : {{ (receptionAgent$ | async)?.lastName || 'Attié Yves-Patrick' }}</td>
+                        <td>Montant à payer :</td>
                         <td class="text-danger" *ngIf="financeData?.country === 'France'"><strong>400 000 FCFA</strong></td>
                         <td class="text-danger" *ngIf="financeData?.country === 'Canada'"><strong>1 000 000 FCFA</strong></td>
                     </tr>

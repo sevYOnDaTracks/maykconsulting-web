@@ -102,3 +102,25 @@
     justify-content: flex-end;
   }
 }
+
+/* Reply modal: 1 field per row, full width */
+.reply-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reply-form .full-width,
+.reply-form mat-form-field,
+.reply-form .mat-mdc-form-field {
+  display: block;
+  width: 100% !important;
+}
+
+.reply-form textarea[matInput] {
+  min-height: 140px;
+}
+
+.card-header.mk-header-success {
+  color: #16a34a !important;
+}

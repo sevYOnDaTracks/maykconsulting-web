@@ -4,7 +4,7 @@
         <h4 class="title text-uppercase fw-bold mb-3">Agents de réception</h4>
       <p class="subtitle">Gestion des agents affichés dans les devis.</p>
     </div>
-    <button mat-raised-button color="primary" (click)="openCreateDialog()">
+    <button mat-raised-button class="mk-nav-gradient-btn" (click)="openCreateDialog()">
       <mat-icon>add</mat-icon>
       Ajouter un agent
     </button>
@@ -47,7 +47,7 @@
         </mat-form-field>
       </form>
 
-      <button mat-raised-button color="primary" (click)="saveActiveAssignments()" [disabled]="isSavingActiveMap">
+      <button mat-raised-button class="mk-nav-gradient-btn" (click)="saveActiveAssignments()" [disabled]="isSavingActiveMap">
         Enregistrer les affectations
       </button>
     </mat-card-content>
@@ -142,7 +142,7 @@
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Annuler</button>
-    <button mat-raised-button color="primary" (click)="saveAgent()" [disabled]="agentForm.invalid || isSavingAgent">
+    <button mat-raised-button class="mk-nav-gradient-btn" (click)="saveAgent()" [disabled]="agentForm.invalid || isSavingAgent">
       Enregistrer
     </button>
   </mat-dialog-actions>

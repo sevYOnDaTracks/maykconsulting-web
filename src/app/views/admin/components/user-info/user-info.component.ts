@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { User } from '../../../landing/model/user';
 import { AuthenticationService } from '../../../landing/services/authentication.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { niveauEtude } from '../data/niveauEtude.data';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-info',
@@ -26,10 +26,10 @@ export class UserInfoComponent implements OnInit {
   };
 
   constructor(
-      private auth: AuthenticationService,
-      private fb: FormBuilder,
-      private _snackBar: MatSnackBar,
-      private router: Router
+    private auth: AuthenticationService,
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {
     this.userForm = this.fb.group({
       firstName: [{ value: '', disabled: true }],
@@ -48,84 +48,101 @@ export class UserInfoComponent implements OnInit {
 
   ngOnInit(): void {
     this.user$ = this.auth.authenticatedUser$;
-    this.user$.subscribe(user => {
-      if (user) {
-        console.log(user);
-        this.user = user;
-        this.userForm.patchValue(user);
+    this.user$.subscribe((user) => {
+      if (!user) {
+        return;
       }
+      this.user = user;
+      this.userForm.patchValue(user);
     });
   }
 
   editUser(): void {
     this.isEditing = true;
     this.userForm.enable();
-    this.userForm.get('email')?.disable(); // Disable email if you don't want it to be edited
+    this.userForm.get('email')?.disable();
   }
 
   saveUser(): void {
-    if (this.userForm.valid) {
-          const updatedUser: User = { ...this.userForm.value, uid: this.user.uid };
-          updatedUser.email = this.user.email;
-          updatedUser.roles = this.user.roles;
-            this.saveUserData(updatedUser);
-            this.isEditing = false;
-    } else {
-      console.log('formulaire invalide');
+    if (!this.userForm.valid) {
+      return;
     }
+
+    const updatedUser: User = { ...this.userForm.value, uid: this.user.uid };
+    updatedUser.email = this.user.email;
+    updatedUser.roles = this.user.roles;
+    this.saveUserData(updatedUser);
+    this.isEditing = false;
   }
 
   saveUserData(user: User): void {
     this.auth.saveUserData(user).then(() => {
-      this._snackBar.open('Informations mise à jour', 'ok');
+      this.snackBar.open('Informations mises a jour', 'OK', { duration: 2500 });
       this.userForm.disable();
-      this.userForm.get('email')?.disable(); // Assurez-vous que l'e-mail reste désactivé
-    }).catch(error => {
-      console.error('Error updating user data: ', error);
+      this.userForm.get('email')?.disable();
+    }).catch((error) => {
+      console.error('Error updating user data:', error);
     });
   }
 
   signOut(): void {
     this.auth.logout().then(() => {
-      // Rediriger vers la page de connexion ou autre
       this.router.navigate(['/']);
-    }).catch(error => {
-      console.error('Erreur de déconnexion', error);
+    }).catch((error) => {
+      console.error('Erreur de deconnexion', error);
     });
   }
 
   async uploadDocument(event: any, documentType: string): Promise<void> {
-    const file = event.target.files[0];
-    if (file) {
-      const maxSize = 8 * 1024 * 1024; // 8 Mo
-      const isImage = file.type.startsWith('image/');
-      if (!isImage) {
-        this._snackBar.open('Le fichier doit être une image', 'Fermer', { duration: 3000 });
-        return;
-      }
-      if (file.size > maxSize) {
-        this._snackBar.open('Le fichier doit être inférieur à 8 Mo', 'Fermer', { duration: 3000 });
-        return;
-      }
-      const currentUser = await this.auth.getCurrentUser();
-      if (currentUser) {
-        const documentUrl = await this.auth.uploadDocument(file, currentUser.uid, documentType);
-        await this.auth.updateUserDocument(currentUser.uid, documentType, documentUrl);
-        this._snackBar.open('Documents mises à jour', 'Ok', { duration: 3000 });
-        this.selectedFiles[documentType] = null;
-        this.userForm.get(`${documentType}Url`)?.setValue(documentUrl);
-      }
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
     }
+
+    const maxSize = 8 * 1024 * 1024;
+    const isImage = file.type.startsWith('image/');
+    const isPdf = file.type === 'application/pdf';
+    const isIdentityPhoto = documentType === 'identityPhoto';
+    const isAllowedType = isIdentityPhoto ? isImage : (isImage || isPdf);
+
+    if (!isAllowedType) {
+      this.snackBar.open(
+        isIdentityPhoto
+          ? 'La photo d identite doit etre une image.'
+          : 'Le fichier doit etre une image ou un PDF.',
+        'Fermer',
+        { duration: 3000 }
+      );
+      return;
+    }
+    if (file.size > maxSize) {
+      this.snackBar.open('Le fichier doit etre inferieur a 8 Mo', 'Fermer', { duration: 3000 });
+      return;
+    }
+
+    const currentUser = await this.auth.getCurrentUser();
+    if (!currentUser) {
+      return;
+    }
+
+    const documentUrl = await this.auth.uploadDocument(file, currentUser.uid, documentType);
+    await this.auth.updateUserDocument(currentUser.uid, documentType, documentUrl);
+    this.snackBar.open('Document mis a jour', 'OK', { duration: 2500 });
+    this.selectedFiles[documentType] = null;
+    this.userForm.get(`${documentType}Url`)?.setValue(documentUrl);
+    (this.user as any)[`${documentType}Url`] = documentUrl;
   }
 
   async deleteDocument(documentType: string): Promise<void> {
     const currentUser = await this.auth.getCurrentUser();
-    if (currentUser) {
-      await this.auth.deleteDocument(currentUser.uid, documentType);
-      await this.auth.updateUserDocument(currentUser.uid, documentType, '');
-      this._snackBar.open(`${documentType} supprimé`, 'ok');
-      this.userForm.get(`${documentType}Url`)?.setValue('');
+    if (!currentUser) {
+      return;
     }
+    await this.auth.deleteDocument(currentUser.uid, documentType);
+    await this.auth.updateUserDocument(currentUser.uid, documentType, '');
+    this.snackBar.open(`${documentType} supprime`, 'OK', { duration: 2500 });
+    this.userForm.get(`${documentType}Url`)?.setValue('');
+    (this.user as any)[`${documentType}Url`] = '';
   }
 
   viewDocument(url: string): void {

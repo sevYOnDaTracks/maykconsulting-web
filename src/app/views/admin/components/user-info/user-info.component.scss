@@ -1,85 +1,132 @@
-.example-container {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.profile-card {
+  border-radius: 14px;
 }
 
-.custom-sidenav {
-  width: 300px; /* Définissez la largeur que vous souhaitez */
+.profile-intro {
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
-.example-is-mobile .example-toolbar {
-  position: fixed;
-  /* Make sure the toolbar will stay on top of the content as it scrolls past. */
-  z-index: 2;
-}
-
-h1.example-app-name {
-  margin-left: 8px;
-}
-
-.example-sidenav-container {
-  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
-     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
-  flex: 1;
-}
-
-.example-is-mobile .example-sidenav-container {
-  /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
-     `<body>` to be our scrolling element for mobile layouts. */
-  flex: 1 0 auto;
-}
-
-.example-spacer {
-  flex: 1 1 auto;
-}
-
-.active-link {
-  background-color: #e0e0e0; /* Couleur de fond gris */
-  border-radius: 9px;
-}
-
-.photo-section {
-  display: flex;
-  justify-content: center;
+.profile-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
 }
 
-.avatar-center {
-  display: inline-block;
-  width: 150px; /* Adjust size as needed */
-  height: 150px; /* Adjust size as needed */
-  border-radius: 50%; /* Makes the image circular */
+.avatar-wrap {
+  width: 98px;
+  height: 98px;
+  border-radius: 50%;
   overflow: hidden;
+  border: 2px solid #dbe3ef;
 }
 
-.avatar-center img {
+.avatar-wrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.document-summary {
-  width: 100%;
-  border-collapse: collapse;
+.profile-meta h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
-.document-item {
+.profile-meta p {
+  margin: 0.1rem 0 0;
+  color: #64748b;
+}
+
+.profile-actions-top {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+}
+
+.profile-form {
+  margin-bottom: 0.4rem;
+}
+
+.section-divider {
+  margin: 1.2rem 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.documents-section h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.doc-note {
+  margin: 0 0 0.9rem;
+  color: #64748b;
+}
+
+.warning-note {
+  color: #9f1239;
+  margin-top: 0.9rem;
+}
+
+.docs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.doc-card {
+  border: 1px solid #dbe3ef;
+  border-radius: 12px;
+  padding: 0.85rem;
+  background: #f8fafc;
+}
+
+.doc-title {
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.doc-state {
+  color: #166534;
+  font-size: 0.9rem;
+  margin-bottom: 0.55rem;
+}
+
+.doc-state.missing {
+  color: #be123c;
+}
+
+.doc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
   align-items: center;
-  margin-bottom: 10px;
 }
 
-.document-summary td {
-  padding: 10px;
-}
+@media (max-width: 991px) {
+  .profile-header {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "avatar meta"
+      "actions actions";
+  }
 
-.text-danger {
-  color: red;
+  .avatar-wrap {
+    grid-area: avatar;
+  }
+
+  .profile-meta {
+    grid-area: meta;
+  }
+
+  .profile-actions-top {
+    grid-area: actions;
+    justify-content: flex-start;
+  }
+
+  .docs-grid {
+    grid-template-columns: 1fr;
+  }
 }

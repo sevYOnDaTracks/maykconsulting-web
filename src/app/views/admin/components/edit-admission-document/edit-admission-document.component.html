@@ -27,7 +27,7 @@
                 <div align="center">
                     <mat-icon>description</mat-icon> Votre baccalauréat
                     <p class="text-danger mt-2">* Vous n'avez pas joint de justificatif</p>
-                    <input type="file" hidden (change)="onFileSelected($event, 0)" #fileInputBac>
+                    <input type="file" hidden accept="image/*,application/pdf" (change)="onFileSelected($event, 0)" #fileInputBac>
                     <button *ngIf="!isLoading" mat-raised-button class="full-width mb-3 mt-3" style="background: #1e3c72; color: white;" (click)="replaceDocument(0)">
                         Importer
                         <mat-icon>cloud_upload</mat-icon>
@@ -61,8 +61,8 @@
                         <ng-template #noDocument>
                             <p class="text-danger">* Vous n'avez pas joint de justificatif</p>
                             <!-- Pour Semestre 1 & 2 -->
-                            <div *ngIf="sem === 1"><input type="file" hidden (change)="onFileSelected($event, sem)" #fileInputSem1></div>
-                            <div *ngIf="sem === 2"><input type="file" hidden (change)="onFileSelected($event, sem)" #fileInputSem2></div>
+                            <div *ngIf="sem === 1"><input type="file" hidden accept="image/*,application/pdf" (change)="onFileSelected($event, sem)" #fileInputSem1></div>
+                            <div *ngIf="sem === 2"><input type="file" hidden accept="image/*,application/pdf" (change)="onFileSelected($event, sem)" #fileInputSem2></div>
                             <button *ngIf="!isLoading"  mat-raised-button class="full-width mt-3" style="background: #1e3c72; color: white;" (click)="replaceDocument(sem)">
                                 <mat-icon>cloud_upload</mat-icon> Importer
                             </button>
@@ -98,9 +98,9 @@
                             <ng-template #noDocument>
                                 <p class="text-danger">* Vous n'avez pas joint de justificatif</p>
                                 <!-- Pour Semestre 1 & 2 -->
-                                <div *ngIf="term === 1"><input type="file" hidden (change)="onFileSelectedCollege($event, term)" #fileInputTerm1></div>
-                                <div *ngIf="term === 2"><input type="file" hidden (change)="onFileSelectedCollege($event, term)" #fileInputTerm2></div>
-                                <div *ngIf="term === 3"><input type="file" hidden (change)="onFileSelectedCollege($event, term)" #fileInputTerm3></div>
+                                <div *ngIf="term === 1"><input type="file" hidden accept="image/*,application/pdf" (change)="onFileSelectedCollege($event, term)" #fileInputTerm1></div>
+                                <div *ngIf="term === 2"><input type="file" hidden accept="image/*,application/pdf" (change)="onFileSelectedCollege($event, term)" #fileInputTerm2></div>
+                                <div *ngIf="term === 3"><input type="file" hidden accept="image/*,application/pdf" (change)="onFileSelectedCollege($event, term)" #fileInputTerm3></div>
                                 <button *ngIf="!isLoading"  mat-raised-button class="full-width mt-3" style="background: #1e3c72; color: white;" (click)="replaceDocumentCollege(term)">
                                     <mat-icon>cloud_upload</mat-icon> Importer
                                 </button>
@@ -132,8 +132,8 @@
                             <ng-template #noDocument>
                                 <p class="text-danger">* Vous n'avez pas joint de justificatif</p>
                                 <!-- Pour Semestre 1 & 2 -->
-                                <div *ngIf="sem === 1"><input type="file" hidden (change)="onFileSelected($event, sem)" #fileInputSem1></div>
-                                <div *ngIf="sem === 2"><input type="file" hidden (change)="onFileSelected($event, sem)" #fileInputSem2></div>
+                                <div *ngIf="sem === 1"><input type="file" hidden accept="image/*,application/pdf" (change)="onFileSelected($event, sem)" #fileInputSem1></div>
+                                <div *ngIf="sem === 2"><input type="file" hidden accept="image/*,application/pdf" (change)="onFileSelected($event, sem)" #fileInputSem2></div>
                                 <button *ngIf="!isLoading"  mat-raised-button class="full-width mt-3" style="background: #1e3c72; color: white;" (click)="replaceDocument(sem)">
                                     <mat-icon>cloud_upload</mat-icon> Importer
                                 </button>

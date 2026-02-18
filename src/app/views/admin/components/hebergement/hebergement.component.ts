@@ -88,7 +88,11 @@ export class HebergementComponent implements OnInit {
   }
 
   openHebergementNewComponent(): void {
-   this.dialog.open(HebergementNewComponent);
+   this.dialog.open(HebergementNewComponent, {
+     width: '860px',
+     maxWidth: '95vw',
+     panelClass: 'mk-request-dialog'
+   });
   }
 
 

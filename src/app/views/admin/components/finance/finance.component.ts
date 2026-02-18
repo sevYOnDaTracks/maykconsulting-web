@@ -82,7 +82,11 @@ export class FinanceComponent implements OnInit {
   }
 
   openFinanceNewComponent(): void {
-    this.dialog.open(FinanceNewComponent);
+    this.dialog.open(FinanceNewComponent, {
+      width: '860px',
+      maxWidth: '95vw',
+      panelClass: 'mk-request-dialog'
+    });
   }
 
 

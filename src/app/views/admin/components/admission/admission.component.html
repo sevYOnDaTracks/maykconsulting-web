@@ -118,7 +118,7 @@
                                         <div *ngFor="let term of [1, 2, 3]" class="row mb-5">
                                             <div class="col-lg-6 col-md-6 col-sm-12 justificatif-btn">
                                                 <button mat-raised-button color="primary" (click)="fileInput.click()">Justificatif <mat-icon>add</mat-icon></button>
-                                                <input type="file" #fileInput hidden (change)="onFileSelected($event, 'term' + year + term + 'Url')">
+                                                <input type="file" #fileInput hidden accept="image/*,application/pdf" (change)="onFileSelected($event, 'term' + year + term + 'Url')">
                                                 <span *ngIf="fileNames['term' + year + term + 'Url']">{{ fileNames['term' + year + term + 'Url'] }}</span>
                                             </div>
                                             <mat-form-field appearance="fill"  class="col-lg-6 col-md-6 col-sm-12">
@@ -145,7 +145,7 @@
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-sm-12 justificatif-btn">
                                             <button mat-raised-button color="primary" (click)="bacFileInput.click()">Justificatif<mat-icon>add</mat-icon></button>
-                                            <input type="file" #bacFileInput hidden (change)="onBacFileSelected($event)">
+                                            <input type="file" #bacFileInput hidden accept="image/*,application/pdf" (change)="onBacFileSelected($event)">
                                             <span *ngIf="bacFileName">{{ bacFileName }}</span>
                                         </div>
                                         <mat-form-field appearance="fill"  class="col-lg-6 col-md-6 col-sm-12">
@@ -167,7 +167,7 @@
                                     <div *ngFor="let Sem of [1, 2]" class="row mb-5">
                                         <div class="col-lg-6 col-md-6 col-sm-12 justificatif-btn">
                                             <button mat-raised-button color="primary" (click)="fileInput.click()">Justificatif <mat-icon>add</mat-icon></button>
-                                            <input type="file" #fileInput hidden (change)="onFileSelected($event, 'year' + year + 'Sem' + Sem )">
+                                            <input type="file" #fileInput hidden accept="image/*,application/pdf" (change)="onFileSelected($event, 'year' + year + 'Sem' + Sem )">
                                             <span *ngIf="fileNames['year' + year + 'Sem' + Sem ]">{{ fileNames['year' + year + 'Sem' + Sem ] }}</span>
                                         </div>
                                         <mat-form-field appearance="fill"  class="col-lg-6 col-md-6 col-sm-12">
@@ -202,7 +202,7 @@
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-sm-12 justificatif-btn">
                                             <button mat-raised-button color="primary" (click)="campusFranceFileInput.click()">Justificatif <mat-icon>add</mat-icon></button>
-                                            <input type="file" #campusFranceFileInput hidden (change)="onBac2FileSelected($event)">
+                                            <input type="file" #campusFranceFileInput hidden accept="image/*,application/pdf" (change)="onBac2FileSelected($event)">
                                             <span *ngIf="campusFranceFileName" class="file-name">{{ campusFranceFileName }}</span>
                                             <br>
                                         </div>
@@ -226,7 +226,7 @@
                                         <div *ngFor="let Sem of [1, 2]" class="row mb-5">
                                             <div class="col-lg-6 col-md-6 col-sm-12 justificatif-btn">
                                                 <button mat-raised-button color="primary" (click)="fileInput.click()">Justificatif <mat-icon>add</mat-icon></button>
-                                                <input type="file" #fileInput hidden (change)="onFileSelected($event, 'year' + year + 'Sem' + Sem )">
+                                                <input type="file" #fileInput hidden accept="image/*,application/pdf" (change)="onFileSelected($event, 'year' + year + 'Sem' + Sem )">
                                                 <span *ngIf="fileNames['year' + year + 'Sem' + Sem ]">{{ fileNames['year' + year + 'Sem' + Sem ] }}</span>
                                             </div>
                                             <mat-form-field appearance="fill"  class="col-lg-6 col-md-6 col-sm-12">
@@ -256,7 +256,7 @@
                                             Justificatif <mat-icon>add</mat-icon>
                                         </button>
 
-                                            <input type="file" #fileInputJustificatifInscription hidden (change)="onJustificatifInscriptionSelected($event)">
+                                            <input type="file" #fileInputJustificatifInscription hidden accept="image/*,application/pdf" (change)="onJustificatifInscriptionSelected($event)">
                                             </div>
 
                                         <div align="center">
@@ -294,7 +294,7 @@
                                     <p>Merci de joindre votre CV ainsi que tous les justificatif de stage associés à votre parcours <u style="color: #e80564">dans le même fichier PDF.</u></p>
                                     <br>
                                     <mat-form-field appearance="fill"  class="full-width">
-                                        <input type="file" matInput (change)="onCVFileSelected($event)" />
+                                        <input type="file" matInput accept="image/*,application/pdf" (change)="onCVFileSelected($event)" />
                                         <mat-hint>Joindre votre CV</mat-hint>
                                     </mat-form-field>
                                 </div>

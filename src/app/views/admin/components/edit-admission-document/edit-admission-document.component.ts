@@ -58,6 +58,20 @@ export class EditAdmissionDocumentComponent implements OnInit {
         }
     }
 
+    private isAllowedUploadType(file: File): boolean {
+        return file.type.startsWith('image/') || file.type === 'application/pdf';
+    }
+
+    private ensureAllowedUploadFile(file: File): boolean {
+        if (!this.isAllowedUploadType(file)) {
+            this.snackBar.open('Le fichier doit etre une image ou un PDF.', 'Fermer', {
+                duration: 3000,
+            });
+            return false;
+        }
+        return true;
+    }
+
     viewDocument(sem: number): void {
         const documentUrl = this.isBac ? this.data.admissionData.bacUrl : this.data.admissionData[`year${this.data.type}Sem${sem}Url`];
         if (documentUrl) {
@@ -115,6 +129,10 @@ export class EditAdmissionDocumentComponent implements OnInit {
     onFileSelected(event: any, sem: number): void {
         const file = event.target.files[0];
         if (file) {
+            if (!this.ensureAllowedUploadFile(file)) {
+                event.target.value = '';
+                return;
+            }
             this.isLoading = true;
             const documentType = this.isBac ? 'bacUrl' : `year${this.data.type}Sem${sem}Url`;
             this.admissionService.uploadDocument(file, this.data.admissionData.userId, documentType)
@@ -139,6 +157,10 @@ export class EditAdmissionDocumentComponent implements OnInit {
     onFileSelectedCollege(event: any, term: number): void {
         const file = event.target.files[0];
         if (file) {
+            if (!this.ensureAllowedUploadFile(file)) {
+                event.target.value = '';
+                return;
+            }
             this.isLoading = true;
             const documentType = this.isBac ? 'bacUrl' : `term${this.data.type}${term}Url`;
             this.admissionService.uploadDocument(file, this.data.admissionData.userId, documentType)
