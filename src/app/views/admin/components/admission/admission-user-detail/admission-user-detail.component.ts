@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {AdmissionService} from '../../../services/admission.service';
 import {UserGestionService} from '../../../services/user-gestion.service';
@@ -11,7 +11,7 @@ import {EmailAdmissionService} from '../../../services/email-admission.service';
   templateUrl: './admission-user-detail.component.html',
   styleUrls: ['./admission-user-detail.component.scss']
 })
-export class AdmissionUserDetailComponent implements OnInit {
+export class AdmissionUserDetailComponent implements OnInit, OnDestroy {
   userId: string;
   userAdmission: any;
   user: any;
@@ -25,7 +25,11 @@ export class AdmissionUserDetailComponent implements OnInit {
   };
 
   originalUniversityName = '';
-  universityNameChanged = false;
+  universityNameChanged  = false;
+
+  /* ── Scrollspy ── */
+  activeSection = 'profil';
+  private observer!: IntersectionObserver;
 
   constructor(
       private route: ActivatedRoute,
@@ -65,6 +69,7 @@ export class AdmissionUserDetailComponent implements OnInit {
       };
       this.originalUniversityName = this.userAdmission.nomUniversite;
       this.universityNameChanged = false;
+      setTimeout(() => this.initScrollSpy(), 300);
     });
   }
 
@@ -308,6 +313,58 @@ export class AdmissionUserDetailComponent implements OnInit {
         .catch(() => {
           this.snack.open('Erreur lors de la mise à jour du paiement.', 'Fermer', { duration: 3000 });
         });
+  }
+
+  ngOnDestroy(): void {
+    this.observer?.disconnect();
+  }
+
+  private initScrollSpy(): void {
+    if (this.observer) this.observer.disconnect();
+    const ids = ['profil', 'statut', 'documents', 'cursus'];
+    this.observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          this.activeSection = e.target.id.replace('section-', '');
+        }
+      });
+    }, { rootMargin: '-10% 0px -65% 0px', threshold: 0 });
+
+    ids.forEach(id => {
+      const el = document.getElementById('section-' + id);
+      if (el) this.observer.observe(el);
+    });
+  }
+
+  scrollTo(sectionId: string): void {
+    document.getElementById('section-' + sectionId)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  getStatusLabel(etat: number): string {
+    const labels: Record<number, string> = {
+      0: 'En attente',
+      1: 'En traitement',
+      2: 'Attente de réponse',
+      3: 'Candidature acceptée',
+      4: 'Candidature refusée',
+      5: 'Archivée',
+      6: 'Admis par le passé',
+    };
+    return labels[etat] ?? 'Inconnu';
+  }
+
+  getStatusClass(etat: number): string {
+    const classes: Record<number, string> = {
+      0: 'status-pending',
+      1: 'status-progress',
+      2: 'status-waiting',
+      3: 'status-accepted',
+      4: 'status-refused',
+      5: 'status-archived',
+      6: 'status-past',
+    };
+    return classes[etat] ?? '';
   }
 
   private formatPaymentDateForInput(value: any): string {

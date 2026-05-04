@@ -204,8 +204,7 @@ export class AdmissionService {
   }
 
   moveAdmissionToPast(userId: string): Promise<void> {
-    // Stocke en string pour rester cohérent avec les autres valeurs enregistrées
-    return this.firestore.collection('admissions').doc(userId).update({ etatDemande: '6' });
+    return this.firestore.collection('admissions').doc(userId).update({ etatDemande: 6 });
   }
 
   deleteAdmission(userId: string): Promise<void> {

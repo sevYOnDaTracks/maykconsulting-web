@@ -1,164 +1,426 @@
-.full-width {
-  width: 100%;
+/* ── Variables ── */
+$navy:    #072150;
+$pink:    #d9006e;
+$amber:   #f5a623;
+$green:   #156c3f;
+$blue:    #1e40af;
+$gray:    #6b7280;
+$light:   #f8fafc;
+$border:  #e2e8f0;
+$radius:  12px;
+
+/* ── Wrapper ── */
+.adm-page-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
 }
 
-.row {
+/* ── Titre page ── */
+.adm-page-title-card {
   display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: $radius;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
 }
+.adm-title-icon { font-size: 28px; color: $navy; }
+.adm-title { font-size: 22px; font-weight: 700; color: $navy; margin: 0; }
 
-.col-lg-6, .col-md-6, .col-sm-12, .col-12 {
-  padding: 0 10px;
+/* ── Intro card ── */
+.adm-intro-card {
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 28px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  margin-bottom: 20px;
 }
-
-.mt-5 {
-  margin-top: 3rem;
+.adm-intro-lead { font-size: 15px; color: #374151; margin-bottom: 12px; }
+.adm-steps-list {
+  padding-left: 20px;
+  margin-bottom: 16px;
+  li { margin-bottom: 6px; color: #374151; }
 }
+.adm-warn { color: $pink !important; }
+.adm-tarif { color: #374151; margin-top: 16px; }
+.adm-price { color: $pink; font-size: 16px; }
+.adm-notice-warn { color: $gray; font-size: 13px; margin-top: 6px; }
 
-.mb-4 {
-  margin-bottom: 1.5rem;
+/* ── Stepper form card ── */
+.adm-form-card {
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: $radius;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  margin-bottom: 20px;
 }
-
-.p-4 {
-  padding: 1.5rem;
-}
-
-.stepper-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1.5rem;
-}
-
-.text-center {
+.adm-form-card-header {
+  background: $navy;
+  color: #fff;
   text-align: center;
+  padding: 14px 20px;
+  font-weight: 600;
+  font-size: 15px;
+}
+.adm-form-card-body { padding: 24px 20px; }
+
+/* ── Statut card ── */
+.adm-status-card {
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: $radius;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  margin-bottom: 20px;
+}
+.adm-status-header {
+  background: $navy;
+  color: #fff;
+  text-align: center;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: .5px;
+}
+.adm-status-body { padding: 24px 28px; }
+.adm-status-footer {
+  background: $light;
+  border-top: 1px solid $border;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 13px;
+  color: $gray;
 }
 
-.hidden-file-input {
-  display: none;
+/* ── Steps ── */
+.adm-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 20px;
+}
+.adm-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: .45;
+  transition: opacity .2s;
+  &.adm-step-active { opacity: 1; }
+  &.adm-step-done   { opacity: .7; }
+}
+.adm-step-line {
+  flex: 1;
+  height: 3px;
+  background: $border;
+  min-width: 60px;
+  max-width: 120px;
+  border-radius: 2px;
+  transition: background .3s;
+  &.adm-line-filled { background: $navy; }
+}
+.adm-step-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+.adm-dot-amber { background: $amber; }
+.adm-dot-blue  { background: $blue; }
+.adm-dot-green { background: $green; }
+.adm-step-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: #374151; white-space: nowrap; }
+
+/* ── Progress bar ── */
+.adm-progress-bar-wrap { margin-bottom: 20px; }
+.adm-progress-track { height: 8px; background: $border; border-radius: 4px; overflow: hidden; }
+.adm-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width .4s ease;
+  background: $navy;
+  &.adm-fill-amber { background: $amber; }
+  &.adm-fill-blue  { background: $blue; }
+  &.adm-fill-green { background: $green; }
 }
 
-.file-name {
-  margin-left: 10px;
-  font-style: italic;
+/* ── Status messages ── */
+.adm-status-msg {
+  p {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+    mat-icon { font-size: 18px; width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+  }
 }
+.adm-msg-amber { background: #fff8ed; color: #92400e; border: 1px solid #fde68a; }
+.adm-msg-blue  { background: #eff6ff; color: $blue;   border: 1px solid #bfdbfe; }
+.adm-msg-green { background: #f0fdf4; color: $green;  border: 1px solid #bbf7d0; }
+
+/* ── Alerts ── */
+%alert-base {
+  display: flex; align-items: flex-start; gap: 8px;
+  border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-top: 12px;
+  mat-icon { font-size: 18px; width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+}
+.adm-alert-warn    { @extend %alert-base; background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; }
+.adm-alert-success { @extend %alert-base; background: #f0fdf4; border: 1px solid #bbf7d0; color: $green; }
+.adm-alert-info    { @extend %alert-base; background: #eff6ff; border: 1px solid #bfdbfe; color: $blue; margin-top: 0; margin-bottom: 14px; }
+.adm-alert-danger  { @extend %alert-base; background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+.adm-alert-success-sm {
+  display: flex; align-items: center; gap: 8px;
+  background: #f0fdf4; border: 1px solid #bbf7d0; color: $green;
+  border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 14px;
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+.adm-link { color: $navy; font-weight: 600; margin-left: 4px; &:hover { text-decoration: underline; } }
+
+/* ── Layout row/col ── */
+.adm-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  @media (max-width: 768px) { flex-direction: column; }
+}
+.adm-col { flex: 1; min-width: 0; }
+
+/* ── Cards ── */
+.adm-card {
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: $radius;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.adm-card-mb { margin-bottom: 20px; }
+.adm-card-header {
+  background: $light;
+  border-bottom: 1px solid $border;
+  padding: 12px 18px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+  text-align: center;
+  &.adm-card-header-dark { background: $navy; color: #fff; }
+}
+.adm-card-body { padding: 20px 18px; }
+.adm-card-hint { font-size: 13px; color: $gray; margin-bottom: 14px; }
+
+/* ── Boutons ── */
+.btn-primary-mk {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: $navy;
+  color: #fff !important;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s;
+  text-decoration: none;
+  &:hover { background: lighten($navy, 8%); }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+.btn-outline-mk {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: $navy;
+  border: 2px solid $navy;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  &:hover { background: $navy; color: #fff; }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+.btn-danger-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: #dc2626;
+  border: 2px solid #dc2626;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  &:hover { background: #dc2626; color: #fff; }
+}
+.btn-icon-view, .btn-icon-edit, .btn-icon-del, .btn-icon-upload {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border: none; border-radius: 6px;
+  cursor: pointer; margin: 2px;
+  transition: opacity .15s;
+  mat-icon { font-size: 15px; width: 15px; height: 15px; }
+  &:hover { opacity: .8; }
+}
+.btn-icon-view   { background: $navy;    color: #fff; }
+.btn-icon-edit   { background: $navy;    color: #fff; }
+.btn-icon-del    { background: #dc2626;  color: #fff; }
+.btn-icon-upload { background: $green;   color: #fff; }
+
+/* ── Btn group ── */
+.adm-btn-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+
+/* ── Document unavailable ── */
+.adm-doc-unavailable {
+  display: flex; flex-direction: column; align-items: center; text-align: center; padding: 12px 0;
+}
+.adm-doc-info-icon { font-size: 36px; width: 36px; height: 36px; color: $gray; margin-bottom: 8px; }
+.adm-doc-info-title { font-weight: 600; color: #374151; margin: 0 0 4px; }
+.adm-doc-info-text  { font-size: 13px; color: $gray; margin: 0; }
+
+/* ── Document ready ── */
+.adm-doc-ready { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+.adm-doc-icon  { font-size: 36px; width: 36px; height: 36px; color: $green; }
+
+/* ── Info tables ── */
+.adm-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  th, td {
+    padding: 9px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid $border;
+    text-align: left;
+  }
+  th { color: $gray; font-weight: 600; width: 45%; }
+  td { color: #1f2937; }
+  tr:last-child th, tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) { background: $light; }
+}
+
+/* ── Parcours table ── */
+.adm-parcours-table {
+  width: 100%;
+  border-collapse: collapse;
+  th, td {
+    padding: 9px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid $border;
+    text-align: left;
+    vertical-align: middle;
+  }
+  th { color: $navy; font-size: 16px; border-bottom: 2px solid $border; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) { background: $light; }
+}
+.adm-row-label { color: #1f2937; font-weight: 500; }
+
+/* ── Consignes ── */
+.adm-comment    { color: #374151; font-size: 14px; text-align: center; }
+.adm-no-comment { color: $gray; font-size: 13px; font-style: italic; }
+
+/* ── Withdraw ── */
+.adm-withdraw-wrap { text-align: center; margin-top: 8px; padding-bottom: 20px; }
+
+/* ── Stepper form ── */
+.full-width { width: 100%; }
+.row { display: flex; flex-wrap: wrap; margin-bottom: 15px; }
+.col-lg-6, .col-md-6, .col-sm-12 { padding: 0 10px; }
+.stepper-buttons { display: flex; justify-content: space-between; margin-top: 1.5rem; }
+.justificatif-btn { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.file-name { margin-left: 10px; font-style: italic; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mb-5 { margin-bottom: 3rem; }
+.mt-2 { margin-top: .5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+.mt-5 { margin-top: 3rem; }
 
 @media (max-width: 768px) {
-  .doc-heb{
-    margin-top: 30px;
+  .justificatif-btn { flex-direction: column; align-items: flex-start; }
+}
+
+/* ── Responsive mobile ── */
+@media (max-width: 600px) {
+  .adm-page-wrap { padding: 10px 10px 28px; }
+
+  .adm-page-title-card { padding: 12px 14px; gap: 8px; }
+  .adm-title { font-size: 17px; }
+  .adm-title-icon { font-size: 22px; }
+
+  .adm-intro-card { padding: 16px 12px; }
+  .adm-intro-lead { font-size: 14px; }
+
+  .adm-status-body { padding: 14px 12px; }
+  .adm-status-footer { font-size: 12px; padding: 8px 12px; }
+
+  .adm-step-line { min-width: 28px; max-width: 50px; }
+  .adm-step-label { font-size: 9px; letter-spacing: 0; }
+  .adm-step-dot { width: 13px; height: 13px; }
+
+  .adm-card-body { padding: 14px 12px; }
+  .adm-card-header { font-size: 13px; padding: 10px 12px; }
+  .adm-form-card-body { padding: 14px 12px; }
+
+  .adm-btn-group { flex-direction: column; gap: 8px; }
+  .btn-primary-mk,
+  .btn-outline-mk,
+  .btn-danger-outline { width: 100%; justify-content: center; }
+
+  .adm-info-table {
+    th, td { padding: 7px 8px; font-size: 12px; }
+    th { width: 38%; }
   }
-  .justificatif-btn {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
+  .adm-parcours-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    th, td { padding: 7px 8px; font-size: 12px; white-space: nowrap; }
   }
-  .file-name {
-    text-align: center;
-    margin-top: 5px;
-  }
-  .mat-form-field {
-    width: 100%;
-  }
+
+  .row { flex-direction: column; }
+  .col-lg-6, .col-md-6, .col-sm-12 { width: 100%; padding: 0; }
+
+  .stepper-buttons { flex-direction: column-reverse; gap: 10px; }
+  .stepper-buttons button { width: 100%; }
 }
 
-.example-spacer {
-  flex: 1 1 auto;
-}
-
-.bg-gradient {
-  background: linear-gradient(120deg, #3e1778 0%, #85cbfd 100%);
-}
-
-.custom-card {
-  border-radius: 10px;
-  box-shadow: 10px 10px 5px rgba(236, 236, 236, 0.5);
-}
-
-.custom-card-header {
-
-  background: #132a57;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  margin-bottom: 5px;
-  color: #fff; /* Texte en blanc pour l'en-tête */
-}
-
-.custom-card-header-3 {
-  background: #ffffff;
-  box-shadow: 10px 10px 5px rgba(243, 243, 243, 0.5);
-  /* Ajouté pour uniformité */
-  /* Ajouté pour uniformité */
-  border-radius: 10px;
-  color: #000000; /* Texte en blanc */
-  border: none; /* Assurez-vous que les bordures n'interfèrent pas */
-  /* Bordures transparentes pour cacher les artefacts potentiels */
-  border-top: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-}
-
-.custom-card-header-2 {
-  box-shadow: 10px 10px 5px rgba(243, 243, 243, 0.5);
-  /* Ajouté pour uniformité */
-  /* Ajouté pour uniformité */
-  border-radius: 10px;
-}
-
-
-.custom-card-normal {
-
-  background: #f3f3f3;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  margin-bottom: 5px;
-  color: #fff; /* Texte en blanc pour l'en-tête */
-}
-
-.custom-card-header mat-card-title {
-  color: #fff; /* Assure que le titre est en blanc */
-}
-
-/* Supprime le trait vertical de l'encoche du label sur les champs outline */
+/* ── Outline notch fixes ── */
 :host ::ng-deep .mat-mdc-form-field-appearance-outline .mdc-notched-outline__notch {
   border-right: none !important;
   border-left: none !important;
 }
-
-/* Supprime aussi la séparation entre le segment gauche et l'encoche */
 :host ::ng-deep .mat-mdc-form-field-appearance-outline .mdc-notched-outline__leading {
   border-right: none !important;
 }
-
-/* Version robuste: retire totalement l'encoche sur le select Pays */
 :host ::ng-deep .country-select-no-notch .mdc-notched-outline__notch {
   max-width: 0 !important;
   border-right: 0 !important;
   border-left: 0 !important;
   padding: 0 !important;
 }
-
 :host ::ng-deep .country-select-no-notch .mdc-notched-outline__leading {
   border-right: 0 !important;
 }
-
-/* Compatibilite champs outline legacy Angular Material */
 :host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-gap {
   border-left: 0 !important;
   border-right: 0 !important;
 }
-
 :host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-start {
   border-right: 0 !important;
-}
-
-.admission-overview-card .card-body {
-  padding: 1rem 1.25rem;
-}
-
-.admission-overview-card .info-line {
-  margin: 0 0 0.55rem;
-  line-height: 1.35;
-}
-
-.admission-overview-card .info-line:last-child {
-  margin-bottom: 0;
 }

@@ -1,298 +1,275 @@
 
-<div class="container" >
+<div class="heb-page-wrap">
 
-    <div *ngIf="isLoading" class="overlay">
-        <mat-spinner diameter="90"></mat-spinner>
-    </div>
-    <div *ngIf="!isLoading">
+  <div *ngIf="isLoading" class="overlay">
+    <mat-spinner diameter="90"></mat-spinner>
+  </div>
 
-        <div class="mt-2 mb-1">
-            <mat-card appearance="outlined"  class="custom-card text-dark mt-2" style="padding: -10rem;">
-                <mat-card-content>
-                    <div align="center" >
-                        <h1 class="text-dark">Hébergement <mat-icon>weekend</mat-icon></h1>
-                    </div>
-                </mat-card-content>
-            </mat-card>
+  <div *ngIf="!isLoading">
 
-        </div>
-
-        <div class="row justify-content-center"  *ngIf="!hasExistingFinance; else financeInProgress">
-            <div class="col-lg-12 col-md-12">
-                <mat-card class="mt-2 mb-2 custom-card" appearance="outlined">
-                    <mat-card-title class="text-center mb-3 mt-3"></mat-card-title>
-                    <mat-card-content>
-                        <div align="center">
-                            <ul class="flex justify-content-center">
-                                Suivez les étapes ci-dessous pour soumettre votre demande d'hébergement <br><br>
-                            </ul>
-                        </div>
-                        <ul>
-                            <li>Choisissez votre pays de destination pour les études (France ou Canada).</li>
-                            <li>Précisez la ville où vous êtes admis pour étude.</li>
-                            <li>Joignez votre attestation ou preuve d'admission ainsi que votre passeport ou autres documents d'identité le cas échéant.</li>
-                            <li class="text-danger"><strong>Attention, les documents illisibles seront rejetés ! Veuillez fournir des scans de très bonne qualité.</strong></li>
-                            <li>Enfin, révisez votre demande et soumettez-la.</li>
-                        </ul>
-                        <br>
-                        <ul>
-                            <p>Notre service de consulting fournira les documents nécessaires pour le volet "hébergement" de votre demande de visa pour études après paiement des frais de service : <strong class="text-danger">200 000 FCFA</strong> pour la France .<br><br> <strong class="flex justify-content-center"> Ces frais ne sont pas remboursables, même en cas de refus de visa.</strong></p>
-                          <br>  <p><strong class="text-danger"><u>NB</u></strong> : Attention nous ne vous fournissons que des documents officiel.Il serai donc preferable d'envisagé d'avoir une alternative une fois votre arrivé en france. Ces documents vous aiderons à avoir votre Visa Etude</p>
-                        </ul>
-                       <div align="center" class="mt-4 mb-2"><button mat-raised-button class="mk-nav-gradient-btn" style="width: 60%" (click)="openHebergementNewComponent()">Faire une demande</button></div>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-        </div>
+    <!-- ── Titre ── -->
+    <div class="heb-page-title-card">
+      <mat-icon class="heb-title-icon">weekend</mat-icon>
+      <h1 class="heb-title">Hébergement</h1>
     </div>
 
-
-    <!-- hebergement in progress -->
-
-    <ng-template #financeInProgress>
-        <div class=" mt-2 mb-4">
-            <div class="card text-center mt-3" >
-                <div class="card-header" style="background: #072150; color: white">
-                    Etat de la demande
-                </div>
-                <div class="card-body">
-                    <div class="progress-container d-flex justify-content-between align-items-center">
-                        <div class="progress-step text-center">
-                            <div class="step-circle bg-danger mx-auto mb-2"></div>
-                            <p class="step-label fw-bold text-xs text-uppercase" style="color:#df3671 "><strong>En attente</strong></p>
-                        </div>
-                        <div class="progress-step text-center">
-                            <div class="step-circle bg-primary mx-auto mb-2"></div>
-                            <p class="step-label fw-bold text-xs text-uppercase" style="color: #072150"><strong>En cours</strong></p>
-                        </div>
-                        <div class="progress-step text-center">
-                            <div class="step-circle bg-success mx-auto mb-2"></div>
-                            <p class="step-label  fw-bold text-xs text-uppercase" style="color: rgb(21,108,63);"><strong>Terminée</strong></p>
-                        </div>
-                    </div>
-                    <div>
-                        <div *ngIf="hebergementData.etatDemande === 0" class="" >
-                            <div class="progress mb-4" role="progressbar" aria-label="Animated striped example" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated " style="width: 33%;background:#df3671; color: white ">En attente ...</div>
-                            </div>
-                            <p *ngIf="!hebergementData.justificatifPaiement">Demande en <strong class="text-secondary fw-bold text-xs text-uppercase">attente de paiement.</strong></p>
-                        </div>
-                        <div *ngIf="hebergementData.etatDemande === 1" class="" >
-                            <div class="progress mb-4" role="progressbar" aria-label="Animated striped example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated " style="width: 50%; background: #072150; color: white">En cours de traitement ..</div>
-                            </div>
-                            <p>Votre demande est cours de traitement ...</p>
-                        </div>
-                        <div *ngIf="hebergementData.etatDemande === 2" class="" >
-                            <div class="progress mb-4" role="progressbar" aria-label="Animated striped example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated " style="width: 100%; background: rgb(21,108,63); color: white">Traitement terminé ...</div>
-                            </div>
-                            <p>Le traitement de votre demande est terminée. Merci de nous avoir fait confiance ...</p>
-                        </div>
-                        <div *ngIf="hebergementData.etatDemande === 3" class="" >
-                            <div class="progress mb-4" role="progressbar" aria-label="Animated striped example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated " style="width: 100%; background: rgb(241,165,7); color: white">Demande Archivée ...</div>
-                            </div>
-                            <p>Votre demande a été archivée. Merci de contacter le service Maykconsulting ...</p>
-                        </div>
-                        <div *ngIf="!hebergementData.justificatifPaiement">
-                            <p align="center" class="alert alert-danger">Nous n'avons pas encore reçu votre justificatif de paiement. Ajouter le en cliquant sur le bouton "Paiement"</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer text-body-secondary">
-                    Demande soumise le <strong>{{ dateDemande }}</strong>
-                </div>
-            </div>
-        </div>
-<div class="row" *ngIf="hebergementData.etatDemande !== 3">
-    <div class="col-md-6">
-        <div class="mb-3">
-            <div class="card text-center">
-                <div class="card-header">
-                    Devis et Paiement
-                </div>
-                <div class="card-body">
-                    <div *ngIf="hebergementData.justificatifPaiement && hebergementData.etatDemande === 0 ">
-                        <p align="center" class="alert alert-success">Nous avons reçu votre justificatif de paiement le statut de votre demande changera  dès que votre justificatif sera approuvé par le système</p>
-                    </div>
-                    <div *ngIf="hebergementData.justificatifPaiement && hebergementData.etatDemande !== 0 && hebergementData.etatDemande !== 3 ">
-                        <p align="center" class="alert alert-success">Votre justificatif de paiement a été validé par notre service.</p>
-                    </div>
-                    <p  *ngIf="!hebergementData.justificatifPaiement"><strong class="text-danger"><u>NB</u>:</strong>Télécharger votre Devis généré automatiquement par le système.Vous pouvez joindre le justificatif de paiement en cliquant sur le bouton "Paiement".Votre demande changera de statut automatiquement et sera traitée par nos agents.</p>
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <!-- (click)="openDevisAdmissionComponent()" -->
-                            <button routerLink="/admin/hebergement/devis" mat-stroked-button style="background: #072150; color: white">
-                                Votre devis ici ! <mat-icon>description</mat-icon>
-                            </button>
-                        </div>
-                        <div>
-                            <button mat-stroked-button  style="margin-left: 10px; color: #072150;" (click)="goToPaymentPage()">
-                                Paiement <mat-icon>payment</mat-icon>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
+    <!-- ── Nouvelle demande ── -->
+    <div *ngIf="!hasExistingFinance; else financeInProgress" class="heb-intro-card">
+      <p class="heb-intro-lead">Suivez les étapes ci-dessous pour soumettre votre demande d'hébergement.</p>
+      <ul class="heb-steps-list">
+        <li>Choisissez votre pays de destination pour les études (France ou Canada).</li>
+        <li>Précisez la ville où vous êtes admis pour étude.</li>
+        <li>Joignez votre attestation ou preuve d'admission ainsi que votre passeport ou autres documents d'identité le cas échéant.</li>
+        <li class="heb-warn"><strong>Attention, les documents illisibles seront rejetés ! Veuillez fournir des scans de très bonne qualité.</strong></li>
+        <li>Enfin, révisez votre demande et soumettez-la.</li>
+      </ul>
+      <p class="heb-tarif">
+        Notre service fournira les documents nécessaires pour le volet "hébergement" de votre demande de visa après paiement des frais :
+        <strong class="heb-price">200 000 FCFA</strong> pour la France.
+      </p>
+      <p class="heb-notice-warn"><strong>Ces frais ne sont pas remboursables, même en cas de refus de visa.</strong></p>
+      <p class="heb-notice-warn"><u>NB</u> : Nous ne fournissons que des documents officiels. Il serait préférable d'envisager une alternative une fois arrivé en France. Ces documents vous aideront à obtenir votre Visa Étude.</p>
+      <div class="heb-intro-action">
+        <button mat-raised-button class="btn-primary-mk" (click)="openHebergementNewComponent()">Faire une demande</button>
+      </div>
     </div>
-    <div  class="col-md-6 doc-heb">
-        <div class="card text-center">
-            <div class="card-header">
-                Documents Relatifs à mon hébergement
-            </div>
-            <div class="card-body">
-                <div *ngIf="hebergementData.hebergemntFile && hebergementData.etatDemande === 2">
-                    <h5 class="card-title">Document hébergement</h5>
-                    <p class="card-text">Cliquez ici pour télécharger votre document !</p>
-                    <button (click)="viewDocument(hebergementData.hebergemntFile)" style="color: white ; background: #096a38" class="btn"><mat-icon>download</mat-icon></button>
-                </div>
-                <div *ngIf="hebergementData.etatDemande !== 2 ">
-                    <p class="card-text"><strong style="color:#df3671"><u>Document indisponible pour l'instant.</u></strong></p>
-                    <p>Une fois le traitement terminé ce dernier apparaitra ici ! Surveillez attentivement vos mails.</p>
-                    Date de livraison estimés sous <strong> 3 à 5 jours</strong> ouvrés
-                </div>
+  </div>
 
-            </div>
+  <!-- ── Demande en cours ── -->
+  <ng-template #financeInProgress>
 
+    <!-- Statut -->
+    <div class="heb-status-card">
+      <div class="heb-status-header">État de la demande</div>
+      <div class="heb-status-body">
+
+        <!-- Étapes visuelles -->
+        <div class="heb-steps">
+          <div class="heb-step" [class.heb-step-active]="hebergementData.etatDemande === 0" [class.heb-step-done]="hebergementData.etatDemande > 0">
+            <div class="heb-step-dot heb-dot-amber"></div>
+            <span class="heb-step-label">En attente</span>
+          </div>
+          <div class="heb-step-line" [class.heb-line-filled]="hebergementData.etatDemande >= 1"></div>
+          <div class="heb-step" [class.heb-step-active]="hebergementData.etatDemande === 1" [class.heb-step-done]="hebergementData.etatDemande > 1">
+            <div class="heb-step-dot heb-dot-blue"></div>
+            <span class="heb-step-label">En cours</span>
+          </div>
+          <div class="heb-step-line" [class.heb-line-filled]="hebergementData.etatDemande >= 2"></div>
+          <div class="heb-step" [class.heb-step-active]="hebergementData.etatDemande === 2" [class.heb-step-done]="hebergementData.etatDemande > 2">
+            <div class="heb-step-dot heb-dot-green"></div>
+            <span class="heb-step-label">Terminée</span>
+          </div>
         </div>
+
+        <!-- Barre de progression -->
+        <div class="heb-progress-bar-wrap">
+          <div class="heb-progress-track">
+            <div class="heb-progress-fill"
+              [style.width]="hebergementData.etatDemande === 0 ? '33%' : hebergementData.etatDemande === 1 ? '66%' : '100%'"
+              [class.heb-fill-amber]="hebergementData.etatDemande === 0"
+              [class.heb-fill-blue]="hebergementData.etatDemande === 1"
+              [class.heb-fill-green]="hebergementData.etatDemande >= 2">
+            </div>
+          </div>
+        </div>
+
+        <!-- Message de statut -->
+        <div class="heb-status-msg">
+          <ng-container *ngIf="hebergementData.etatDemande === 0">
+            <p *ngIf="!hebergementData.justificatifPaiement" class="heb-msg-amber">
+              <mat-icon>hourglass_empty</mat-icon> Votre demande est en attente de paiement.
+            </p>
+            <p *ngIf="hebergementData.justificatifPaiement" class="heb-msg-blue">
+              <mat-icon>schedule</mat-icon> Justificatif reçu — en attente de validation par notre équipe.
+            </p>
+          </ng-container>
+          <p *ngIf="hebergementData.etatDemande === 1" class="heb-msg-blue">
+            <mat-icon>autorenew</mat-icon> Votre demande est en cours de traitement.
+          </p>
+          <p *ngIf="hebergementData.etatDemande === 2" class="heb-msg-green">
+            <mat-icon>check_circle</mat-icon> Le traitement de votre demande est terminé. Merci de nous avoir fait confiance.
+          </p>
+          <p *ngIf="hebergementData.etatDemande === 3" class="heb-msg-amber">
+            <mat-icon>archive</mat-icon> Votre demande a été archivée. Veuillez contacter le service Mayk Consulting.
+          </p>
+        </div>
+
+        <div *ngIf="!hebergementData.justificatifPaiement" class="heb-alert-warn">
+          <mat-icon>warning_amber</mat-icon>
+          Nous n'avons pas encore reçu votre justificatif de paiement. Ajoutez-le en cliquant sur le bouton <strong>Paiement</strong>.
+        </div>
+
+      </div>
+      <div class="heb-status-footer">
+        Demande soumise le <strong>{{ dateDemande }}</strong>
+      </div>
     </div>
+
+    <!-- ── Devis + Documents ── -->
+    <div class="heb-row" *ngIf="hebergementData.etatDemande !== 3">
+
+      <!-- Devis et paiement -->
+      <div class="heb-col">
+        <div class="heb-card">
+          <div class="heb-card-header">Devis et Paiement</div>
+          <div class="heb-card-body">
+
+            <div *ngIf="hebergementData.justificatifPaiement && hebergementData.etatDemande === 0" class="heb-alert-info">
+              <mat-icon>schedule</mat-icon> Justificatif reçu. Le statut changera dès validation par notre équipe.
+            </div>
+            <div *ngIf="hebergementData.justificatifPaiement && hebergementData.etatDemande !== 0 && hebergementData.etatDemande !== 3" class="heb-alert-success">
+              <mat-icon>verified</mat-icon> Votre justificatif de paiement a été validé par notre service.
+            </div>
+            <p *ngIf="!hebergementData.justificatifPaiement" class="heb-card-hint">
+              <strong>NB :</strong> Téléchargez votre devis généré automatiquement. Vous pouvez joindre le justificatif de paiement en cliquant sur <strong>Paiement</strong>.
+            </p>
+
+            <div class="heb-btn-group">
+              <button routerLink="/admin/hebergement/devis" class="btn-primary-mk">
+                <mat-icon>description</mat-icon> Votre devis ici !
+              </button>
+              <button class="btn-outline-mk" (click)="goToPaymentPage()">
+                <mat-icon>payment</mat-icon> Paiement
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents hébergement -->
+      <div class="heb-col">
+        <div class="heb-card">
+          <div class="heb-card-header">Documents Relatifs à mon hébergement</div>
+          <div class="heb-card-body">
+
+            <div *ngIf="hebergementData.hebergemntFile && hebergementData.etatDemande === 2" class="heb-doc-ready">
+              <mat-icon class="heb-doc-icon">description</mat-icon>
+              <p>Votre document est prêt. Cliquez pour le télécharger.</p>
+              <button (click)="viewDocument(hebergementData.hebergemntFile)" class="btn-primary-mk">
+                <mat-icon>download</mat-icon> Télécharger
+              </button>
+            </div>
+
+            <div *ngIf="hebergementData.etatDemande !== 2" class="heb-doc-unavailable">
+              <mat-icon class="heb-doc-info-icon">info_outline</mat-icon>
+              <p class="heb-doc-info-title">Document indisponible pour l'instant</p>
+              <p class="heb-doc-info-text">Une fois le traitement terminé, le document apparaîtra ici. Surveillez attentivement vos mails.</p>
+              <span class="heb-doc-delay">Livraison estimée sous <strong>3 à 5 jours</strong> ouvrés</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Informations + Vidéos ── -->
+    <div class="heb-row">
+
+      <!-- Mes informations -->
+      <div class="heb-col">
+        <div class="heb-card">
+          <div class="heb-card-header heb-card-header-dark">Mes informations communiquées</div>
+          <div class="heb-card-body">
+            <p class="heb-card-intro">Pour votre demande soumise le <strong>{{ dateDemande }}</strong>, vous nous avez communiqué :</p>
+
+            <table class="heb-info-table">
+              <tbody>
+                <tr>
+                  <th>Pays</th>
+                  <td>{{ hebergementData.country }}</td>
+                </tr>
+                <tr>
+                  <th>Ville</th>
+                  <td>{{ hebergementData.city }}</td>
+                </tr>
+                <tr>
+                  <th>Passeport</th>
+                  <td>
+                    <button *ngIf="hebergementData.passport" (click)="viewDocument(hebergementData.passport)" class="btn-icon-view">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <span *ngIf="!hebergementData.passport" class="heb-no-doc">Aucun document</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Admission</th>
+                  <td>
+                    <button *ngIf="hebergementData.admissionFile" (click)="viewDocument(hebergementData.admissionFile)" class="btn-icon-view">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <span *ngIf="!hebergementData.admissionFile" class="heb-no-doc">Aucun document</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Paiement</th>
+                  <td>
+                    <button *ngIf="hebergementData.justificatifPaiement" (click)="viewDocument(hebergementData.justificatifPaiement)" class="btn-icon-view">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <span *ngIf="!hebergementData.justificatifPaiement" class="heb-no-doc heb-required">Aucun justificatif <strong>(Obligatoire)</strong></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p class="heb-info-note"><strong>NB :</strong> En cas d'erreur, contactez un agent Mayk Consulting ou retirez votre demande pour en soumettre une nouvelle.</p>
+
+            <div *ngIf="hebergementData.etatDemande === 0" class="heb-withdraw-wrap">
+              <button class="btn-danger-outline" (click)="onWithdrawRequest()">Retirer ma demande</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="hebergementData.country === 'France'" class="heb-card heb-card-mt">
+          <div class="heb-card-header">Documents à fournir pour le visa</div>
+          <div class="heb-card-body heb-text-center">
+            <p>Vous trouverez la liste des justificatifs nécessaires pour votre demande de visa.</p>
+            <button (click)="viewDocument('https://firebasestorage.googleapis.com/v0/b/maykconsulting-7e0c1.appspot.com/o/divers%2Fliste_ls_etudiants_galbv.pdf?alt=media&token=6c952503-bdba-4512-a342-abc6523bdc4e')" class="btn-primary-mk">
+              <mat-icon>download</mat-icon> Télécharger la liste
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vidéos -->
+      <div class="heb-col">
+        <div class="heb-card heb-card-mb">
+          <div class="heb-card-header">Astuces : Prendre son rendez-vous pour visa France</div>
+          <div class="heb-card-body">
+            <iframe *ngIf="youtubeUrl" [src]="youtubeUrl" width="100%" height="280" frameborder="0" allowfullscreen class="heb-video"></iframe>
+            <p *ngIf="!youtubeUrl" class="heb-no-video">Aucune vidéo disponible pour l'instant.</p>
+          </div>
+        </div>
+
+        <div class="heb-card">
+          <div class="heb-card-header">Astuces : Comment remplir son formulaire visa France</div>
+          <div class="heb-card-body">
+            <iframe *ngIf="youtubeUrl2" [src]="youtubeUrl2" width="100%" height="280" frameborder="0" allowfullscreen class="heb-video"></iframe>
+            <p *ngIf="!youtubeUrl2" class="heb-no-video">Aucune vidéo disponible pour l'instant.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Contact ── -->
+    <div class="heb-contact-footer">
+      Pour toute question, contactez-nous par mail :
+      <a href="mailto:maykconsulting&#64;gmail.com">maykconsulting&#64;gmail.com</a>
+      ou au <strong>+33 6 21 35 86 92</strong> (également sur WhatsApp)
+    </div>
+
+  </ng-template>
+
 </div>
-
-<div class="row">
-        <div class="col-md-6">
-        <div class="">
-            <div class="card">
-                <div class="card-header" style="background: #072150; color: white">
-                    <div align="center">Mes informations communiqués</div>
-                </div>
-                <div class="card-body">
-                    <p class="card-text text-center">Pour votre demande d'hébergement soumise le <strong>{{ dateDemande }}</strong>  vous nous avez communiqué les informations suivantes :</p>
-
-                    <!-- content -->
-                    <div class="container">
-                        <div class="row">
-                            <div class="col">
-                                <table class="table text-center">
-                                    <tbody>
-                                    <tr>
-                                        <th scope="row">Pays  </th>
-                                        <td>{{ hebergementData.country }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Ville  </th>
-                                        <td>{{ hebergementData.city }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Passport </th>
-                                        <td>
-                                            <button *ngIf="hebergementData.passport" (click)="viewDocument(hebergementData.passport)" mat-flat-button class="btn btn-sm mk-nav-solid-btn">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <div *ngIf="!hebergementData.passport">Aucun justificatif</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Admission</th>
-                                        <td>
-                                            <button *ngIf="hebergementData.admissionFile" (click)="viewDocument(hebergementData.admissionFile)" mat-flat-button class ="btn btn-sm mk-nav-solid-btn">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <div *ngIf="!hebergementData.admissionFile">Aucun justificatif</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">
-                                            Paiement
-                                        </th>
-                                        <td>
-                                            <button mat-flat-button (click)="viewDocument(hebergementData.justificatifPaiement)" *ngIf="hebergementData.justificatifPaiement" class="btn btn-sm mk-nav-solid-btn">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <div *ngIf="!hebergementData.justificatifPaiement">Aucun justificatif <strong style="color: #d9006e">(Obligatoire pour le traitement de votre demande)</strong> </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <strong style="color: #d9006e"><u>NB</u> :</strong> En cas d'erreur, veuillez contacter l'agent de Maykconsulting, ou bien retirer votre demande et en soumettre une nouvelle.
-                    <div align="center" class="mt-4" *ngIf="hebergementData.etatDemande === 0"> <button mat-flat-button class="btn mk-nav-solid-btn" (click)="onWithdrawRequest()">Retirer ma demande</button></div>
-
-                </div>
-                <div class="card-footer text-body-secondary">
-<br>
-                </div>
-            </div>
-
-            <div *ngIf="hebergementData.country === 'France'" class="card text-center mt-4">
-                <div class="card-header">
-                    Documents à fournir pour le visa
-                </div>
-                <div class="card-body">
-                    <div >
-                        <h5 class="card-title">Document du consulat Français</h5>
-                        <p class="card-text">Vous trouverez la liste des justificatifs nécessaires pour votre demande de visa !</p>
-                        <button (click)="viewDocument('https://firebasestorage.googleapis.com/v0/b/maykconsulting-7e0c1.appspot.com/o/divers%2Fliste_ls_etudiants_galbv.pdf?alt=media&token=6c952503-bdba-4512-a342-abc6523bdc4e')" style="color: white ; background: #072150" class="btn"><mat-icon>download</mat-icon></button>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-        </div>
-        <div class="col-md-6 doc-heb">
-<!-- mettre la video youtube ici a partir d un lien par exemple -->
-            <div class="card text-center mb-2">
-                <div class="card-header">
-                    Astuces : Prendre son rendez-vous pour visa France
-                </div>
-                <div class="card-body">
-                    <iframe *ngIf="youtubeUrl" [src]="youtubeUrl" width="100%" height="315" frameborder="0" allowfullscreen></iframe>
-                    <p *ngIf="!youtubeUrl">Aucune vidéo disponible pour l'instant.</p>
-                </div>
-            </div>
-
-            <div class="card text-center mt-4">
-                <div class="card-header">
-                    Astuces : Comment remplir son formulaire pour visa France
-                </div>
-                <div class="card-body">
-                    <iframe *ngIf="youtubeUrl2" [src]="youtubeUrl2" width="100%" height="315" frameborder="0" allowfullscreen></iframe>
-                    <p *ngIf="!youtubeUrl2">Aucune vidéo disponible pour l'instant.</p>
-                </div>
-            </div>
-
-        </div>
-        </div>
-
-        <div class="row justify-content-center mt-5 mb-4">
-            <div class="col-md-12 text-center">
-                <p>Pour toutes questions veuillez nous contacter par mail sur : <a href="mailto:maykconsulting@gmail.com" style="color: #1e3c72">{{ 'maykconsulting@gmail.com' }}</a> ou au + 33 6 21 35 86 92 (également disponible par Whatsapp)</p>
-            </div>
-        </div>
-
-    </ng-template>
-</div>
-
 
 <style>
-    .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(197, 197, 197, 0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-    }
+  .overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(197, 197, 197, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
 </style>
-
-
