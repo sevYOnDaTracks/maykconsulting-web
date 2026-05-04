@@ -1,121 +1,109 @@
-﻿<div class="container p-3 mt-5" *ngIf="user$ | async as user; else loading">
-    <div class="row justify-content-center">
-        <div class="text-center">
-            <h1 class="welcome-title">Hello {{ user.firstName }} {{ user.lastName }} !</h1>
-        </div>
-    </div>
-    <div *ngIf="emailVerified === false" class="alert alert-danger text-center mt-4 mb-4">
-        Votre adresse email n'est pas vérifiée, vérifiez votre boîte aux lettres, un lien vous a été envoyé avec comme expéditeur "{{ 'no-reply@maykconsulting.fr' }}". Vérifiez également vos Spams si besoin.
-    </div>
-    <div *ngIf="hasExistingAdmissionNotPay" class="alert alert-warning text-center mt-4 mb-4">
-        Vous avez une demande d'admission en attente de paiement !  <u style="cursor:pointer;" routerLink="/admin/admission">Cliquez ici pour voir.</u>
-    </div>
-    <div *ngIf="hasExistingHebergementNotPay" class="alert alert-warning text-center mt-4 mb-4">
-        Vous avez une demande d'hébergement en attente de paiement !  <u style="cursor:pointer;" routerLink="/admin/hebergement">Cliquez ici pour voir.</u>
-    </div>
-    <div *ngIf="hasExistingFinanceNotPay" class="alert alert-warning text-center mt-4 mb-4">
-        Vous avez une demande de garant financier en attente de paiement !  <u style="cursor:pointer;" routerLink="/admin/finance">Cliquez ici pour voir.</u>
-    </div>
-    <div *ngIf="hebergementData?.hebergemntFile" class="alert alert-success text-center mt-4 mb-4">
-        Merci de votre patience, vos documents d'hébergement sont prêts !  <u style="cursor:pointer;" routerLink="/admin/hebergement">Cliquez ici pour voir.</u>
-    </div>
-    <div *ngIf="financeData?.garantFile" class="alert text-center mt-4 mb-4" style="background: rgba(47,163,34,0.25)">
-        Merci de votre patience, vos documents de garant financier sont prêts !  <u style="cursor:pointer;" routerLink="/admin/finance">Cliquez ici pour voir.</u>
-    </div>
+<div class="home-wrap" *ngIf="user$ | async as user; else loading">
 
-    <div *ngIf="admissionData?.etatDemande === 3" class="alert text-center mt-4 mb-4" style="background: rgba(47,163,34,0.25)">
-        Félicitations vous avez été accepté dans au moins 1 établissement !  <u style="cursor:pointer;" routerLink="/admin/admission">Cliquez ici pour voir.</u>
+  <!-- Welcome -->
+  <div class="mb-8 text-center">
+    <h1 class="welcome-title">Hello {{ user.firstName }} {{ user.lastName }} !</h1>
+    <p class="welcome-sub">Que souhaitez-vous faire aujourd'hui ?</p>
+  </div>
+
+  <!-- Alerts -->
+  <div class="alerts-zone">
+    <div *ngIf="emailVerified === false" class="alert alert-danger">
+      Votre adresse email n'est pas vérifiée. Vérifiez votre boîte aux lettres (expéditeur : <strong>no-reply&#64;maykconsulting.fr</strong>) et vos Spams si besoin.
     </div>
-
-    <div *ngIf="admissionData?.etatDemande === 4" class="alert text-center mt-4 mb-4" style="background: rgba(191,60,20,0.21)">
-        Pas de chance !!! Malheuresement vous n'avez été accepté dans aucun établissement. <br>Nous pouvons tenter une admission dans une école privée, mais les frais d'admission seront à votre charge.
+    <div *ngIf="hasExistingAdmissionNotPay" class="alert alert-warning">
+      Vous avez une demande d'admission en attente de paiement.
+      <a routerLink="/admin/admission">Voir ma demande →</a>
     </div>
-
-
-
-    <h5 align="center" class="mt-4"> Que souhaitez-vous comme prestation ?</h5>
-    <!-- Replace buttons with clickable cards and icons -->
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-4 mt-2">
-            <mat-card class="text-center" routerLink="/admin/hebergement" style="cursor:pointer;">
-                <mat-card-content class="mt-3 mb-3">
-                    <mat-icon style="color: #4e2680">weekend</mat-icon>
-                    <p>Hébergement</p>
-                </mat-card-content>
-            </mat-card>
-        </div>
-        <div class="col-md-4 mt-2">
-            <mat-card class="text-center" routerLink="/admin/admission" style="cursor:pointer;">
-                <mat-card-content class="mt-3 mb-3">
-                    <mat-icon style="color: #1e3c72;">school</mat-icon>
-                    <p>Admissions</p>
-                </mat-card-content>
-
-
-            </mat-card>
-        </div>
-        <div class="col-md-4 mt-2">
-            <mat-card class="text-center" routerLink="/admin/finance" style="cursor:pointer;">
-                <mat-card-content class="mt-3 mb-3">
-                    <mat-icon style="color: #43b7df;">work</mat-icon>
-                    <p>Garant Financier</p>
-                </mat-card-content>
-            </mat-card>
-        </div>
+    <div *ngIf="hasExistingHebergementNotPay" class="alert alert-warning">
+      Vous avez une demande d'hébergement en attente de paiement.
+      <a routerLink="/admin/hebergement">Voir ma demande →</a>
     </div>
-
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-12">
-            <mat-card class="text-center">
-                <mat-card-header>
-                    <mat-card-title></mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <mat-card-subtitle *ngIf="!user.identityPhotoUrl" class=" alert alert-warn p-2" style="background-color: #fff3cd;justify-content: center">
-                        Hey, nous n'avons toujours pas reçu ta photo d'identité.
-                    </mat-card-subtitle>
-                    <input
-                            #quickIdentityInput
-                            type="file"
-                            accept="image/*"
-                            hidden
-                            (change)="onQuickIdentityPhotoSelected($event, user)"
-                    />
-                    <p class="mt-2">Souhaitez-vous gérer vos informations ? C'est par ici !</p>
-                    <div class="profile-actions-row">
-                        <button
-                                *ngIf="!user.identityPhotoUrl"
-                                mat-flat-button
-                                class="quick-upload-btn"
-                                type="button"
-                                [disabled]="isUploadingIdentityPhoto"
-                                (click)="triggerQuickIdentityUpload(quickIdentityInput)"
-                        >
-                            {{ isUploadingIdentityPhoto ? 'Chargement...' : 'Mettre une photo' }}
-                            <mat-icon>cloud_upload</mat-icon>
-                        </button>
-                        <button mat-stroked-button routerLink="/admin/user" style="color:#1e3c72">
-                            Profil
-                            <mat-icon>person</mat-icon>
-                        </button>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
+    <div *ngIf="hasExistingFinanceNotPay" class="alert alert-warning">
+      Vous avez une demande de garant financier en attente de paiement.
+      <a routerLink="/admin/finance">Voir ma demande →</a>
     </div>
-
-
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-12 text-center">
-            <p>Pour toutes questions, veuillez nous contacter par mail sur : <a href="mailto:maykconsulting@gmail.com" style="color: #1e3c72">{{ 'maykconsulting@gmail.com' }}</a></p>
-        </div>
+    <div *ngIf="hebergementData?.hebergemntFile" class="alert alert-success">
+      Vos documents d'hébergement sont prêts !
+      <a routerLink="/admin/hebergement">Voir mes documents →</a>
     </div>
+    <div *ngIf="financeData?.garantFile" class="alert alert-success">
+      Vos documents de garant financier sont prêts !
+      <a routerLink="/admin/finance">Voir mes documents →</a>
+    </div>
+    <div *ngIf="admissionData?.etatDemande === 3" class="alert alert-success">
+      Félicitations, vous avez été accepté dans au moins 1 établissement !
+      <a routerLink="/admin/admission">Voir les résultats →</a>
+    </div>
+    <div *ngIf="admissionData?.etatDemande === 4" class="alert alert-danger">
+      Malheureusement vous n'avez été accepté dans aucun établissement. Nous pouvons tenter une admission dans une école privée, les frais seront à votre charge.
+    </div>
+  </div>
+
+  <!-- Service cards -->
+  <div class="service-grid">
+    <a routerLink="/admin/hebergement" class="service-card">
+      <div class="service-icon-wrap" style="background: rgba(78,38,128,0.10);">
+        <mat-icon style="color:#4e2680;">weekend</mat-icon>
+      </div>
+      <span class="service-label">Hébergement</span>
+      <span class="service-arrow">→</span>
+    </a>
+
+    <a routerLink="/admin/admission" class="service-card">
+      <div class="service-icon-wrap" style="background: rgba(30,60,114,0.10);">
+        <mat-icon style="color:#1e3c72;">school</mat-icon>
+      </div>
+      <span class="service-label">Admissions</span>
+      <span class="service-arrow">→</span>
+    </a>
+
+    <a routerLink="/admin/finance" class="service-card">
+      <div class="service-icon-wrap" style="background: rgba(30,64,175,0.10);">
+        <mat-icon style="color:#1e40af;">work</mat-icon>
+      </div>
+      <span class="service-label">Garant Financier</span>
+      <span class="service-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- Profile card -->
+  <div class="profile-card">
+    <div *ngIf="!user.identityPhotoUrl" class="photo-notice">
+      <mat-icon class="photo-notice-icon">info_outline</mat-icon>
+      Nous n'avons pas encore reçu votre photo d'identité.
+    </div>
+    <p class="profile-card-label">Souhaitez-vous gérer vos informations ?</p>
+    <div class="profile-actions">
+      <input #quickIdentityInput type="file" accept="image/*" hidden (change)="onQuickIdentityPhotoSelected($event, user)" />
+      <button
+        *ngIf="!user.identityPhotoUrl"
+        mat-flat-button
+        class="quick-upload-btn"
+        type="button"
+        [disabled]="isUploadingIdentityPhoto"
+        (click)="triggerQuickIdentityUpload(quickIdentityInput)"
+      >
+        {{ isUploadingIdentityPhoto ? 'Chargement...' : 'Mettre une photo' }}
+        <mat-icon>cloud_upload</mat-icon>
+      </button>
+      <button mat-stroked-button routerLink="/admin/user">
+        <mat-icon>person</mat-icon>
+        Mon profil
+      </button>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <p class="contact-line">
+    Pour toutes questions :
+    <a href="mailto:maykconsulting@gmail.com">maykconsulting&#64;gmail.com</a>
+  </p>
+
 </div>
 
 <ng-template #loading>
-    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
-        <mat-spinner diameter="90"></mat-spinner>
-    </div>
+  <div class="loading-state">
+    <mat-spinner diameter="52"></mat-spinner>
+  </div>
 </ng-template>
-
-

@@ -4,14 +4,13 @@
 
   <mat-toolbar class="fixed-toolbar">
     <div class="admin-nav-shell">
-      <button mat-icon-button class="menu-btn" (click)="snav.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
 
+      <!-- Logo : toujours à gauche -->
       <a routerLink="/admin" class="brand-link">
         <img src="assets/images/logoB.png" alt="Maykconsulting logo" class="brand-full-logo">
       </a>
 
+      <!-- Nav desktop : centrée -->
       <nav class="desktop-nav">
         <a
           *ngFor="let nav of topNav; trackBy: trackByFn"
@@ -29,6 +28,7 @@
         </button>
       </nav>
 
+      <!-- Actions : toujours à droite -->
       <div class="actions">
         <button mat-icon-button class="icon-btn profile-photo-btn" routerLink="/admin/user" aria-label="Profil">
           <img
@@ -44,13 +44,14 @@
           <mat-icon [matBadge]="demandesCount" [matBadgeColor]="demandesCount === 0 ? 'primary' : 'warn'">notifications</mat-icon>
         </button>
 
-        <button mat-icon-button class="icon-btn" [matMenuTriggerFor]="accountMenu" aria-label="Actions">
+        <button mat-icon-button class="icon-btn" [matMenuTriggerFor]="accountMenu" aria-label="Menu">
           <mat-icon>more_vert</mat-icon>
         </button>
       </div>
     </div>
   </mat-toolbar>
 
+  <!-- Menu admin desktop -->
   <mat-menu #adminDesktopMenu="matMenu">
     <button *ngFor="let nav of adminNav" mat-menu-item [routerLink]="nav.path">
       <mat-icon>{{ nav.icon }}</mat-icon>
@@ -58,6 +59,7 @@
     </button>
   </mat-menu>
 
+  <!-- Menu notifications -->
   <mat-menu #notificationMenu="matMenu">
     <button *ngIf="hebergementData" mat-menu-item routerLink="/admin/hebergement">
       <mat-icon>weekend</mat-icon>
@@ -74,15 +76,34 @@
     <span *ngIf="demandesCount === 0" class="empty-notification">Rien par ici...</span>
   </mat-menu>
 
+  <!-- Menu 3-points : navigation + compte (accessible sur mobile) -->
   <mat-menu #accountMenu="matMenu">
-    <button mat-menu-item routerLink="/admin">
+    <button mat-menu-item routerLink="/admin/">
       <mat-icon>home</mat-icon>
       <span>Accueil</span>
     </button>
+    <button mat-menu-item routerLink="/admin/admission">
+      <mat-icon>school</mat-icon>
+      <span>Admissions</span>
+    </button>
+    <button mat-menu-item routerLink="/admin/hebergement">
+      <mat-icon>weekend</mat-icon>
+      <span>Hebergement</span>
+    </button>
+    <button mat-menu-item routerLink="/admin/finance">
+      <mat-icon>work</mat-icon>
+      <span>Garantie Financiere</span>
+    </button>
+    <mat-divider></mat-divider>
     <button mat-menu-item routerLink="/admin/user">
       <mat-icon>person</mat-icon>
       <span>Mon compte</span>
     </button>
+    <button *ngIf="isAdmin" mat-menu-item [matMenuTriggerFor]="adminDesktopMenu">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>Administration</span>
+    </button>
+    <mat-divider></mat-divider>
     <button (click)="signOut()" mat-menu-item>
       <mat-icon>power</mat-icon>
       <span>Deconnexion</span>
@@ -95,36 +116,7 @@
       class="custom-sidenav"
       mode="over"
       [opened]="false"
-      [fixedInViewport]="mobileQuery.matches"
-      [fixedTopGap]="mobileQuery.matches ? 78 : 0"
     >
-      <div class="mobile-nav-title">Navigation</div>
-      <mat-nav-list>
-        <a
-          *ngFor="let nav of fillerNav; trackBy: trackByFn"
-          mat-list-item
-          (click)="snav.close()"
-          [routerLink]="nav.path"
-          routerLinkActive="active-link"
-          [routerLinkActiveOptions]="{ exact: nav.path === '/admin/' }"
-        >
-          <mat-icon>{{ nav.icon }}</mat-icon>
-          <span>{{ nav.label }}</span>
-        </a>
-
-        <mat-list-item *ngIf="isAdmin" class="admin-toggle" (click)="toggleAdminMenu()">
-          <mat-icon>admin_panel_settings</mat-icon>
-          <span>Administration</span>
-          <mat-icon>{{ showAdminMenu ? 'expand_less' : 'expand_more' }}</mat-icon>
-        </mat-list-item>
-
-        <div *ngIf="showAdminMenu && isAdmin" class="admin-sub-links">
-          <a *ngFor="let nav of adminNav" mat-list-item [routerLink]="nav.path" (click)="snav.close()">
-            <mat-icon>{{ nav.icon }}</mat-icon>
-            <span>{{ nav.label }}</span>
-          </a>
-        </div>
-      </mat-nav-list>
     </mat-sidenav>
 
     <mat-sidenav-content class="admin-content">

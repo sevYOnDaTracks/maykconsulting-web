@@ -2,6 +2,7 @@
   display: block;
 }
 
+/* ── Shell ── */
 .admin-shell {
   position: relative;
   min-height: 100vh;
@@ -10,30 +11,15 @@
   background: #f4f6fb;
 }
 
-.bg-orb {
-  display: none;
-}
+.bg-orb { display: none; }
 
-.orb-a {
-  top: -12vw;
-  left: -10vw;
-  background: rgba(56, 189, 248, 0.2);
-}
-
-.orb-b {
-  right: -8vw;
-  bottom: -10vw;
-  background: rgba(0, 194, 168, 0.18);
-}
-
+/* ── Toolbar ── */
 .fixed-toolbar {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   z-index: 1200;
   background: transparent;
-  padding: 1rem 1rem 0;
+  padding: 0.85rem 1rem 0;
   height: auto;
 }
 
@@ -41,11 +27,10 @@
   width: 100%;
   max-width: 1380px;
   margin: 0 auto;
-  min-height: 72px;
+  min-height: 68px;
   display: flex;
   align-items: center;
-  gap: 0.9rem;
-  padding: 0.55rem 0.9rem;
+  padding: 0.5rem 0.9rem;
   border-radius: 1.1rem;
   border: 1px solid rgba(148, 163, 184, 0.36);
   background: linear-gradient(110deg, #072150, #0a2a63 55%, #072047);
@@ -53,18 +38,13 @@
   backdrop-filter: blur(10px);
 }
 
-.menu-btn {
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  border-radius: 0.7rem;
-  color: #dbeefe;
-  background: rgba(12, 29, 42, 0.78);
-}
-
+/* ── Brand : flex:1 pour pousser la nav au centre ── */
 .brand-link {
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  min-width: 200px;
+  flex: 1;
+  min-width: 0;
 }
 
 .brand-full-logo {
@@ -74,26 +54,28 @@
   object-fit: contain;
 }
 
+/* ── Desktop nav : centrée naturellement ── */
 .desktop-nav {
-  margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.2rem;
+  flex-shrink: 0;
 }
 
 .nav-link {
   display: inline-flex;
   align-items: center;
   gap: 0.2rem;
-  height: 44px;
-  border-radius: 11px;
+  height: 40px;
+  border-radius: 10px;
   border: 1px solid transparent;
-  padding: 0 1rem;
+  padding: 0 0.9rem;
   color: #e8f3f9;
   font-family: "Space Grotesk", sans-serif;
-  font-size: 1rem;
+  font-size: 0.93rem;
   font-weight: 600;
   text-decoration: none;
+  white-space: nowrap;
   background: transparent;
   transition: background 0.2s ease, color 0.2s ease;
 }
@@ -104,9 +86,7 @@
 }
 
 .nav-link mat-icon {
-  width: 20px;
-  height: 20px;
-  font-size: 20px;
+  width: 20px; height: 20px; font-size: 20px;
 }
 
 .active-nav-link {
@@ -120,19 +100,20 @@
   background: rgba(6, 18, 33, 0.22) !important;
 }
 
-.nav-menu-link mat-icon {
-  color: #f8fdff !important;
-}
+.nav-menu-link mat-icon { color: #f8fdff !important; }
 
 :host ::ng-deep .nav-menu-link .mdc-button__label {
   color: #f8fdff !important;
 }
 
+/* ── Actions : flex:1 pour équilibrer à droite ── */
 .actions {
-  margin-left: 0.4rem;
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  flex-shrink: 0;
 }
 
 .icon-btn {
@@ -144,19 +125,17 @@
 }
 
 .profile-photo-btn {
-  width: 46px;
-  height: 46px;
-  padding: 0;
+  width: 44px; height: 44px; padding: 0;
 }
 
 .user-photo {
-  width: 36px;
-  height: 36px;
+  width: 34px; height: 34px;
   border-radius: 999px;
   object-fit: cover;
   border: 1px solid rgba(148, 163, 184, 0.42);
 }
 
+/* ── Sidenav ── */
 .example-sidenav-container {
   position: relative;
   z-index: 1;
@@ -165,7 +144,7 @@
 }
 
 .custom-sidenav {
-  width: min(350px, 92vw);
+  width: min(340px, 92vw);
   border-right: 1px solid rgba(148, 163, 184, 0.32);
   background: #ffffff;
   color: #0f172a;
@@ -192,13 +171,9 @@
   padding-top: 0.3rem;
 }
 
-.admin-sub-links {
-  padding-left: 0.65rem;
-}
+.admin-sub-links { padding-left: 0.65rem; }
 
-.admin-content {
-  background: #f4f6fb;
-}
+.admin-content { background: #f4f6fb; }
 
 .admin-main {
   width: 100%;
@@ -221,68 +196,47 @@
   font-size: 0.92rem;
 }
 
-@media (min-width: 1101px) {
-  .menu-btn {
-    display: none;
-  }
-}
+/* ══════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ══════════════════════════════ */
 
-@media (max-width: 1300px) {
-  .brand-full-logo {
-    width: 165px;
-  }
-
-  .nav-link {
-    padding: 0 0.82rem;
-    font-size: 0.94rem;
-  }
-}
-
-@media (max-width: 1100px) {
+/* < 900px : nav desktop cachée, logo + actions seulement */
+@media (max-width: 899px) {
   .desktop-nav {
     display: none;
   }
-
-  .brand-link {
-    min-width: 0;
-  }
-
   .brand-full-logo {
     width: 150px;
   }
 }
 
-@media (max-width: 700px) {
-  .fixed-toolbar {
-    padding: 0.7rem 0.65rem 0;
-  }
-
-  .admin-nav-shell {
-    min-height: 66px;
-    padding: 0.45rem 0.6rem;
-    gap: 0.55rem;
-  }
-
-  .brand-full-logo {
-    width: 126px;
-  }
-
-  .actions {
-    gap: 0.28rem;
-  }
-
-  .icon-btn,
-  .profile-photo-btn {
-    width: 40px;
+/* 900px – 1200px : nav compacte */
+@media (min-width: 900px) and (max-width: 1200px) {
+  .brand-full-logo { width: 148px; }
+  .nav-link {
+    font-size: 0.875rem;
+    padding: 0 0.65rem;
     height: 40px;
   }
+  .desktop-nav { gap: 0.15rem; }
+}
 
-  .user-photo {
-    width: 31px;
-    height: 31px;
-  }
+/* ≥ 1201px : taille pleine */
+@media (min-width: 1201px) {
+  .brand-full-logo { width: 185px; }
+  .nav-link { font-size: 1rem; padding: 0 1rem; height: 44px; }
+}
 
-  .admin-shell {
-    padding-top: 82px;
+/* ≤ 600px : mobile serré */
+@media (max-width: 600px) {
+  .fixed-toolbar { padding: 0.65rem 0.6rem 0; }
+  .admin-nav-shell {
+    min-height: 62px;
+    padding: 0.42rem 0.6rem;
   }
+  .brand-full-logo { width: 118px; }
+  .actions { gap: 0.22rem; }
+  .icon-btn, .profile-photo-btn { width: 38px; height: 38px; }
+  .user-photo { width: 28px; height: 28px; }
+  .admin-shell { padding-top: 80px; }
 }
