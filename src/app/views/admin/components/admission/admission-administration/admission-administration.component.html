@@ -12,6 +12,42 @@
     </button>
   </div>
 
+  <!-- ── Barre de recherche rapide ── -->
+  <div class="search-wrap">
+    <div class="search-bar" [class.search-bar-active]="filteredCandidates.length > 0">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Rechercher un candidat par nom, prénom…"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchInput(searchQuery)"
+        autocomplete="off"
+      />
+      <button class="search-clear" *ngIf="searchQuery" (click)="clearSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="search-dropdown" *ngIf="filteredCandidates.length > 0">
+      <div
+        *ngFor="let c of filteredCandidates"
+        class="search-suggestion"
+        (mousedown)="onCandidateSelected(c)"
+      >
+        <img [src]="c.photo || 'assets/images/landing/lOGO_d/logo.png'" alt="" class="suggestion-avatar">
+        <div class="suggestion-info">
+          <span class="suggestion-name">{{ c.demandeur }}</span>
+          <span class="suggestion-meta">{{ c.country }}</span>
+        </div>
+        <span class="suggestion-badge" [style.background]="getEtatColor(c.etatDemande) + '18'" [style.color]="getEtatColor(c.etatDemande)">
+          {{ getEtatLabel(c.etatDemande) }}
+        </span>
+        <mat-icon class="suggestion-arrow">chevron_right</mat-icon>
+      </div>
+    </div>
+  </div>
+
   <!-- ── KPI Strip ── -->
   <div class="kpi-grid">
     <div class="kpi-card">

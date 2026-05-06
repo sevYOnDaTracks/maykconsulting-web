@@ -1,133 +1,181 @@
-﻿<div class="container mt-3" *ngIf="user$ | async as user; else loading">
+<div class="devis-page" *ngIf="user$ | async as user; else loading">
 
-    <div class="mt-2 mb-2">
-        <mat-card appearance="outlined"  class="custom-card text-dark mt-2" style="padding: -10rem;">
-            <mat-card-content>
-                <div align="center" >
-                    <h1 class="text-dark">Hébergement <mat-icon>weekend</mat-icon></h1>
-                </div>
-            </mat-card-content>
-        </mat-card>
+  <!-- ── Barre d'actions (hors document imprimable) ── -->
+  <div class="action-bar">
+    <button class="btn-back" routerLink="/admin/hebergement/">
+      <mat-icon>arrow_back</mat-icon>
+      Retour
+    </button>
+    <div class="action-right">
+      <button class="btn-download" (click)="downloadPDF()">
+        <mat-icon>download</mat-icon>
+        Télécharger le devis
+      </button>
+    </div>
+  </div>
 
+  <!-- ── Document devis (capturé en PDF) ── -->
+  <div class="devis-document" id="devis-section" #pdfContent>
+
+    <!-- En-tête du document -->
+    <div class="doc-header">
+      <div class="doc-header-left">
+        <img src="assets/images/landing/lOGO_d/logo.png" alt="Maykconsulting" class="doc-logo">
+        <div class="doc-company">
+          <span class="doc-company-name">Maykconsulting</span>
+          <span class="doc-company-tagline">Service d'accompagnement international</span>
+        </div>
+      </div>
+      <div class="doc-header-right">
+        <div class="doc-badge">DEVIS</div>
+        <div class="doc-meta">
+          <div class="doc-meta-row">
+            <span class="doc-meta-label">Date</span>
+            <span class="doc-meta-value">{{ formattedDate }}</span>
+          </div>
+          <div class="doc-meta-row">
+            <span class="doc-meta-label">Service</span>
+            <span class="doc-meta-value">Hébergement</span>
+          </div>
+          <div class="doc-meta-row">
+            <span class="doc-meta-label">Statut</span>
+            <span class="doc-status-badge">En attente de paiement</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <mat-card appearance="outlined" class="mb-2">
-        <mat-card-content>
-            <div class="d-flex justify-content-between align-items-center">
-                <button routerLink="/admin/hebergement/" mat-flat-button class="mk-nav-gradient-btn">
-                    <mat-icon>arrow_left</mat-icon> Revenir
-                </button>
-                <button (click)="downloadPDF()" mat-stroked-button>
-                    <mat-icon>download</mat-icon> Télécharger
-                </button>
-            </div>
-        </mat-card-content>
-    </mat-card>
+    <div class="doc-divider"></div>
 
+    <!-- Émetteur / Destinataire -->
+    <div class="doc-parties">
+      <div class="doc-party">
+        <div class="doc-party-label">DE</div>
+        <div class="doc-party-name">Maykconsulting</div>
+        <div class="doc-party-detail">Service Hébergement International</div>
+        <div class="doc-party-detail">maykconsulting&#64;gmail.com</div>
+      </div>
+      <div class="doc-party-divider"></div>
+      <div class="doc-party">
+        <div class="doc-party-label">À L'ATTENTION DE</div>
+        <div class="doc-party-name">{{ user.firstName }} {{ user.lastName }}</div>
+        <div class="doc-party-detail">{{ user.email }}</div>
+        <div class="doc-party-detail">{{ user.phone }}</div>
+        <div class="doc-party-detail">Né(e) le {{ user.birthDate | date:'dd MMMM yyyy' }}</div>
+      </div>
+    </div>
 
-    <mat-card  class="card mb-4" appearance="outlined">
-        <mat-card-content class="m-2">
-            <div id="devis-section" class="card-body">
-                <div class="row">
-                    <div class="col-md-6 mt-2">
-                        <h5>{{ user.firstName }} {{ user.lastName }}</h5>
-                        <h5>Né(e) le {{ user.birthDate | date:'dd-MM-yyyy' }}</h5>
-                        <h5>{{ user.email }}</h5>
-                        <h5>{{ user.phone }}</h5>
-                    </div>
-                    <div class="col-md-6 text-right mt-2">
-                        <h5>Date : {{ formattedDate }}</h5>
-                    </div>
-                </div>
-                <table class="table mt-5">
-                    <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Hébergement : </td>
-                        <td> <strong>{{ hebergementData?.country }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td>Ville : </td>
-                        <td><strong> {{ hebergementData.city }} </strong></td>
-                    </tr>
-                    <tr>
-                        <td>Montant à payer : </td>
-                        <td class="text-danger" *ngIf="hebergementData.country === 'France'"><strong>200 000 FCFA</strong></td>
-                        <td class="text-danger" *ngIf="hebergementData.country === 'Canada'"><strong>A définir</strong></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="text-center mt-5 mb-3">
-                    <p>Paiement à effectuer via <strong>Western Union, Ria, MoneyGram...</strong> Vers :</p>
-                    <div class="d-flex justify-content-center mt-3 mb-3">
-                        <img src="assets/images/wuLogoOffi.jpg" alt="Western Union" class="payment-logo">
-                        <img src="assets/images/ria.png" alt="Ria" class="payment-logo">
-                        <img src="assets/images/MoneyGramLogo.png" alt="MoneyGram" class="payment-logo">
-                    </div>
-                </div>
-                <table class="table mt-5">
-                    <thead>
-                    <tr>
-                        <th>Agent de Réception</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                     <tr>
-                    <td>Nom : {{ (receptionAgent$ | async)?.firstName || 'Eboua' }}</td>
-                </tr>
-                <tr>
-                    <td>Prénoms : {{ (receptionAgent$ | async)?.lastName || 'Attié Yves-Patrick' }}</td>
-                </tr>
-                <tr>
-                    <td>Pays de résidence : {{ (receptionAgent$ | async)?.country || 'France' }}</td>
-                </tr>
-                <tr>
-                    <td>Adresse : {{ (receptionAgent$ | async)?.address || '90 Chaussée Jules César' }}</td>
-                </tr>
-                <tr>
-                    <td>Ville : {{ (receptionAgent$ | async)?.city || 'Eaubonne' }}</td>
-                </tr>
-                <tr>
-                    <td>Numéro : {{ (receptionAgent$ | async)?.phone || '+33 7 62 68 12 47' }}</td>
-                </tr>
-                    </tbody>
-                </table>
-                <p align="start" class="mt-3">By Maykconsulting le {{ formattedDate }}</p>
-                <div align="end"> <img class="logo-mayk" src="assets/images/landing/lOGO_d/logo.png" ></div>
+    <div class="doc-divider"></div>
+
+    <!-- Tableau des prestations -->
+    <div class="doc-section-title">Détail des prestations</div>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th class="col-desc">Description</th>
+          <th class="col-detail">Détail</th>
+          <th class="col-amount">Montant</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="service-name">Hébergement</div>
+            <div class="service-sub">Service de recherche et réservation</div>
+          </td>
+          <td>
+            <div class="service-detail-tag">{{ hebergementData?.country }}</div>
+            <div class="service-detail-city" *ngIf="hebergementData?.city">{{ hebergementData.city }}</div>
+          </td>
+          <td class="amount-cell">
+            <div class="amount-wrap">
+              <ng-container *ngIf="hebergementData?.country === 'France'">
+                <span class="amount-value">200 000</span>
+                <span class="amount-currency">FCFA</span>
+              </ng-container>
+              <ng-container *ngIf="hebergementData?.country !== 'France'">
+                <span class="amount-tbd">À définir</span>
+              </ng-container>
             </div>
-        </mat-card-content>
-    </mat-card>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td colspan="2" class="total-label">TOTAL À RÉGLER</td>
+          <td class="amount-cell total-amount">
+            <ng-container *ngIf="hebergementData?.country === 'France'">
+              200 000 FCFA
+            </ng-container>
+            <ng-container *ngIf="hebergementData?.country !== 'France'">
+              À définir
+            </ng-container>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="doc-divider"></div>
+
+    <!-- Instructions de paiement -->
+    <div class="doc-section-title">Mode de paiement</div>
+    <div class="doc-payment">
+      <p class="payment-intro">
+        Le règlement est à effectuer par transfert d'argent international via l'un des services suivants :
+      </p>
+      <div class="payment-logos">
+        <img src="assets/images/wuLogoOffi.jpg" alt="Western Union" class="payment-logo">
+        <img src="assets/images/ria.png" alt="Ria Money Transfer" class="payment-logo">
+        <img src="assets/images/MoneyGramLogo.png" alt="MoneyGram" class="payment-logo">
+      </div>
+    </div>
+
+    <!-- Agent de réception -->
+    <ng-container *ngIf="receptionAgent$ | async as agent">
+      <div class="doc-divider"></div>
+      <div class="doc-section-title">Agent de réception du paiement</div>
+      <div class="doc-agent">
+        <div class="agent-avatar">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="agent-details">
+          <div class="agent-name">{{ agent.firstName || 'Eboua' }} - {{ agent.lastName || 'Attié Yves-Patrick' }}</div>
+          <div class="agent-info-grid">
+            <div class="agent-info-item">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ agent.address || '90 Chaussée Jules César' }}, {{ agent.city || 'Eaubonne' }}</span>
+            </div>
+            <div class="agent-info-item">
+              <mat-icon>flag</mat-icon>
+              <span>{{ agent.country || 'France' }}</span>
+            </div>
+            <div class="agent-info-item">
+              <mat-icon>phone</mat-icon>
+              <span>{{ agent.phone || '+33 7 62 68 12 47' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Pied de document -->
+    <div class="doc-footer">
+      <div class="doc-footer-note">
+        <mat-icon>info_outline</mat-icon>
+        <span>Ce devis est établi à titre informatif. Le service sera activé à réception du justificatif de paiement.</span>
+      </div>
+      <div class="doc-footer-brand">
+        <img src="assets/images/landing/lOGO_d/logo.png" alt="Maykconsulting" class="footer-logo">
+        <span class="footer-by">Maykconsulting · {{ formattedDate }}</span>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <ng-template #loading>
-    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
-        <mat-spinner diameter="50"></mat-spinner>
-    </div>
+  <div class="devis-loading">
+    <mat-spinner diameter="44"></mat-spinner>
+    <p>Chargement du devis…</p>
+  </div>
 </ng-template>
-
-<style>
-    .custom-card-header {
-        background-color: #132a57;
-        color: #fff;
-    }
-
-    .payment-logo {
-        width: 65px;
-        height: auto;
-        margin: 0 15px;
-    }
-
-    .logo-mayk {
-        width: 190px;
-        height: auto;
-        margin-right: 15px;
-    }
-
-</style>
-
-

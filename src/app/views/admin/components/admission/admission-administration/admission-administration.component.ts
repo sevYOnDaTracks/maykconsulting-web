@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../../../landing/services/authentication.service';
 import {AdmissionService} from '../../../services/admission.service';
 import {MatTableDataSource} from '@angular/material/table';
@@ -16,6 +16,11 @@ import {CdkDragDrop, transferArrayItem} from '@angular/cdk/drag-drop';
   styleUrl: './admission-administration.component.scss'
 })
 export class AdmissionAdministrationComponent implements OnInit {
+
+  /* ── Recherche rapide ── */
+  searchQuery = '';
+  filteredCandidates: any[] = [];
+  private allCandidates: any[] = [];
 
   /* ── Kanban card arrays (pipeline actif) ── */
   pendingCards:    any[] = [];
@@ -51,8 +56,16 @@ export class AdmissionAdministrationComponent implements OnInit {
     private admissionService: AdmissionService,
     private authService:      AuthenticationService,
     private router:           Router,
-    private snackBar:         MatSnackBar
+    private snackBar:         MatSnackBar,
+    private elRef:            ElementRef
   ) {}
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.elRef.nativeElement.querySelector('.search-wrap')?.contains(event.target)) {
+      this.filteredCandidates = [];
+    }
+  }
 
   ngOnInit(): void {
     this.loadPendingCards();
@@ -83,31 +96,31 @@ export class AdmissionAdministrationComponent implements OnInit {
   private loadPendingCards(): void {
     this.admissionService.getPendingPaymentRequests()
       .pipe(switchMap(r => this.pipe$(r)))
-      .subscribe(data => { this.pendingCards = data; this.pendingRequestCount = data.length; });
+      .subscribe(data => { this.pendingCards = data; this.pendingRequestCount = data.length; this.rebuildAllCandidates(); });
   }
 
   private loadInProgressCards(): void {
     this.admissionService.getInProgressPaymentRequests()
       .pipe(switchMap(r => this.pipe$(r)))
-      .subscribe(data => { this.inProgressCards = data; this.inProgressRequestCount = data.length; });
+      .subscribe(data => { this.inProgressCards = data; this.inProgressRequestCount = data.length; this.rebuildAllCandidates(); });
   }
 
   private loadFinishCards(): void {
     this.admissionService.getFinsishPaymentRequests()
       .pipe(switchMap(r => this.pipe$(r)))
-      .subscribe(data => { this.finishCards = data; this.validateRequestCount = data.length; });
+      .subscribe(data => { this.finishCards = data; this.validateRequestCount = data.length; this.rebuildAllCandidates(); });
   }
 
   private loadAcceptedCards(): void {
     this.admissionService.getAcceptedPaymentRequest()
       .pipe(switchMap(r => this.pipe$(r)))
-      .subscribe(data => { this.acceptedCards = data; this.acceptedRequestCount = data.length; });
+      .subscribe(data => { this.acceptedCards = data; this.acceptedRequestCount = data.length; this.rebuildAllCandidates(); });
   }
 
   private loadRefusedCards(): void {
     this.admissionService.getRefusePaymentRequest()
       .pipe(switchMap(r => this.pipe$(r)))
-      .subscribe(data => { this.refusedCards = data; this.refusedRequestCount = data.length; });
+      .subscribe(data => { this.refusedCards = data; this.refusedRequestCount = data.length; this.rebuildAllCandidates(); });
   }
 
   private loadArchivedTable(): void {
@@ -118,6 +131,7 @@ export class AdmissionAdministrationComponent implements OnInit {
         this.dataSourceArchived.paginator = this.archivedPaginator;
         this.dataSourceArchived.sort = this.archivedSort;
         this.finishRequestCount = data.length;
+        this.rebuildAllCandidates();
       });
   }
 
@@ -129,7 +143,73 @@ export class AdmissionAdministrationComponent implements OnInit {
         this.dataSourcePast.paginator = this.pastPaginator;
         this.dataSourcePast.sort = this.pastSort;
         this.pastRequestCount = data.length;
+        this.rebuildAllCandidates();
       });
+  }
+
+  private rebuildAllCandidates(): void {
+    const seen = new Set<string>();
+    const merge = (arr: any[]) => arr.forEach(c => {
+      const key = c.userId || c.id;
+      if (key && !seen.has(key)) { seen.add(key); this.allCandidates.push(c); }
+    });
+    this.allCandidates = [];
+    merge(this.pendingCards);
+    merge(this.inProgressCards);
+    merge(this.finishCards);
+    merge(this.acceptedCards);
+    merge(this.refusedCards);
+    merge(this.dataSourceArchived?.data || []);
+    merge(this.dataSourcePast?.data || []);
+  }
+
+  onSearchInput(value: string): void {
+    const lower = (value || '').toLowerCase().trim();
+    if (!lower) { this.filteredCandidates = []; return; }
+    this.filteredCandidates = this.allCandidates
+      .map(c => ({ candidate: c, score: this.scoreMatch(c, lower) }))
+      .filter(x => x.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5)
+      .map(x => x.candidate);
+  }
+
+  private scoreMatch(c: any, q: string): number {
+    const name = (c.demandeur || '').toLowerCase();
+    const country = (c.country || '').toLowerCase();
+    if (name.startsWith(q)) return 4;
+    if (name.includes(q)) return 3;
+    if (country.startsWith(q)) return 2;
+    if (country.includes(q)) return 1;
+    return 0;
+  }
+
+  onCandidateSelected(candidate: any): void {
+    const id = candidate.userId || candidate.id;
+    if (id) this.openEditAdmissionDemande(id);
+    this.searchQuery = '';
+    this.filteredCandidates = [];
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.filteredCandidates = [];
+  }
+
+  getEtatLabel(etat: number): string {
+    const labels: Record<number, string> = {
+      0: 'En attente', 1: 'En traitement', 2: 'Att. réponse',
+      3: 'Accepté', 4: 'Refusé', 5: 'Archivé', 6: 'Admis passé'
+    };
+    return labels[etat] ?? '—';
+  }
+
+  getEtatColor(etat: number): string {
+    const colors: Record<number, string> = {
+      0: '#d97706', 1: '#1e3c72', 2: '#64748b',
+      3: '#16a34a', 4: '#dc2626', 5: '#94a3b8', 6: '#7c3aed'
+    };
+    return colors[etat] ?? '#94a3b8';
   }
 
   onCardDrop(event: CdkDragDrop<any[]>, targetEtat: number): void {

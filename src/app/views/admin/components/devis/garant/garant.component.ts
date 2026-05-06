@@ -58,30 +58,49 @@ export class GarantComponent implements OnInit {
     this.snack.open('Téléchargement en cours ...', 'Fermer');
     const element = document.getElementById('devis-section');
 
-    // Fixer la largeur de l'élément pour le rendu du PDF
-    const originalWidth = element.style.width;
-    element.style.width = '200mm';  // A4 width in millimeters (210mm)
-
     html2canvas(element, {
-      scale: 2,  // Augmenter l'échelle pour une meilleure qualité
-      scrollY: 0, // S'assurer que la page ne se déplace pas pendant la capture
-      useCORS: true // Si vous avez des images externes
+      scale: 2,
+      useCORS: true,
+      scrollX: 0,
+      scrollY: -window.scrollY,
+      windowWidth: 1200,
+      onclone: (clonedDoc: Document, clonedEl: HTMLElement) => {
+        clonedEl.style.width = '800px';
+        const s = clonedDoc.createElement('style');
+        s.textContent = `
+          .doc-header { flex-direction: row !important; flex-wrap: nowrap !important; justify-content: space-between !important; }
+          .doc-header-right { align-items: flex-end !important; width: auto !important; flex-shrink: 0 !important; }
+          .doc-meta { align-items: flex-end !important; }
+          .doc-badge { font-size: 26px !important; letter-spacing: 4px !important; }
+          .doc-parties { display: grid !important; grid-template-columns: 1fr auto 1fr !important; gap: 24px !important; }
+          .doc-party-divider { display: block !important; width: 1px !important; }
+          th:nth-child(2), td:nth-child(2) { display: table-cell !important; }
+          .doc-table th, .doc-table td { padding: 12px 16px !important; }
+          .doc-agent { flex-direction: row !important; gap: 16px !important; padding: 18px !important; }
+          .doc-footer { flex-direction: row !important; justify-content: space-between !important; align-items: flex-end !important; }
+          .doc-footer-brand { align-items: flex-end !important; }
+          .footer-logo { width: 100px !important; }
+        `;
+        clonedDoc.head.appendChild(s);
+      }
     }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const margin = 20;
-      const pdfWidth = pdf.internal.pageSize.getWidth() - margin * 2;
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
       const imgProps = pdf.getImageProperties(imgData);
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-      pdf.addImage(imgData, 'PNG', margin, margin, pdfWidth, pdfHeight);
-      pdf.save('devis-' + this.user.firstName + '-garant-devis.pdf');
+      let position = 0;
+      let remaining = pdfHeight;
+      while (remaining > 0) {
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+        remaining -= pageHeight;
+        if (remaining > 0) { pdf.addPage(); position -= pageHeight; }
+      }
 
-      // Restaurer la largeur originale
-      element.style.width = originalWidth;
-      this.snack.open('Téléchargement terminé ...', 'Fermer', {
-        duration: 2500,
-      });
+      pdf.save('devis-' + this.user.firstName + '-garant-devis.pdf');
+      this.snack.open('Téléchargement terminé ...', 'Fermer', { duration: 2500 });
     }).catch(error => {
       console.error('Error generating PDF:', error);
     });

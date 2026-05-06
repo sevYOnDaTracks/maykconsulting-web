@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {AuthenticationService} from '../../../../landing/services/authentication.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -16,6 +16,11 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   styleUrl: './finance-administration.component.scss'
 })
 export class FinanceAdministrationComponent implements OnInit, OnDestroy {
+
+  /* ── Recherche rapide ── */
+  searchQuery = '';
+  filteredCandidates: any[] = [];
+  private allCandidates: any[] = [];
 
   /* ── Kanban card arrays ── */
   pendingCards:    any[] = [];
@@ -48,13 +53,21 @@ export class FinanceAdministrationComponent implements OnInit, OnDestroy {
     private dialog:         MatDialog,
     private emailService:   EmailService,
     private fb:             FormBuilder,
-    private snackBar:       MatSnackBar
+    private snackBar:       MatSnackBar,
+    private elRef:          ElementRef
   ) {
     this.replyForm = this.fb.group({
       to:      ['', [Validators.required, Validators.email]],
       subject: ['', Validators.required],
       message: ['', Validators.required],
     });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.elRef.nativeElement.querySelector('.search-wrap')?.contains(event.target)) {
+      this.filteredCandidates = [];
+    }
   }
 
   ngOnInit(): void {
@@ -84,34 +97,86 @@ export class FinanceAdministrationComponent implements OnInit, OnDestroy {
 
   private loadData(): void {
     this.subscriptions.push(
-      this.financeService.getValidatedVisaCount().subscribe(count => {
-        this.visaRequestCount = count;
-      })
+      this.financeService.getValidatedVisaCount().subscribe(count => { this.visaRequestCount = count; })
     );
 
     this.subscriptions.push(
       this.financeService.getPendingPaymentRequests()
         .pipe(switchMap(r => this.pipe$(r)))
-        .subscribe(data => { this.pendingCards = data; this.pendingRequestCount = data.length; })
+        .subscribe(data => { this.pendingCards = data; this.pendingRequestCount = data.length; this.rebuildAllCandidates(); })
     );
 
     this.subscriptions.push(
       this.financeService.getInProgressPaymentRequests()
         .pipe(switchMap(r => this.pipe$(r)))
-        .subscribe(data => { this.inProgressCards = data; this.inProgressRequestCount = data.length; })
+        .subscribe(data => { this.inProgressCards = data; this.inProgressRequestCount = data.length; this.rebuildAllCandidates(); })
     );
 
     this.subscriptions.push(
       this.financeService.getFinsishPaymentRequests()
         .pipe(switchMap(r => this.pipe$(r)))
-        .subscribe(data => { this.finishCards = data; this.finishRequestCount = data.length; })
+        .subscribe(data => { this.finishCards = data; this.finishRequestCount = data.length; this.rebuildAllCandidates(); })
     );
 
     this.subscriptions.push(
       this.financeService.getArchivedPaymentRequest()
         .pipe(switchMap(r => this.pipe$(r)))
-        .subscribe(data => { this.archivedCards = data; this.archivedRequestCount = data.length; })
+        .subscribe(data => { this.archivedCards = data; this.archivedRequestCount = data.length; this.rebuildAllCandidates(); })
     );
+  }
+
+  private rebuildAllCandidates(): void {
+    const seen = new Set<string>();
+    this.allCandidates = [];
+    [this.pendingCards, this.inProgressCards, this.finishCards, this.archivedCards].forEach(arr =>
+      arr.forEach(c => {
+        const key = c.userId || c.id;
+        if (key && !seen.has(key)) { seen.add(key); this.allCandidates.push(c); }
+      })
+    );
+  }
+
+  onSearchInput(value: string): void {
+    const lower = (value || '').toLowerCase().trim();
+    if (!lower) { this.filteredCandidates = []; return; }
+    this.filteredCandidates = this.allCandidates
+      .map(c => ({ candidate: c, score: this.scoreMatch(c, lower) }))
+      .filter(x => x.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5)
+      .map(x => x.candidate);
+  }
+
+  private scoreMatch(c: any, q: string): number {
+    const name    = (c.demandeur || '').toLowerCase();
+    const country = (c.country   || '').toLowerCase();
+    if (name.startsWith(q))    return 4;
+    if (name.includes(q))      return 3;
+    if (country.startsWith(q)) return 2;
+    if (country.includes(q))   return 1;
+    return 0;
+  }
+
+  onCandidateSelected(candidate: any): void {
+    const id = candidate.userId || candidate.id;
+    if (id) this.openEditFinanceDemande(id);
+    this.searchQuery = '';
+    this.filteredCandidates = [];
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.filteredCandidates = [];
+  }
+
+  getEtatLabel(etat: number): string {
+    const labels: Record<number, string> = { 0: 'En attente', 1: 'En cours', 2: 'Terminé', 3: 'Archivé' };
+    return labels[etat] ?? '—';
+  }
+
+  getEtatColor(etat: number): string {
+    const colors: Record<number, string> = { 0: '#d97706', 1: '#1e3c72', 2: '#64748b', 3: '#7c3aed' };
+    return colors[etat] ?? '#94a3b8';
   }
 
   onCardDrop(event: CdkDragDrop<any[]>, targetStatus: number): void {

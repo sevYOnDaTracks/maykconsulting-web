@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {HebergementService} from '../../../services/hebergement.service';
 import {AuthenticationService} from '../../../../landing/services/authentication.service';
@@ -16,6 +16,11 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
   styleUrl: './hebergement-administration.component.scss'
 })
 export class HebergementAdministrationComponent implements OnInit {
+
+  /* ── Recherche rapide ── */
+  searchQuery = '';
+  filteredCandidates: any[] = [];
+  private allCandidates: any[] = [];
 
   /* ── Kanban card arrays ── */
   pendingCards:    any[] = [];
@@ -45,13 +50,21 @@ export class HebergementAdministrationComponent implements OnInit {
     private dialog:             MatDialog,
     private snackBar:           MatSnackBar,
     private emailService:       EmailService,
-    private fb:                 FormBuilder
+    private fb:                 FormBuilder,
+    private elRef:              ElementRef
   ) {
     this.replyForm = this.fb.group({
       to:      ['', [Validators.required, Validators.email]],
       subject: ['', Validators.required],
       message: ['', Validators.required],
     });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.elRef.nativeElement.querySelector('.search-wrap')?.contains(event.target)) {
+      this.filteredCandidates = [];
+    }
   }
 
   ngOnInit(): void {
@@ -82,19 +95,73 @@ export class HebergementAdministrationComponent implements OnInit {
   private loadData(): void {
     this.hebergementService.getPendingPaymentRequests()
       .pipe(switchMap(r => this.pipe$(r)))
-      .subscribe(data => { this.pendingCards = data; this.pendingRequestCount = data.length; });
+      .subscribe(data => { this.pendingCards = data; this.pendingRequestCount = data.length; this.rebuildAllCandidates(); });
 
     this.hebergementService.getInProgressPaymentRequests()
       .pipe(switchMap(r => this.pipe$(r)))
-      .subscribe(data => { this.inProgressCards = data; this.inProgressRequestCount = data.length; });
+      .subscribe(data => { this.inProgressCards = data; this.inProgressRequestCount = data.length; this.rebuildAllCandidates(); });
 
     this.hebergementService.getFinsishPaymentRequests()
       .pipe(switchMap(r => this.pipe$(r)))
-      .subscribe(data => { this.finishCards = data; this.finishRequestCount = data.length; });
+      .subscribe(data => { this.finishCards = data; this.finishRequestCount = data.length; this.rebuildAllCandidates(); });
 
     this.hebergementService.getArchivedPaymentRequest()
       .pipe(switchMap(r => this.pipe$(r)))
-      .subscribe(data => { this.archivedCards = data; this.archivedRequestCount = data.length; });
+      .subscribe(data => { this.archivedCards = data; this.archivedRequestCount = data.length; this.rebuildAllCandidates(); });
+  }
+
+  private rebuildAllCandidates(): void {
+    const seen = new Set<string>();
+    this.allCandidates = [];
+    [this.pendingCards, this.inProgressCards, this.finishCards, this.archivedCards].forEach(arr =>
+      arr.forEach(c => {
+        const key = c.userId || c.id;
+        if (key && !seen.has(key)) { seen.add(key); this.allCandidates.push(c); }
+      })
+    );
+  }
+
+  onSearchInput(value: string): void {
+    const lower = (value || '').toLowerCase().trim();
+    if (!lower) { this.filteredCandidates = []; return; }
+    this.filteredCandidates = this.allCandidates
+      .map(c => ({ candidate: c, score: this.scoreMatch(c, lower) }))
+      .filter(x => x.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5)
+      .map(x => x.candidate);
+  }
+
+  private scoreMatch(c: any, q: string): number {
+    const name    = (c.demandeur || '').toLowerCase();
+    const country = (c.country   || '').toLowerCase();
+    if (name.startsWith(q))    return 4;
+    if (name.includes(q))      return 3;
+    if (country.startsWith(q)) return 2;
+    if (country.includes(q))   return 1;
+    return 0;
+  }
+
+  onCandidateSelected(candidate: any): void {
+    const id = candidate.userId || candidate.id;
+    if (id) this.openEditHebergementDemande(id);
+    this.searchQuery = '';
+    this.filteredCandidates = [];
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.filteredCandidates = [];
+  }
+
+  getEtatLabel(etat: number): string {
+    const labels: Record<number, string> = { 0: 'En attente', 1: 'En cours', 2: 'Terminé', 3: 'Archivé' };
+    return labels[etat] ?? '—';
+  }
+
+  getEtatColor(etat: number): string {
+    const colors: Record<number, string> = { 0: '#d97706', 1: '#1e3c72', 2: '#64748b', 3: '#7c3aed' };
+    return colors[etat] ?? '#94a3b8';
   }
 
   onCardDrop(event: CdkDragDrop<any[]>, targetStatus: number): void {
