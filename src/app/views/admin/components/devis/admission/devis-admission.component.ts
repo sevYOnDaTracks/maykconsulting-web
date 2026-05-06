@@ -65,9 +65,18 @@ export class DevisAdmissionComponent implements OnInit {
       scrollY: -window.scrollY,
       windowWidth: 1200,
       onclone: (clonedDoc: Document, clonedEl: HTMLElement) => {
-        clonedEl.style.width = '800px';
+        clonedDoc.body.style.width = '900px';
+        clonedDoc.body.style.margin = '0';
+        let ancestor: HTMLElement | null = clonedEl.parentElement;
+        while (ancestor && ancestor !== clonedDoc.body) {
+          ancestor.style.maxWidth = 'none';
+          ancestor.style.width = 'auto';
+          ancestor.style.overflow = 'visible';
+          ancestor = ancestor.parentElement;
+        }
         const s = clonedDoc.createElement('style');
         s.textContent = `
+          body { width: 900px !important; margin: 0 !important; }
           .doc-header { flex-direction: row !important; flex-wrap: nowrap !important; justify-content: space-between !important; }
           .doc-header-right { align-items: flex-end !important; width: auto !important; flex-shrink: 0 !important; }
           .doc-meta { align-items: flex-end !important; }
