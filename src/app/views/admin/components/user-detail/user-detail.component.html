@@ -1,196 +1,268 @@
 <ng-container *ngIf="!isLoading; else loadingTpl">
-  <div class="subnav mat-elevation-z2">
-    <div class="breadcrumbs">
-      <a routerLink="/admin/user/gestion">Utilisateurs</a>
-      <mat-icon>chevron_right</mat-icon>
-      <span>{{ user?.firstName }} {{ user?.lastName }}</span>
-    </div>
-    <div class="actions">
-      <button mat-icon-button color="primary" (click)="openEdit()" [disabled]="!user">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-stroked-button color="primary" routerLink="/admin/user/gestion">
-        <mat-icon>arrow_back</mat-icon>
-        Retour
-      </button>
-    </div>
-  </div>
+  <div class="ud-wrap">
 
-  <div class="user-detail">
-    <div class="profile-card mat-elevation-z3">
-      <div class="avatar">
-        <img [src]="user?.identityPhotoUrl || 'assets/images/landing/lOGO_d/logo.png'" alt="avatar">
+    <!-- ── Back ── -->
+    <div class="ud-back">
+      <button routerLink="/admin/user/gestion" class="btn-back">
+        <mat-icon>arrow_back</mat-icon> Retour aux utilisateurs
+      </button>
+    </div>
+
+    <!-- ── Hero ── -->
+    <div class="ud-hero" *ngIf="user">
+      <img [src]="user?.identityPhotoUrl || 'assets/images/landing/lOGO_d/logo.png'" alt="" class="hero-avatar">
+      <div class="hero-info">
+        <h1 class="hero-name">{{ user?.firstName }} {{ user?.lastName }}</h1>
+        <div class="hero-meta">
+          <span><mat-icon>email</mat-icon>{{ user?.email }}</span>
+          <span *ngIf="user?.phone"><mat-icon>phone</mat-icon>{{ user?.phone }}</span>
+          <span *ngIf="user?.degreeLevel"><mat-icon>school</mat-icon>{{ user?.degreeLevel }}</span>
+        </div>
       </div>
-      <div class="profile-info">
-        <div class="title-row">
-          <h2>{{ user?.firstName }} {{ user?.lastName }}</h2>
-          <span class="chip">{{ user?.roles || 'Utilisateur' }}</span>
-        </div>
-        <div class="info-grid">
-          <div>
-            <span class="label">Email</span>
-            <div>{{ user?.email }}</div>
-          </div>
-          <div>
-            <span class="label">Téléphone</span>
-            <div>{{ user?.phone || '—' }}</div>
-          </div>
-          <div>
-            <span class="label">Niveau</span>
-            <div>{{ user?.degreeLevel || '—' }}</div>
-          </div>
-        </div>
+      <div class="hero-aside">
+        <span class="role-badge" [ngClass]="getRoleClass(user?.roles)">{{ getRoleLabel(user?.roles) }}</span>
+        <button class="btn-edit-hero" (click)="openEdit()" [disabled]="!user">
+          <mat-icon>edit</mat-icon> Modifier
+        </button>
       </div>
     </div>
 
-    <div class="cards">
-      <mat-card class="mat-elevation-z2">
-        <mat-card-header>
-          <div mat-card-avatar class="icon-circle"><mat-icon>badge</mat-icon></div>
-          <mat-card-title>Identités</mat-card-title>
-          <mat-card-subtitle>Documents fournis</mat-card-subtitle>
-        </mat-card-header>
-        <mat-divider></mat-divider>
-        <mat-card-content>
-          <div class="doc-row">
-            <span>Photo</span>
-            <button mat-button color="primary" *ngIf="user?.identityPhotoUrl" (click)="openDoc(user?.identityPhotoUrl)">Voir</button>
-            <span class="muted" *ngIf="!user?.identityPhotoUrl">Non fournie</span>
-          </div>
-          <div class="doc-row">
-            <span>Passeport</span>
-            <button mat-button color="primary" *ngIf="user?.passportUrl" (click)="openDoc(user?.passportUrl)">Voir</button>
-            <span class="muted" *ngIf="!user?.passportUrl">Non fourni</span>
-          </div>
-          <div class="doc-row">
-            <span>CNI</span>
-            <button mat-button color="primary" *ngIf="user?.cniUrl" (click)="openDoc(user?.cniUrl)">Voir</button>
-            <span class="muted" *ngIf="!user?.cniUrl">Non fournie</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+    <!-- ── Cards grid ── -->
+    <div class="ud-grid">
 
-      <mat-card class="mat-elevation-z2">
-        <mat-card-header>
-          <div mat-card-avatar class="icon-circle"><mat-icon>account_balance_wallet</mat-icon></div>
-          <mat-card-title>Garant financier</mat-card-title>
-          <mat-card-subtitle>Dernière demande</mat-card-subtitle>
-        </mat-card-header>
-        <mat-divider></mat-divider>
-        <mat-card-content>
-          <ng-container *ngIf="finance; else noFinance">
-            <div class="grid-row"><span>Pays</span><strong>{{ finance.country }}</strong></div>
-            <div class="grid-row"><span>État</span><strong>{{ formatFinanceStatus(finance.etatDemande) }}</strong></div>
-            <div class="grid-row"><span>Paiement</span><strong>{{ finance.justificatifPaiement ? 'Oui' : 'Non' }}</strong></div>
-            <div class="grid-row"><span>Cashout</span><strong>{{ formatCashout(finance.payout || finance.cashout) }}</strong></div>
-            <div class="doc-list">
-              <div class="doc-row">
-                <span>Justificatif de paiement</span>
-                <button mat-stroked-button color="primary" *ngIf="finance.justificatifPaiement" (click)="openDoc(finance.justificatifPaiement)">Télécharger</button>
-                <span class="muted" *ngIf="!finance.justificatifPaiement">Non fourni</span>
-              </div>
-              <div class="doc-row">
-                <span>Passeport</span>
-                <button mat-stroked-button color="primary" *ngIf="finance.passport" (click)="openDoc(finance.passport)">Télécharger</button>
-                <span class="muted" *ngIf="!finance.passport">Non fourni</span>
-              </div>
-              <div class="doc-row">
-                <span>Dossier d'admission</span>
-                <button mat-stroked-button color="primary" *ngIf="finance.admissionFile" (click)="openDoc(finance.admissionFile)">Télécharger</button>
-                <span class="muted" *ngIf="!finance.admissionFile">Non fourni</span>
-              </div>
-              <div class="doc-row">
-                <span>Fichier garant</span>
-                <button mat-stroked-button color="primary" *ngIf="finance.garantFile" (click)="openDoc(finance.garantFile)">Télécharger</button>
-                <span class="muted" *ngIf="!finance.garantFile">Non fourni</span>
-              </div>
+      <!-- Pièces d'identité -->
+      <div class="ud-card">
+        <div class="card-header">
+          <span class="card-icon"><mat-icon>badge</mat-icon></span>
+          <h2 class="card-title">Pièces d'identité</h2>
+        </div>
+        <div class="doc-list" *ngIf="user">
+          <div class="doc-row">
+            <div class="doc-left">
+              <mat-icon>photo_camera</mat-icon>
+              <span class="doc-label">Photo d'identité</span>
+              <span [class]="user?.identityPhotoUrl ? 'doc-badge-present' : 'doc-badge-missing'">
+                {{ user?.identityPhotoUrl ? 'Présente' : 'Manquante' }}
+              </span>
             </div>
-          </ng-container>
-          <ng-template #noFinance><p class="muted">Aucune demande enregistrée.</p></ng-template>
-        </mat-card-content>
-      </mat-card>
+            <button *ngIf="user?.identityPhotoUrl" class="btn-doc btn-view"
+                    (click)="openDoc(user.identityPhotoUrl)">
+              <mat-icon>visibility</mat-icon> Voir
+            </button>
+          </div>
+          <div class="doc-row">
+            <div class="doc-left">
+              <mat-icon>book</mat-icon>
+              <span class="doc-label">Passeport</span>
+              <span [class]="user?.passportUrl ? 'doc-badge-present' : 'doc-badge-missing'">
+                {{ user?.passportUrl ? 'Présent' : 'Manquant' }}
+              </span>
+            </div>
+            <button *ngIf="user?.passportUrl" class="btn-doc btn-view"
+                    (click)="openDoc(user.passportUrl)">
+              <mat-icon>visibility</mat-icon> Voir
+            </button>
+          </div>
+          <div class="doc-row">
+            <div class="doc-left">
+              <mat-icon>credit_card</mat-icon>
+              <span class="doc-label">CNI</span>
+              <span [class]="user?.cniUrl ? 'doc-badge-present' : 'doc-badge-missing'">
+                {{ user?.cniUrl ? 'Présente' : 'Manquante' }}
+              </span>
+            </div>
+            <button *ngIf="user?.cniUrl" class="btn-doc btn-view"
+                    (click)="openDoc(user.cniUrl)">
+              <mat-icon>visibility</mat-icon> Voir
+            </button>
+          </div>
+        </div>
+      </div>
 
-      <mat-card class="mat-elevation-z2">
-        <mat-card-header>
-          <div mat-card-avatar class="icon-circle"><mat-icon>holiday_village</mat-icon></div>
-          <mat-card-title>Hébergement</mat-card-title>
-          <mat-card-subtitle>Dernière demande</mat-card-subtitle>
-        </mat-card-header>
-        <mat-divider></mat-divider>
-        <mat-card-content>
-          <ng-container *ngIf="hebergement; else noHeb">
-            <div class="grid-row"><span>Pays</span><strong>{{ hebergement.country }}</strong></div>
-            <div class="grid-row"><span>État</span><strong>{{ formatHebergementStatus(hebergement.etatDemande) }}</strong></div>
-            <div class="grid-row"><span>Paiement</span><strong>{{ hebergement.justificatifPaiement ? 'Oui' : 'Non' }}</strong></div>
-            <div class="grid-row"><span>Cashout</span><strong>{{ formatCashout(hebergement.payout || hebergement.cashout) }}</strong></div>
-          </ng-container>
-          <ng-template #noHeb><p class="muted">Aucune demande enregistrée.</p></ng-template>
-        </mat-card-content>
-      </mat-card>
+      <!-- Garant financier -->
+      <div class="ud-card">
+        <div class="card-header">
+          <span class="card-icon"><mat-icon>account_balance_wallet</mat-icon></span>
+          <h2 class="card-title">Garant financier</h2>
+        </div>
+        <ng-container *ngIf="finance; else noFinance">
+          <div class="info-rows">
+            <div class="info-row">
+              <span class="info-label">Pays</span>
+              <span class="info-value">{{ finance.country }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">État</span>
+              <span class="status-pill" [ngClass]="getServiceStatusClass(finance.etatDemande, 'finance')">
+                {{ formatFinanceStatus(finance.etatDemande) }}
+              </span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Paiement</span>
+              <span class="info-value">{{ finance.justificatifPaiement ? 'Oui' : 'Non' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Cashout</span>
+              <span class="info-value">{{ formatCashout(finance.payout || finance.cashout) }}</span>
+            </div>
+          </div>
+          <div class="doc-list small-mt">
+            <div class="doc-row">
+              <div class="doc-left">
+                <mat-icon>receipt_long</mat-icon>
+                <span class="doc-label">Justificatif paiement</span>
+                <span [class]="finance.justificatifPaiement ? 'doc-badge-present' : 'doc-badge-missing'">
+                  {{ finance.justificatifPaiement ? 'Déposé' : 'Manquant' }}
+                </span>
+              </div>
+              <button *ngIf="finance.justificatifPaiement" class="btn-doc btn-view"
+                      (click)="openDoc(finance.justificatifPaiement)">
+                <mat-icon>visibility</mat-icon> Voir
+              </button>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #noFinance>
+          <div class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <span>Aucune demande enregistrée</span>
+          </div>
+        </ng-template>
+      </div>
 
-      <mat-card class="mat-elevation-z2">
-        <mat-card-header>
-          <div mat-card-avatar class="icon-circle"><mat-icon>school</mat-icon></div>
-          <mat-card-title>Admission</mat-card-title>
-          <mat-card-subtitle>Dernière demande</mat-card-subtitle>
-        </mat-card-header>
-        <mat-divider></mat-divider>
-        <mat-card-content>
-          <ng-container *ngIf="admission; else noAdmission">
-            <div class="grid-row"><span>Pays</span><strong>{{ admission.country || admission.pays }}</strong></div>
-            <div class="grid-row"><span>État</span><strong>{{ formatAdmissionStatus(admission.etatDemande) }}</strong></div>
-            <div class="grid-row"><span>Paiement</span><strong>{{ admission.justificatifPaiement ? 'Oui' : 'Non' }}</strong></div>
-            <div class="grid-row"><span>Cashout</span><strong>{{ formatCashout(admission.cashout) }}</strong></div>
-          </ng-container>
-          <ng-template #noAdmission><p class="muted">Aucune demande enregistrée.</p></ng-template>
-        </mat-card-content>
-      </mat-card>
+      <!-- Hébergement -->
+      <div class="ud-card">
+        <div class="card-header">
+          <span class="card-icon"><mat-icon>holiday_village</mat-icon></span>
+          <h2 class="card-title">Hébergement</h2>
+        </div>
+        <ng-container *ngIf="hebergement; else noHeb">
+          <div class="info-rows">
+            <div class="info-row">
+              <span class="info-label">Pays</span>
+              <span class="info-value">{{ hebergement.country }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">État</span>
+              <span class="status-pill" [ngClass]="getServiceStatusClass(hebergement.etatDemande, 'hebergement')">
+                {{ formatHebergementStatus(hebergement.etatDemande) }}
+              </span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Paiement</span>
+              <span class="info-value">{{ hebergement.justificatifPaiement ? 'Oui' : 'Non' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Cashout</span>
+              <span class="info-value">{{ formatCashout(hebergement.payout || hebergement.cashout) }}</span>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #noHeb>
+          <div class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <span>Aucune demande enregistrée</span>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Admission -->
+      <div class="ud-card">
+        <div class="card-header">
+          <span class="card-icon"><mat-icon>school</mat-icon></span>
+          <h2 class="card-title">Admission</h2>
+        </div>
+        <ng-container *ngIf="admission; else noAdmission">
+          <div class="info-rows">
+            <div class="info-row">
+              <span class="info-label">Pays</span>
+              <span class="info-value">{{ admission.country || admission.pays }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">État</span>
+              <span class="status-pill" [ngClass]="getServiceStatusClass(admission.etatDemande, 'admission')">
+                {{ formatAdmissionStatus(admission.etatDemande) }}
+              </span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Paiement</span>
+              <span class="info-value">{{ admission.justificatifPaiement ? 'Oui' : 'Non' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Cashout</span>
+              <span class="info-value">{{ formatCashout(admission.cashout) }}</span>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #noAdmission>
+          <div class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <span>Aucune demande enregistrée</span>
+          </div>
+        </ng-template>
+      </div>
+
     </div>
   </div>
 </ng-container>
 
 <ng-template #loadingTpl>
-  <div class="loading">
+  <div class="ud-loading">
     <mat-spinner diameter="40"></mat-spinner>
-    <p class="muted">Chargement...</p>
+    <p>Chargement…</p>
   </div>
 </ng-template>
 
+<!-- ── Dialog : Modifier ── -->
 <ng-template #editUserDialog>
-  <h3 mat-dialog-title>Modifier l'utilisateur</h3>
-  <mat-dialog-content [formGroup]="editForm" class="dialog-body">
-    <div class="form-grid">
-      <mat-form-field appearance="outline">
-        <mat-label>Prénom</mat-label>
-        <input matInput formControlName="firstName">
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Nom</mat-label>
-        <input matInput formControlName="lastName">
-      </mat-form-field>
-      <mat-form-field appearance="outline">
+  <div class="dlg-header">
+    <mat-icon>edit</mat-icon>
+    <h3 mat-dialog-title>Modifier l'utilisateur</h3>
+  </div>
+  <mat-dialog-content class="dlg-body">
+    <form [formGroup]="editForm" class="dlg-form">
+      <div class="dlg-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Prénom</mat-label>
+          <input matInput formControlName="firstName">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Nom</mat-label>
+          <input matInput formControlName="lastName">
+        </mat-form-field>
+      </div>
+      <mat-form-field appearance="outline" class="dlg-full">
         <mat-label>Email</mat-label>
-        <input matInput formControlName="email">
+        <mat-icon matPrefix>email</mat-icon>
+        <input matInput formControlName="email" type="email">
       </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="dlg-full">
         <mat-label>Téléphone</mat-label>
+        <mat-icon matPrefix>phone</mat-icon>
         <input matInput formControlName="phone">
       </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Niveau</mat-label>
-        <input matInput formControlName="degreeLevel">
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Rôles</mat-label>
-        <input matInput formControlName="roles" placeholder="admin, user">
-      </mat-form-field>
-    </div>
+      <div class="dlg-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Niveau d'études</mat-label>
+          <input matInput formControlName="degreeLevel">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Rôle</mat-label>
+          <mat-select formControlName="roles">
+            <mat-option value="user">Utilisateur</mat-option>
+            <mat-option value="admin">Administrateur</mat-option>
+            <mat-option value="agent_reception">Agent de réception</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
   </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Annuler</button>
-    <button mat-flat-button color="primary" (click)="saveUser()" [disabled]="editForm.invalid || isSaving">
+  <mat-dialog-actions align="end" class="dlg-actions">
+    <button class="dlg-btn-cancel" mat-dialog-close>Annuler</button>
+    <button class="dlg-btn-save" (click)="saveUser()" [disabled]="editForm.invalid || isSaving">
       <mat-spinner *ngIf="isSaving" diameter="16"></mat-spinner>
-      <span *ngIf="!isSaving">Enregistrer</span>
+      <mat-icon *ngIf="!isSaving">save</mat-icon>
+      <span>{{ isSaving ? 'Enregistrement…' : 'Enregistrer' }}</span>
     </button>
   </mat-dialog-actions>
 </ng-template>

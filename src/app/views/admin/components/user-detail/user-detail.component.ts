@@ -32,24 +32,24 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     '0': 'En attente de paiement',
     '1': 'En traitement',
     '2': 'Terminé',
-    '3': 'Archivé'
+    '3': 'Archivé',
   };
 
   private hebergementStatus: Record<string, string> = {
     '0': 'En attente de paiement',
     '1': 'En traitement',
     '2': 'Terminé',
-    '3': 'Archivé'
+    '3': 'Archivé',
   };
 
   private admissionStatus: Record<string, string> = {
     '0': 'En attente',
     '1': 'En traitement',
-    '2': 'Terminé (attente de réponse)',
+    '2': 'Attente de réponse',
     '3': 'Accepté',
     '4': 'Refusé',
     '5': 'Archivé',
-    '6': 'Historique'
+    '6': 'Historique',
   };
 
   constructor(
@@ -63,12 +63,12 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
   ) {
     this.editForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: [''],
+      firstName:   ['', Validators.required],
+      lastName:    ['', Validators.required],
+      email:       ['', [Validators.required, Validators.email]],
+      phone:       [''],
       degreeLevel: [''],
-      roles: [''],
+      roles:       ['user'],
     });
   }
 
@@ -76,15 +76,12 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.sub = this.route.params.pipe(
       switchMap(params => {
         const uid = params['id'];
-        if (!uid) {
-          return of([null, null, null]);
-        }
-        // valueChanges ne complète jamais, on prend une seule valeur pour forkJoin
+        if (!uid) { return of([null, null, null, null]); }
         const user$ = this.userService.getUserById(uid).pipe(take(1), catchError(() => of(null)));
         const finance$ = from(this.financeService.getFinanceByUserId(uid)).pipe(catchError(() => of(null)));
-        const hebergement$ = from(this.hebergementService.getHebergementByUserId(uid)).pipe(catchError(() => of(null)));
-        const admission$ = from(this.admissionService.getAdmissionByUserId(uid)).pipe(catchError(() => of(null)));
-        return forkJoin([user$, finance$, hebergement$, admission$]);
+        const heb$ = from(this.hebergementService.getHebergementByUserId(uid)).pipe(catchError(() => of(null)));
+        const adm$ = from(this.admissionService.getAdmissionByUserId(uid)).pipe(catchError(() => of(null)));
+        return forkJoin([user$, finance$, heb$, adm$]);
       })
     ).subscribe({
       next: ([user, finance, hebergement, admission]) => {
@@ -94,63 +91,97 @@ export class UserDetailComponent implements OnInit, OnDestroy {
         this.admission = admission;
         this.isLoading = false;
       },
-      error: () => {
-        this.isLoading = false;
-      }
+      error: () => { this.isLoading = false; }
     });
   }
 
-  ngOnDestroy(): void {
-    this.sub?.unsubscribe();
-  }
+  ngOnDestroy(): void { this.sub?.unsubscribe(); }
 
   openDoc(url?: string): void {
-    if (!url) { return; }
-    window.open(url, '_blank');
+    if (url) { window.open(url, '_blank'); }
   }
 
   formatFinanceStatus(etat: any): string {
-    const key = String(etat ?? '');
-      return this.financeStatus[key] || key || '—';
+    return this.financeStatus[String(etat ?? '')] || '—';
   }
 
   formatHebergementStatus(etat: any): string {
-    const key = String(etat ?? '');
-    return this.hebergementStatus[key] || key || '—';
+    return this.hebergementStatus[String(etat ?? '')] || '—';
   }
 
   formatAdmissionStatus(etat: any): string {
-    const key = String(etat ?? '');
-    return this.admissionStatus[key] || key || '—';
+    return this.admissionStatus[String(etat ?? '')] || '—';
   }
 
   formatCashout(val: any): string {
-    const v = String(val ?? '');
-    return v === '1' || v === 'true' || val === true ? 'Oui (retiré)' : 'Non';
+    return (val === 1 || val === true || val === '1' || val === 'true') ? 'Oui (retiré)' : 'Non';
+  }
+
+  getServiceStatusClass(etat: any, service: 'finance' | 'hebergement' | 'admission'): string {
+    const key = Number(etat);
+    if (service === 'admission') {
+      const map: Record<number, string> = {
+        0: 'sp-pending',
+        1: 'sp-progress',
+        2: 'sp-waiting',
+        3: 'sp-accepted',
+        4: 'sp-refused',
+        5: 'sp-archived',
+        6: 'sp-past',
+      };
+      return map[key] ?? '';
+    }
+    const map: Record<number, string> = {
+      0: 'sp-pending',
+      1: 'sp-progress',
+      2: 'sp-accepted',
+      3: 'sp-archived',
+    };
+    return map[key] ?? '';
+  }
+
+  getRoleLabel(role: string): string {
+    const map: Record<string, string> = {
+      admin:           'Administrateur',
+      agent_reception: 'Agent réception',
+      user:            'Utilisateur',
+    };
+    return map[role] ?? (role || 'Utilisateur');
+  }
+
+  getRoleClass(role: string): string {
+    const map: Record<string, string> = {
+      admin:           'role-admin',
+      agent_reception: 'role-agent',
+    };
+    return map[role] ?? 'role-user';
   }
 
   openEdit(): void {
     if (!this.user) { return; }
     this.editForm.patchValue({
-      firstName: this.user.firstName || '',
-      lastName: this.user.lastName || '',
-      email: this.user.email || '',
-      phone: (this.user as any).phone || '',
+      firstName:   this.user.firstName   || '',
+      lastName:    this.user.lastName    || '',
+      email:       this.user.email       || '',
+      phone:       (this.user as any).phone || '',
       degreeLevel: this.user.degreeLevel || '',
-      roles: this.user.roles || '',
+      roles:       this.user.roles       || 'user',
     });
-    this.dialog.open(this.editUserDialog, { width: '520px' });
+    this.dialog.open(this.editUserDialog, { width: '520px', panelClass: 'custom-dialog' });
   }
 
   saveUser(): void {
     if (!this.user?.uid || this.editForm.invalid) { return; }
     this.isSaving = true;
-    this.userService.updateUser(this.user.uid, this.editForm.value).then(() => {
-      this.snackBar.open('Utilisateur mis à jour', 'Fermer', { duration: 3000 });
-      this.dialog.closeAll();
-      this.user = { ...this.user, ...this.editForm.value };
-    }).catch(() => {
-      this.snackBar.open('Erreur lors de la mise à jour', 'Fermer', { duration: 4000 });
-    }).finally(() => this.isSaving = false);
+    this.userService.updateUser(this.user.uid, this.editForm.value)
+      .then(() => {
+        this.snackBar.open('Utilisateur mis à jour', 'Fermer', { duration: 3000 });
+        this.dialog.closeAll();
+        this.user = { ...this.user, ...this.editForm.value };
+      })
+      .catch(() => {
+        this.snackBar.open('Erreur lors de la mise à jour', 'Fermer', { duration: 4000 });
+      })
+      .finally(() => { this.isSaving = false; });
   }
 }
