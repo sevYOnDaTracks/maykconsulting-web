@@ -61,41 +61,40 @@ export class HebergementDevisComponent implements OnInit {
         this.snack.open('Téléchargement en cours ...', 'Fermer');
         const element = document.getElementById('devis-section');
 
+        const override = document.createElement('style');
+        override.textContent = `
+            .doc-header { flex-direction: row !important; flex-wrap: nowrap !important; justify-content: space-between !important; }
+            .doc-header-right { align-items: flex-end !important; width: auto !important; flex-shrink: 0 !important; }
+            .doc-meta { align-items: flex-end !important; }
+            .doc-badge { font-size: 26px !important; letter-spacing: 4px !important; }
+            .doc-parties { display: grid !important; grid-template-columns: 1fr auto 1fr !important; gap: 24px !important; }
+            .doc-party-divider { display: block !important; width: 1px !important; }
+            th:nth-child(2), td:nth-child(2) { display: table-cell !important; }
+            .doc-table th, .doc-table td { padding: 12px 16px !important; }
+            .doc-agent { flex-direction: row !important; gap: 16px !important; padding: 18px !important; }
+            .doc-footer { flex-direction: row !important; justify-content: space-between !important; align-items: flex-end !important; }
+            .doc-footer-brand { align-items: flex-end !important; }
+            .footer-logo { width: 100px !important; }
+        `;
+        document.head.appendChild(override);
+        const devisPage = element?.closest('.devis-page') as HTMLElement | null;
+        const savedWidth = devisPage?.style.width ?? '';
+        const savedMaxWidth = devisPage?.style.maxWidth ?? '';
+        if (devisPage) { devisPage.style.width = '820px'; devisPage.style.maxWidth = '820px'; }
+
+        const cleanup = () => {
+            document.head.removeChild(override);
+            if (devisPage) { devisPage.style.width = savedWidth; devisPage.style.maxWidth = savedMaxWidth; }
+        };
+
         html2canvas(element, {
             scale: 2,
             useCORS: true,
             scrollX: 0,
             scrollY: -window.scrollY,
             windowWidth: 1200,
-            onclone: (clonedDoc: Document, clonedEl: HTMLElement) => {
-                clonedDoc.body.style.width = '900px';
-                clonedDoc.body.style.margin = '0';
-                let ancestor: HTMLElement | null = clonedEl.parentElement;
-                while (ancestor && ancestor !== clonedDoc.body) {
-                    ancestor.style.maxWidth = 'none';
-                    ancestor.style.width = 'auto';
-                    ancestor.style.overflow = 'visible';
-                    ancestor = ancestor.parentElement;
-                }
-                const s = clonedDoc.createElement('style');
-                s.textContent = `
-                    body { width: 900px !important; margin: 0 !important; }
-                    .doc-header { flex-direction: row !important; flex-wrap: nowrap !important; justify-content: space-between !important; }
-                    .doc-header-right { align-items: flex-end !important; width: auto !important; flex-shrink: 0 !important; }
-                    .doc-meta { align-items: flex-end !important; }
-                    .doc-badge { font-size: 26px !important; letter-spacing: 4px !important; }
-                    .doc-parties { display: grid !important; grid-template-columns: 1fr auto 1fr !important; gap: 24px !important; }
-                    .doc-party-divider { display: block !important; width: 1px !important; }
-                    th:nth-child(2), td:nth-child(2) { display: table-cell !important; }
-                    .doc-table th, .doc-table td { padding: 12px 16px !important; }
-                    .doc-agent { flex-direction: row !important; gap: 16px !important; padding: 18px !important; }
-                    .doc-footer { flex-direction: row !important; justify-content: space-between !important; align-items: flex-end !important; }
-                    .doc-footer-brand { align-items: flex-end !important; }
-                    .footer-logo { width: 100px !important; }
-                `;
-                clonedDoc.head.appendChild(s);
-            }
         }).then((canvas) => {
+            cleanup();
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -114,6 +113,7 @@ export class HebergementDevisComponent implements OnInit {
             pdf.save('devis-' + this.user.firstName + '-hebergement.pdf');
             this.snack.open('Téléchargement terminé ...', 'Fermer', { duration: 2500 });
         }).catch(error => {
+            cleanup();
             console.error('Error generating PDF:', error);
         });
     }
