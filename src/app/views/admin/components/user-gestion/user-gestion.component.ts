@@ -1,15 +1,15 @@
-import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { UserGestionService } from '../../services/user-gestion.service';
 import { User } from '../../../landing/model/user';
-import {EmailService} from '../../services/email.service';
-import {MatDialog} from '@angular/material/dialog';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Subscription} from 'rxjs';
-import {Router} from '@angular/router';
+import { EmailService } from '../../services/email.service';
+import { MatDialog } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-gestion',
@@ -17,11 +17,12 @@ import {Router} from '@angular/router';
   styleUrls: ['./user-gestion.component.scss']
 })
 export class UserGestionComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['photo', 'firstName', 'lastName', 'email', 'degreeLevel', 'roles', 'actions'];
+  displayedColumns: string[] = [];
   dataSource: MatTableDataSource<User> = new MatTableDataSource<User>([]);
   editForm: FormGroup;
   emailForm: FormGroup;
   selectedUser: User | null = null;
+  userToDelete: User | null = null;
   isSavingUser = false;
   isSendingEmail = false;
   usersSub?: Subscription;
@@ -30,6 +31,7 @@ export class UserGestionComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('editUserDialog') editUserDialog: TemplateRef<any>;
   @ViewChild('emailUserDialog') emailUserDialog: TemplateRef<any>;
+  @ViewChild('deleteDialog') deleteDialog: TemplateRef<any>;
 
   constructor(
     private userService: UserGestionService,
@@ -40,32 +42,37 @@ export class UserGestionComponent implements OnInit, OnDestroy {
     private router: Router,
   ) {
     this.editForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: [''],
+      firstName:   ['', Validators.required],
+      lastName:    ['', Validators.required],
+      email:       ['', [Validators.required, Validators.email]],
+      phone:       [''],
       degreeLevel: [''],
-      roles: [''],
+      roles:       ['user'],
     });
 
     this.emailForm = this.fb.group({
-      to: ['', [Validators.required, Validators.email]],
+      to:      ['', [Validators.required, Validators.email]],
       subject: ['', Validators.required],
       message: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
-    this.setDisplayedColumns();
+    this.updateColumns();
     this.loadUsers();
-
-    window.onresize = () => {
-      this.setDisplayedColumns();
-    };
   }
 
   ngOnDestroy(): void {
     this.usersSub?.unsubscribe();
+  }
+
+  @HostListener('window:resize')
+  updateColumns(): void {
+    if (window.innerWidth <= 768) {
+      this.displayedColumns = ['photo', 'firstName', 'actions'];
+    } else {
+      this.displayedColumns = ['photo', 'firstName', 'email', 'degreeLevel', 'roles', 'actions'];
+    }
   }
 
   loadUsers(): void {
@@ -79,24 +86,9 @@ export class UserGestionComponent implements OnInit, OnDestroy {
 
   applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
-
-  openEditUser(user: User): void {
-    this.selectedUser = user;
-    this.editForm.patchValue({
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
-      email: user.email || '',
-      phone: (user as any).phone || '',
-      degreeLevel: user.degreeLevel || '',
-      roles: user.roles || '',
-    });
-
-    this.dialog.open(this.editUserDialog, { width: '500px' });
   }
 
   goToDetail(user: User): void {
@@ -104,35 +96,45 @@ export class UserGestionComponent implements OnInit, OnDestroy {
     this.router.navigate(['/admin/user/gestion', user.uid]);
   }
 
-  saveUser(): void {
-    if (!this.selectedUser?.uid || this.editForm.invalid) {
-      return;
-    }
-    this.isSavingUser = true;
-    this.userService.updateUser(this.selectedUser.uid, this.editForm.value).then(() => {
-      this.snackBar.open('Utilisateur mis à jour', 'Fermer', { duration: 3000 });
-      this.dialog.closeAll();
-    }).catch(() => {
-      this.snackBar.open('Erreur lors de la mise à jour', 'Fermer', { duration: 4000 });
-    }).finally(() => {
-      this.isSavingUser = false;
+  openEditUser(user: User): void {
+    this.selectedUser = user;
+    this.editForm.patchValue({
+      firstName:   user.firstName   || '',
+      lastName:    user.lastName    || '',
+      email:       user.email       || '',
+      phone:       (user as any).phone || '',
+      degreeLevel: user.degreeLevel || '',
+      roles:       user.roles       || 'user',
     });
+    this.dialog.open(this.editUserDialog, { width: '520px', panelClass: 'custom-dialog' });
+  }
+
+  saveUser(): void {
+    if (!this.selectedUser?.uid || this.editForm.invalid) { return; }
+    this.isSavingUser = true;
+    this.userService.updateUser(this.selectedUser.uid, this.editForm.value)
+      .then(() => {
+        this.snackBar.open('Utilisateur mis à jour', 'Fermer', { duration: 3000 });
+        this.dialog.closeAll();
+      })
+      .catch(() => {
+        this.snackBar.open('Erreur lors de la mise à jour', 'Fermer', { duration: 4000 });
+      })
+      .finally(() => { this.isSavingUser = false; });
   }
 
   openEmailUser(user: User): void {
     this.selectedUser = user;
     this.emailForm.reset({
-      to: user.email,
+      to:      user.email,
       subject: 'Information Maykconsulting',
-      message: `Bonjour ${user.firstName},\n`,
+      message: `Bonjour ${user.firstName},\n\n`,
     });
-    this.dialog.open(this.emailUserDialog, { width: '500px' });
+    this.dialog.open(this.emailUserDialog, { width: '520px', panelClass: 'custom-dialog' });
   }
 
   sendEmailToUser(): void {
-    if (this.emailForm.invalid) {
-      return;
-    }
+    if (this.emailForm.invalid) { return; }
     const { to, subject, message } = this.emailForm.value;
     this.isSendingEmail = true;
     this.emailService.sendCustomEmail(to, subject, message).subscribe({
@@ -140,33 +142,43 @@ export class UserGestionComponent implements OnInit, OnDestroy {
         this.snackBar.open('E-mail envoyé', 'Fermer', { duration: 3000 });
         this.dialog.closeAll();
       },
-      error: () => this.snackBar.open('Erreur lors de l’envoi', 'Fermer', { duration: 4000 }),
-      complete: () => this.isSendingEmail = false,
+      error: () => this.snackBar.open('Erreur lors de l\'envoi', 'Fermer', { duration: 4000 }),
+      complete: () => { this.isSendingEmail = false; },
     });
   }
 
-  onDeleteUser(user: User): void {
-    if (!user?.uid) {
-      this.snackBar.open('Utilisateur invalide', 'Fermer', { duration: 3000 });
-      return;
-    }
-    const confirmed = confirm(`Supprimer l'utilisateur ${user.firstName} ${user.lastName} ?`);
-    if (!confirmed) {
-      return;
-    }
-    this.userService.deleteUser(user.uid).then(() => {
-      this.snackBar.open('Utilisateur supprimé', 'Fermer', { duration: 3000 });
-    }).catch(() => {
-      this.snackBar.open('Erreur lors de la suppression', 'Fermer', { duration: 4000 });
-    });
+  openDeleteConfirm(user: User): void {
+    this.userToDelete = user;
+    this.dialog.open(this.deleteDialog, { width: '420px', panelClass: 'custom-dialog' });
   }
 
+  confirmDelete(): void {
+    if (!this.userToDelete?.uid) { return; }
+    this.userService.deleteUser(this.userToDelete.uid)
+      .then(() => {
+        this.snackBar.open('Utilisateur supprimé', 'Fermer', { duration: 3000 });
+        this.dialog.closeAll();
+        this.userToDelete = null;
+      })
+      .catch(() => {
+        this.snackBar.open('Erreur lors de la suppression', 'Fermer', { duration: 4000 });
+      });
+  }
 
-  setDisplayedColumns(): void {
-    if (window.innerWidth <= 768) {
-      this.displayedColumns = ['email', 'actions'];
-    } else {
-      this.displayedColumns = ['photo', 'firstName', 'lastName', 'email', 'degreeLevel', 'roles', 'actions'];
-    }
+  getRoleLabel(role: string): string {
+    const map: Record<string, string> = {
+      admin:            'Administrateur',
+      agent_reception:  'Agent réception',
+      user:             'Utilisateur',
+    };
+    return map[role] ?? (role || 'Utilisateur');
+  }
+
+  getRoleClass(role: string): string {
+    const map: Record<string, string> = {
+      admin:           'role-admin',
+      agent_reception: 'role-agent',
+    };
+    return map[role] ?? 'role-user';
   }
 }

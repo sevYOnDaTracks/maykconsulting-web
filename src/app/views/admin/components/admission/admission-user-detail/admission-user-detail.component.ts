@@ -1,17 +1,20 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {AdmissionService} from '../../../services/admission.service';
 import {UserGestionService} from '../../../services/user-gestion.service';
 import {catchError, of} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {EmailAdmissionService} from '../../../services/email-admission.service';
+import {CredentialService} from '../../../services/credential.service';
+import {CampusFranceService} from '../../../services/campus-france.service';
+import {CREDENTIAL_PLATFORMS, StudentCredential} from '../../../model/student-credential';
 
 @Component({
   selector: 'app-admission-user-detail',
   templateUrl: './admission-user-detail.component.html',
   styleUrls: ['./admission-user-detail.component.scss']
 })
-export class AdmissionUserDetailComponent implements OnInit, OnDestroy {
+export class AdmissionUserDetailComponent implements OnInit {
   userId: string;
   userAdmission: any;
   user: any;
@@ -27,15 +30,26 @@ export class AdmissionUserDetailComponent implements OnInit, OnDestroy {
   originalUniversityName = '';
   universityNameChanged  = false;
 
-  /* ── Scrollspy ── */
-  activeSection = 'profil';
-  private observer!: IntersectionObserver;
+  /* ── Tabs ── */
+  activeTab = 'profil';
+
+  /* ── Campus France sync ── */
+  cfSyncing = false;
+
+  /* ── Credentials ── */
+  readonly PLATFORMS = CREDENTIAL_PLATFORMS;
+  credentials = new Map<string, StudentCredential>();
+  editingPlatform: string | null = null;
+  editForm = { username: '', password: '' };
+  showPasswordFor = new Set<string>();
 
   constructor(
       private route: ActivatedRoute,
       private admissionService: AdmissionService,
       private emailService: EmailAdmissionService,
       private userService: UserGestionService,
+      private credentialService: CredentialService,
+      private campusFranceService: CampusFranceService,
       private snack: MatSnackBar
   ) { }
 
@@ -45,6 +59,7 @@ export class AdmissionUserDetailComponent implements OnInit, OnDestroy {
       if (this.userId) {
         this.loadUser(this.userId);
         this.loadUserAdmission(this.userId);
+        this.loadCredentials(this.userId);
       }
     });
   }
@@ -69,7 +84,6 @@ export class AdmissionUserDetailComponent implements OnInit, OnDestroy {
       };
       this.originalUniversityName = this.userAdmission.nomUniversite;
       this.universityNameChanged = false;
-      setTimeout(() => this.initScrollSpy(), 300);
     });
   }
 
@@ -95,7 +109,7 @@ export class AdmissionUserDetailComponent implements OnInit, OnDestroy {
     return '';
   }
 
-  private formatAnyDate(value: any): string {
+  formatAnyDate(value: any): string {
     if (!value) {
       return 'Non renseignee';
     }
@@ -315,30 +329,113 @@ export class AdmissionUserDetailComponent implements OnInit, OnDestroy {
         });
   }
 
-  ngOnDestroy(): void {
-    this.observer?.disconnect();
-  }
-
-  private initScrollSpy(): void {
-    if (this.observer) this.observer.disconnect();
-    const ids = ['profil', 'statut', 'documents', 'cursus'];
-    this.observer = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          this.activeSection = e.target.id.replace('section-', '');
-        }
-      });
-    }, { rootMargin: '-10% 0px -65% 0px', threshold: 0 });
-
-    ids.forEach(id => {
-      const el = document.getElementById('section-' + id);
-      if (el) this.observer.observe(el);
+  /* ── Credentials methods ── */
+  loadCredentials(userId: string): void {
+    this.credentialService.getAll(userId).then(creds => {
+      this.credentials = new Map(creds.map(c => [c.platform, c]));
     });
   }
 
-  scrollTo(sectionId: string): void {
-    document.getElementById('section-' + sectionId)
-      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  startEditCredential(platformId: string): void {
+    this.editingPlatform = platformId;
+    const existing = this.credentials.get(platformId);
+    this.editForm = { username: existing?.username || '', password: existing?.password || '' };
+  }
+
+  cancelEditCredential(): void {
+    this.editingPlatform = null;
+    this.editForm = { username: '', password: '' };
+  }
+
+  async saveCredential(platform: typeof CREDENTIAL_PLATFORMS[0]): Promise<void> {
+    if (!this.editForm.username.trim() || !this.editForm.password.trim()) {
+      this.snack.open('Identifiant et mot de passe requis.', 'OK', { duration: 2500 });
+      return;
+    }
+    const cred: StudentCredential = {
+      platform: platform.id,
+      platformLabel: platform.label,
+      url: platform.url,
+      username: this.editForm.username.trim(),
+      password: this.editForm.password.trim(),
+    };
+    await this.credentialService.save(this.userId, cred);
+    this.credentials.set(platform.id, cred);
+    this.editingPlatform = null;
+    this.snack.open(`Accès ${platform.label} enregistré.`, 'OK', { duration: 2000 });
+  }
+
+  async deleteCredential(platformId: string): Promise<void> {
+    await this.credentialService.delete(this.userId, platformId);
+    this.credentials.delete(platformId);
+    this.snack.open('Accès supprimé.', 'OK', { duration: 2000 });
+  }
+
+  openPlatform(platform: typeof CREDENTIAL_PLATFORMS[0]): void {
+    const cred = this.credentials.get(platform.id);
+    if (!cred) { return; }
+    window.open(platform.url, '_blank');
+    navigator.clipboard.writeText(cred.username).then(() => {
+      const ref = this.snack.open(
+        `① Identifiant copié — collez-le, puis cliquez →`,
+        'Copier MDP',
+        { duration: 20000 }
+      );
+      ref.onAction().subscribe(() => {
+        navigator.clipboard.writeText(cred.password).then(() => {
+          this.snack.open('② Mot de passe copié — collez-le', 'OK', { duration: 5000 });
+        });
+      });
+    });
+  }
+
+  toggleShowPassword(platformId: string): void {
+    if (this.showPasswordFor.has(platformId)) {
+      this.showPasswordFor.delete(platformId);
+    } else {
+      this.showPasswordFor.add(platformId);
+    }
+  }
+
+  copyPassword(platformId: string): void {
+    const cred = this.credentials.get(platformId);
+    if (cred) {
+      navigator.clipboard.writeText(cred.password).then(() => {
+        this.snack.open('Mot de passe copié.', 'OK', { duration: 2000 });
+      });
+    }
+  }
+
+  setTab(tab: string): void {
+    this.activeTab = tab;
+  }
+
+  syncCampusFrance(): void {
+    if (!this.userId) { return; }
+    this.cfSyncing = true;
+    this.campusFranceService.syncResponses(this.userId).subscribe({
+      next: (result) => {
+        this.cfSyncing = false;
+        if (this.userAdmission) {
+          this.userAdmission.cfResponses = result.responses;
+          this.userAdmission.cfLastSync = result.syncedAt;
+        }
+        this.snack.open(`${result.count} réponse(s) synchronisée(s).`, 'OK', { duration: 3000 });
+      },
+      error: (err) => {
+        this.cfSyncing = false;
+        const msg = err?.error?.error || 'Erreur lors de la synchronisation Campus France.';
+        this.snack.open(msg, 'Fermer', { duration: 5000 });
+      }
+    });
+  }
+
+  getCfResponseClass(reponse: string): string {
+    if (!reponse) { return 'cf-pending'; }
+    const r = reponse.toLowerCase();
+    if (r.includes('accept')) { return 'cf-accepted'; }
+    if (r.includes('refus')) { return 'cf-refused'; }
+    return 'cf-pending';
   }
 
   getStatusLabel(etat: number): string {

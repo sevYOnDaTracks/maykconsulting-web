@@ -7,7 +7,7 @@
     </button>
   </div>
 
-  <!-- ── Hero (full width) ── -->
+  <!-- ── Hero ── -->
   <div class="detail-hero" *ngIf="user">
     <img [src]="user?.identityPhotoUrl || 'assets/images/landing/lOGO_d/logo.png'" alt="" class="hero-avatar">
     <div class="hero-info">
@@ -24,366 +24,509 @@
     </span>
   </div>
 
-  <!-- ── Two-column layout ── -->
-  <div class="detail-layout">
+  <!-- ── Chips de navigation ── -->
+  <div class="tabs-bar">
+    <button class="tab-chip" [class.active]="activeTab === 'profil'" (click)="setTab('profil')">
+      <mat-icon>person</mat-icon><span>Profil</span>
+    </button>
+    <button class="tab-chip" [class.active]="activeTab === 'statut'" (click)="setTab('statut')">
+      <mat-icon>assignment</mat-icon><span>Statut & Paiement</span>
+    </button>
+    <button class="tab-chip" [class.active]="activeTab === 'documents'" (click)="setTab('documents')">
+      <mat-icon>folder_open</mat-icon><span>Documents</span>
+    </button>
+    <button class="tab-chip" [class.active]="activeTab === 'cursus'" (click)="setTab('cursus')">
+      <mat-icon>school</mat-icon><span>Cursus</span>
+    </button>
+    <button class="tab-chip" [class.active]="activeTab === 'acces'" (click)="setTab('acces')">
+      <mat-icon>vpn_key</mat-icon><span>Plateformes</span>
+    </button>
+    <button class="tab-chip" [class.active]="activeTab === 'reponses'" (click)="setTab('reponses')">
+      <mat-icon>sync</mat-icon><span>Réponses CF</span>
+    </button>
+  </div>
 
-    <!-- ── Main content ── -->
-    <div class="detail-main">
+  <!-- ── Contenu de la section active ── -->
+  <div class="detail-main">
 
-      <!-- ══ Section : Profil ══ -->
-      <section id="section-profil" class="detail-section">
-        <h2 class="section-title"><mat-icon>person</mat-icon> Profil du candidat</h2>
-        <div class="info-grid" *ngIf="user">
-          <div class="info-item">
-            <span class="info-label">Email</span>
-            <span class="info-value">{{ user?.email || '—' }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Téléphone</span>
-            <span class="info-value">{{ user?.phone || '—' }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Date de naissance</span>
-            <span class="info-value">{{ formattedBirthDate || '—' }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Niveau de diplôme</span>
-            <span class="info-value">{{ user?.degreeLevel || '—' }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Pays de destination</span>
-            <span class="info-value">{{ userAdmission?.country || '—' }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Type d'admission</span>
-            <span class="info-value">{{ userAdmission?.admissionType || '—' }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Filière</span>
-            <span class="info-value">{{ userAdmission?.fieldOfStudy || '—' }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Date de demande</span>
-            <span class="info-value">{{ formattedASkDemande }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Type de Bac</span>
-            <span class="info-value">{{ userAdmission?.bacType || '—' }}</span>
-          </div>
+    <!-- ══ Profil ══ -->
+    <section class="detail-section" *ngIf="activeTab === 'profil'">
+      <h2 class="section-title"><mat-icon>person</mat-icon> Profil du candidat</h2>
+      <div class="info-grid" *ngIf="user">
+        <div class="info-item">
+          <span class="info-label">Email</span>
+          <span class="info-value">{{ user?.email || '—' }}</span>
         </div>
-        <div *ngIf="userAdmission?.comments" class="comment-box">
-          <mat-icon>format_quote</mat-icon>
-          <p>{{ userAdmission?.comments }}</p>
+        <div class="info-item">
+          <span class="info-label">Téléphone</span>
+          <span class="info-value">{{ user?.phone || '—' }}</span>
         </div>
-      </section>
-
-      <!-- ══ Section : Statut & Paiement ══ -->
-      <section id="section-statut" class="detail-section" *ngIf="userAdmission">
-        <h2 class="section-title"><mat-icon>assignment</mat-icon> Statut & Paiement</h2>
-
-        <div class="field-group">
-          <label class="field-label">État de la demande</label>
-          <mat-form-field appearance="outline" class="field-full">
-            <mat-select [(ngModel)]="userAdmission.etatDemande" (selectionChange)="changeAdmissionState()">
-              <mat-option [value]="0">En attente de paiement pour prise en charge</mat-option>
-              <mat-option [value]="1">En cours de traitement : Campus France, Canada, École Privée</mat-option>
-              <mat-option [value]="2">Traitement terminé : En attente de réponse</mat-option>
-              <mat-option [value]="3">Traitement terminé : Candidature acceptée</mat-option>
-              <mat-option [value]="4">Traitement terminé : Candidature refusée globalement</mat-option>
-              <mat-option [value]="5">Traitement terminé : Demande archivée</mat-option>
-              <mat-option [value]="6">Candidature acceptée par le passé</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="info-item">
+          <span class="info-label">Date de naissance</span>
+          <span class="info-value">{{ formattedBirthDate || '—' }}</span>
         </div>
-
-        <div *ngIf="userAdmission.etatDemande === 3" class="field-group university-row">
-          <mat-form-field appearance="outline" style="flex:1">
-            <mat-label>Nom de l'université</mat-label>
-            <input matInput [(ngModel)]="userAdmission.nomUniversite"
-                   (ngModelChange)="onUniversityNameChange()"
-                   placeholder="Ex : Université Laval">
-          </mat-form-field>
-          <button class="btn-save" (click)="saveUniversityName()" [disabled]="!universityNameChanged">
-            <mat-icon>save</mat-icon> Enregistrer
-          </button>
+        <div class="info-item">
+          <span class="info-label">Niveau de diplôme</span>
+          <span class="info-value">{{ user?.degreeLevel || '—' }}</span>
         </div>
-
-        <div class="section-divider"></div>
-
-        <h3 class="subsection-title">Justificatif de paiement</h3>
-        <div class="doc-list mb-block">
-          <div class="doc-row">
-            <div class="doc-row-left">
-              <mat-icon>receipt_long</mat-icon>
-              <span class="doc-label">Justificatif de paiement</span>
-              <span *ngIf="userAdmission?.justificatifPaiement" class="doc-badge-present">Déposé</span>
-              <span *ngIf="!userAdmission?.justificatifPaiement" class="doc-badge-missing">Manquant</span>
-            </div>
-            <div class="doc-actions">
-              <button *ngIf="userAdmission?.justificatifPaiement" class="btn-doc btn-view"
-                      (click)="viewDocument(userAdmission.justificatifPaiement)">
-                <mat-icon>visibility</mat-icon> Voir
-              </button>
-              <button class="btn-doc btn-edit" (click)="updateDocument('justificatifPaiement')">
-                <mat-icon>upload</mat-icon> {{ userAdmission?.justificatifPaiement ? 'Mettre à jour' : 'Joindre' }}
-              </button>
-            </div>
-          </div>
+        <div class="info-item">
+          <span class="info-label">Pays de destination</span>
+          <span class="info-value">{{ userAdmission?.country || '—' }}</span>
         </div>
-
-        <div class="payment-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Service de paiement</mat-label>
-            <mat-select [(ngModel)]="paymentDetails.service">
-              <mat-option value="Western Union">Western Union</mat-option>
-              <mat-option value="Ria">Ria</mat-option>
-              <mat-option value="MoneyGram">MoneyGram</mat-option>
-              <mat-option value="Autres">Autres</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Code de paiement</mat-label>
-            <input matInput [(ngModel)]="paymentDetails.code" placeholder="Code / référence">
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Montant (€)</mat-label>
-            <input matInput type="number" min="0" step="0.01" [(ngModel)]="paymentDetails.amount">
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Date de paiement</mat-label>
-            <input matInput type="datetime-local" [(ngModel)]="paymentDetails.date">
-          </mat-form-field>
+        <div class="info-item">
+          <span class="info-label">Type d'admission</span>
+          <span class="info-value">{{ userAdmission?.admissionType || '—' }}</span>
         </div>
-        <div class="action-row">
-          <button class="btn-save" (click)="savePaymentDetails()">
-            <mat-icon>save</mat-icon> Enregistrer le paiement
-          </button>
+        <div class="info-item">
+          <span class="info-label">Filière</span>
+          <span class="info-value">{{ userAdmission?.fieldOfStudy || '—' }}</span>
         </div>
+        <div class="info-item">
+          <span class="info-label">Date de demande</span>
+          <span class="info-value">{{ formattedASkDemande }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Type de Bac</span>
+          <span class="info-value">{{ userAdmission?.bacType || '—' }}</span>
+        </div>
+      </div>
+      <div *ngIf="userAdmission?.comments" class="comment-box">
+        <mat-icon>format_quote</mat-icon>
+        <p>{{ userAdmission?.comments }}</p>
+      </div>
+    </section>
 
-        <div class="section-divider"></div>
+    <!-- ══ Statut & Paiement ══ -->
+    <section class="detail-section" *ngIf="activeTab === 'statut' && userAdmission">
+      <h2 class="section-title"><mat-icon>assignment</mat-icon> Statut & Paiement</h2>
 
-        <h3 class="subsection-title">Argent retiré (Cashout)</h3>
-        <mat-form-field appearance="outline" class="field-half">
-          <mat-select [(ngModel)]="userAdmission.cashout" (selectionChange)="changeCashoutStatus()">
-            <mat-option [value]="0">Non</mat-option>
-            <mat-option [value]="1">Oui</mat-option>
+      <div class="field-group">
+        <label class="field-label">État de la demande</label>
+        <mat-form-field appearance="outline" class="field-full">
+          <mat-select [(ngModel)]="userAdmission.etatDemande" (selectionChange)="changeAdmissionState()">
+            <mat-option [value]="0">En attente de paiement pour prise en charge</mat-option>
+            <mat-option [value]="1">En cours de traitement : Campus France, Canada, École Privée</mat-option>
+            <mat-option [value]="2">Traitement terminé : En attente de réponse</mat-option>
+            <mat-option [value]="3">Traitement terminé : Candidature acceptée</mat-option>
+            <mat-option [value]="4">Traitement terminé : Candidature refusée globalement</mat-option>
+            <mat-option [value]="5">Traitement terminé : Demande archivée</mat-option>
+            <mat-option [value]="6">Candidature acceptée par le passé</mat-option>
           </mat-select>
         </mat-form-field>
-      </section>
+      </div>
 
-      <!-- ══ Section : Documents ══ -->
-      <section id="section-documents" class="detail-section">
-        <h2 class="section-title"><mat-icon>folder_open</mat-icon> Documents</h2>
+      <div *ngIf="userAdmission.etatDemande === 3" class="field-group university-row">
+        <mat-form-field appearance="outline" style="flex:1">
+          <mat-label>Nom de l'université</mat-label>
+          <input matInput [(ngModel)]="userAdmission.nomUniversite"
+                 (ngModelChange)="onUniversityNameChange()"
+                 placeholder="Ex : Université Laval">
+        </mat-form-field>
+        <button class="btn-save" (click)="saveUniversityName()" [disabled]="!universityNameChanged">
+          <mat-icon>save</mat-icon> Enregistrer
+        </button>
+      </div>
 
-        <h3 class="subsection-title">Pièces d'identité</h3>
-        <div class="doc-list" *ngIf="user">
-          <div class="doc-row">
-            <div class="doc-row-left">
-              <mat-icon>photo_camera</mat-icon>
-              <span class="doc-label">Photo d'identité</span>
-              <span [class]="user?.identityPhotoUrl ? 'doc-badge-present' : 'doc-badge-missing'">
-                {{ user?.identityPhotoUrl ? 'Présente' : 'Manquante' }}
-              </span>
-            </div>
-            <div class="doc-actions">
-              <button *ngIf="user?.identityPhotoUrl" class="btn-doc btn-view"
-                      (click)="viewDocument(user.identityPhotoUrl)">
-                <mat-icon>visibility</mat-icon> Voir
-              </button>
-            </div>
+      <div class="section-divider"></div>
+
+      <h3 class="subsection-title">Justificatif de paiement</h3>
+      <div class="doc-list mb-block">
+        <div class="doc-row">
+          <div class="doc-row-left">
+            <mat-icon>receipt_long</mat-icon>
+            <span class="doc-label">Justificatif de paiement</span>
+            <span *ngIf="userAdmission?.justificatifPaiement" class="doc-badge-present">Déposé</span>
+            <span *ngIf="!userAdmission?.justificatifPaiement" class="doc-badge-missing">Manquant</span>
           </div>
-          <div class="doc-row">
-            <div class="doc-row-left">
-              <mat-icon>credit_card</mat-icon>
-              <span class="doc-label">Carte Nationale d'Identité</span>
-              <span [class]="user?.cniUrl ? 'doc-badge-present' : 'doc-badge-missing'">
-                {{ user?.cniUrl ? 'Présente' : 'Manquante' }}
-              </span>
-            </div>
-            <div class="doc-actions">
-              <button *ngIf="user?.cniUrl" class="btn-doc btn-view"
-                      (click)="viewDocument(user.cniUrl)">
-                <mat-icon>visibility</mat-icon> Voir
-              </button>
-            </div>
-          </div>
-          <div class="doc-row">
-            <div class="doc-row-left">
-              <mat-icon>book</mat-icon>
-              <span class="doc-label">Passeport</span>
-              <span [class]="user?.passportUrl ? 'doc-badge-present' : 'doc-badge-missing'">
-                {{ user?.passportUrl ? 'Présent' : 'Manquant' }}
-              </span>
-            </div>
-            <div class="doc-actions">
-              <button *ngIf="user?.passportUrl" class="btn-doc btn-view"
-                      (click)="viewDocument(user.passportUrl)">
-                <mat-icon>visibility</mat-icon> Voir
-              </button>
-            </div>
+          <div class="doc-actions">
+            <button *ngIf="userAdmission?.justificatifPaiement" class="btn-doc btn-view"
+                    (click)="viewDocument(userAdmission.justificatifPaiement)">
+              <mat-icon>visibility</mat-icon> Voir
+            </button>
+            <button class="btn-doc btn-edit" (click)="updateDocument('justificatifPaiement')">
+              <mat-icon>upload</mat-icon> {{ userAdmission?.justificatifPaiement ? 'Mettre à jour' : 'Joindre' }}
+            </button>
           </div>
         </div>
+      </div>
 
-        <h3 class="subsection-title">Documents officiels</h3>
-        <div class="doc-list" *ngIf="userAdmission">
-          <div class="doc-row">
-            <div class="doc-row-left">
-              <mat-icon>description</mat-icon>
-              <span class="doc-label">Accord préalable / Document d'admission</span>
-              <span [class]="userAdmission?.admissionFileOfi ? 'doc-badge-present' : 'doc-badge-missing'">
-                {{ userAdmission?.admissionFileOfi ? 'Présent' : 'Manquant' }}
-              </span>
-            </div>
-            <div class="doc-actions">
-              <ng-container *ngIf="userAdmission?.admissionFileOfi">
-                <button class="btn-doc btn-view" (click)="viewDocument(userAdmission.admissionFileOfi)"><mat-icon>visibility</mat-icon> Voir</button>
-                <button class="btn-doc btn-edit" (click)="updateDocument('admissionFileOfi')"><mat-icon>edit</mat-icon></button>
-                <button class="btn-doc btn-del"  (click)="deleteDocument('admissionFileOfi')"><mat-icon>delete</mat-icon></button>
-              </ng-container>
-              <button *ngIf="!userAdmission?.admissionFileOfi" class="btn-doc btn-attach"
-                      (click)="attachDocument('admissionFileOfi')">
-                <mat-icon>attach_file</mat-icon> Joindre
-              </button>
-            </div>
-          </div>
-          <div class="doc-row">
-            <div class="doc-row-left">
-              <mat-icon>verified</mat-icon>
-              <span class="doc-label">Certificat d'inscription (année en cours)</span>
-              <span [class]="userAdmission?.justificatifInscription ? 'doc-badge-present' : 'doc-badge-missing'">
-                {{ userAdmission?.justificatifInscription ? 'Présent' : 'Manquant' }}
-              </span>
-            </div>
-            <div class="doc-actions">
-              <ng-container *ngIf="userAdmission?.justificatifInscription">
-                <button class="btn-doc btn-view" (click)="viewDocument(userAdmission.justificatifInscription)"><mat-icon>visibility</mat-icon> Voir</button>
-                <button class="btn-doc btn-edit" (click)="updateDocument('justificatifInscription')"><mat-icon>edit</mat-icon></button>
-                <button class="btn-doc btn-del"  (click)="deleteDocument('justificatifInscription')"><mat-icon>delete</mat-icon></button>
-              </ng-container>
-              <button *ngIf="!userAdmission?.justificatifInscription" class="btn-doc btn-attach"
-                      (click)="attachDocument('justificatifInscription')">
-                <mat-icon>attach_file</mat-icon> Joindre
-              </button>
-            </div>
-          </div>
-          <div class="doc-row">
-            <div class="doc-row-left">
-              <mat-icon>work</mat-icon>
-              <span class="doc-label">CV et justificatif(s) de stage</span>
-              <span [class]="userAdmission?.cvUrl ? 'doc-badge-present' : 'doc-badge-missing'">
-                {{ userAdmission?.cvUrl ? 'Présent' : 'Manquant' }}
-              </span>
-            </div>
-            <div class="doc-actions">
-              <ng-container *ngIf="userAdmission?.cvUrl">
-                <button class="btn-doc btn-view" (click)="viewDocument(userAdmission.cvUrl)"><mat-icon>visibility</mat-icon> Voir</button>
-                <button class="btn-doc btn-edit" (click)="updateDocument('cvUrl')"><mat-icon>edit</mat-icon></button>
-                <button class="btn-doc btn-del"  (click)="deleteDocument('cvUrl')"><mat-icon>delete</mat-icon></button>
-              </ng-container>
-              <button *ngIf="!userAdmission?.cvUrl" class="btn-doc btn-attach"
-                      (click)="attachDocument('cvUrl')">
-                <mat-icon>attach_file</mat-icon> Joindre
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div class="payment-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Service de paiement</mat-label>
+          <mat-select [(ngModel)]="paymentDetails.service">
+            <mat-option value="Western Union">Western Union</mat-option>
+            <mat-option value="Ria">Ria</mat-option>
+            <mat-option value="MoneyGram">MoneyGram</mat-option>
+            <mat-option value="Autres">Autres</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Code de paiement</mat-label>
+          <input matInput [(ngModel)]="paymentDetails.code" placeholder="Code / référence">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Montant (€)</mat-label>
+          <input matInput type="number" min="0" step="0.01" [(ngModel)]="paymentDetails.amount">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Date de paiement</mat-label>
+          <input matInput type="datetime-local" [(ngModel)]="paymentDetails.date">
+        </mat-form-field>
+      </div>
+      <div class="action-row">
+        <button class="btn-save" (click)="savePaymentDetails()">
+          <mat-icon>save</mat-icon> Enregistrer le paiement
+        </button>
+      </div>
 
-      <!-- ══ Section : Cursus ══ -->
-      <section id="section-cursus" class="detail-section" *ngIf="userAdmission">
-        <h2 class="section-title"><mat-icon>school</mat-icon> Cursus académique</h2>
+      <div class="section-divider"></div>
 
-        <h3 class="subsection-title">Études Secondaires</h3>
-        <div *ngFor="let year of ['2nd', 'Première', 'Terminale']">
-          <div class="cursus-year-header"><mat-icon>book</mat-icon> {{ year }}</div>
-          <div *ngFor="let term of [1, 2, 3]" class="cursus-term-row">
-            <div class="cursus-term-info">
-              <span class="cursus-term-label">Trimestre {{ term }}</span>
-              <span class="cursus-term-avg">
-                {{ userAdmission['termAverage' + year + term] ? 'Moy. ' + userAdmission['termAverage' + year + term] + '/20' : 'Moyenne non renseignée' }}
-              </span>
-            </div>
-            <div class="doc-actions">
-              <ng-container *ngIf="userAdmission['term' + year + term + 'Url']">
-                <button class="btn-doc btn-view" (click)="viewDocument(userAdmission['term' + year + term + 'Url'])"><mat-icon>visibility</mat-icon> Voir</button>
-                <button class="btn-doc btn-edit" (click)="updateDocument('term' + year + term + 'Url')"><mat-icon>edit</mat-icon></button>
-                <button class="btn-doc btn-del"  (click)="deleteDocument('term' + year + term + 'Url')"><mat-icon>delete</mat-icon></button>
-              </ng-container>
-              <button *ngIf="!userAdmission['term' + year + term + 'Url']" class="btn-doc btn-attach"
-                      (click)="attachDocument('term' + year + term + 'Url')">
-                <mat-icon>attach_file</mat-icon> Joindre
-              </button>
-            </div>
-          </div>
-        </div>
+      <h3 class="subsection-title">Argent retiré (Cashout)</h3>
+      <mat-form-field appearance="outline" class="field-half">
+        <mat-select [(ngModel)]="userAdmission.cashout" (selectionChange)="changeCashoutStatus()">
+          <mat-option [value]="0">Non</mat-option>
+          <mat-option [value]="1">Oui</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </section>
 
-        <h3 class="subsection-title">Baccalauréat</h3>
-        <div class="cursus-term-row">
-          <div class="cursus-term-info">
-            <span class="cursus-term-label">Relevé de notes BAC</span>
-            <span class="cursus-term-avg">
-              {{ userAdmission?.bacAverage ? 'Moy. générale : ' + userAdmission.bacAverage + ' pts' : 'Moyenne non renseignée' }}
+    <!-- ══ Documents ══ -->
+    <section class="detail-section" *ngIf="activeTab === 'documents'">
+      <h2 class="section-title"><mat-icon>folder_open</mat-icon> Documents</h2>
+
+      <h3 class="subsection-title">Pièces d'identité</h3>
+      <div class="doc-list" *ngIf="user">
+        <div class="doc-row">
+          <div class="doc-row-left">
+            <mat-icon>photo_camera</mat-icon>
+            <span class="doc-label">Photo d'identité</span>
+            <span [class]="user?.identityPhotoUrl ? 'doc-badge-present' : 'doc-badge-missing'">
+              {{ user?.identityPhotoUrl ? 'Présente' : 'Manquante' }}
             </span>
           </div>
           <div class="doc-actions">
-            <ng-container *ngIf="userAdmission?.bacUrl">
-              <button class="btn-doc btn-view" (click)="viewDocument(userAdmission.bacUrl)"><mat-icon>visibility</mat-icon> Voir</button>
-              <button class="btn-doc btn-edit" (click)="updateDocument('bacUrl')"><mat-icon>edit</mat-icon></button>
-              <button class="btn-doc btn-del"  (click)="deleteDocument('bacUrl')"><mat-icon>delete</mat-icon></button>
+            <button *ngIf="user?.identityPhotoUrl" class="btn-doc btn-view"
+                    (click)="viewDocument(user.identityPhotoUrl)">
+              <mat-icon>visibility</mat-icon> Voir
+            </button>
+          </div>
+        </div>
+        <div class="doc-row">
+          <div class="doc-row-left">
+            <mat-icon>credit_card</mat-icon>
+            <span class="doc-label">Carte Nationale d'Identité</span>
+            <span [class]="user?.cniUrl ? 'doc-badge-present' : 'doc-badge-missing'">
+              {{ user?.cniUrl ? 'Présente' : 'Manquante' }}
+            </span>
+          </div>
+          <div class="doc-actions">
+            <button *ngIf="user?.cniUrl" class="btn-doc btn-view"
+                    (click)="viewDocument(user.cniUrl)">
+              <mat-icon>visibility</mat-icon> Voir
+            </button>
+          </div>
+        </div>
+        <div class="doc-row">
+          <div class="doc-row-left">
+            <mat-icon>book</mat-icon>
+            <span class="doc-label">Passeport</span>
+            <span [class]="user?.passportUrl ? 'doc-badge-present' : 'doc-badge-missing'">
+              {{ user?.passportUrl ? 'Présent' : 'Manquant' }}
+            </span>
+          </div>
+          <div class="doc-actions">
+            <button *ngIf="user?.passportUrl" class="btn-doc btn-view"
+                    (click)="viewDocument(user.passportUrl)">
+              <mat-icon>visibility</mat-icon> Voir
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="subsection-title">Documents officiels</h3>
+      <div class="doc-list" *ngIf="userAdmission">
+        <div class="doc-row">
+          <div class="doc-row-left">
+            <mat-icon>description</mat-icon>
+            <span class="doc-label">Accord préalable / Document d'admission</span>
+            <span [class]="userAdmission?.admissionFileOfi ? 'doc-badge-present' : 'doc-badge-missing'">
+              {{ userAdmission?.admissionFileOfi ? 'Présent' : 'Manquant' }}
+            </span>
+          </div>
+          <div class="doc-actions">
+            <ng-container *ngIf="userAdmission?.admissionFileOfi">
+              <button class="btn-doc btn-view" (click)="viewDocument(userAdmission.admissionFileOfi)"><mat-icon>visibility</mat-icon> Voir</button>
+              <button class="btn-doc btn-edit" (click)="updateDocument('admissionFileOfi')"><mat-icon>edit</mat-icon></button>
+              <button class="btn-doc btn-del"  (click)="deleteDocument('admissionFileOfi')"><mat-icon>delete</mat-icon></button>
             </ng-container>
-            <button *ngIf="!userAdmission?.bacUrl" class="btn-doc btn-attach"
-                    (click)="attachDocument('bacUrl')">
+            <button *ngIf="!userAdmission?.admissionFileOfi" class="btn-doc btn-attach"
+                    (click)="attachDocument('admissionFileOfi')">
               <mat-icon>attach_file</mat-icon> Joindre
             </button>
           </div>
         </div>
-
-        <h3 class="subsection-title">Études Supérieures</h3>
-        <div *ngFor="let year of getYears(userAdmission.educationLevel)">
-          <div class="cursus-year-header"><mat-icon>school</mat-icon> Année {{ year }}</div>
-          <div *ngFor="let sem of [1, 2]" class="cursus-term-row">
-            <div class="cursus-term-info">
-              <span class="cursus-term-label">Semestre {{ sem }}</span>
-              <span class="cursus-term-avg">
-                {{ userAdmission['averageYear' + year + 'Sem' + sem] ? 'Moy. ' + userAdmission['averageYear' + year + 'Sem' + sem] + '/20' : 'Moyenne non renseignée' }}
-              </span>
-            </div>
-            <div class="doc-actions">
-              <ng-container *ngIf="userAdmission['year' + year + 'Sem' + sem + 'Url']">
-                <button class="btn-doc btn-view" (click)="viewDocument(userAdmission['year' + year + 'Sem' + sem + 'Url'])"><mat-icon>visibility</mat-icon> Voir</button>
-                <button class="btn-doc btn-edit" (click)="updateDocument('year' + year + 'Sem' + sem + 'Url')"><mat-icon>edit</mat-icon></button>
-                <button class="btn-doc btn-del"  (click)="deleteDocument('year' + year + 'Sem' + sem + 'Url')"><mat-icon>delete</mat-icon></button>
-              </ng-container>
-              <button *ngIf="!userAdmission['year' + year + 'Sem' + sem + 'Url']" class="btn-doc btn-attach"
-                      (click)="attachDocument('year' + year + 'Sem' + sem + 'Url')">
-                <mat-icon>attach_file</mat-icon> Joindre
-              </button>
-            </div>
+        <div class="doc-row">
+          <div class="doc-row-left">
+            <mat-icon>verified</mat-icon>
+            <span class="doc-label">Certificat d'inscription (année en cours)</span>
+            <span [class]="userAdmission?.justificatifInscription ? 'doc-badge-present' : 'doc-badge-missing'">
+              {{ userAdmission?.justificatifInscription ? 'Présent' : 'Manquant' }}
+            </span>
+          </div>
+          <div class="doc-actions">
+            <ng-container *ngIf="userAdmission?.justificatifInscription">
+              <button class="btn-doc btn-view" (click)="viewDocument(userAdmission.justificatifInscription)"><mat-icon>visibility</mat-icon> Voir</button>
+              <button class="btn-doc btn-edit" (click)="updateDocument('justificatifInscription')"><mat-icon>edit</mat-icon></button>
+              <button class="btn-doc btn-del"  (click)="deleteDocument('justificatifInscription')"><mat-icon>delete</mat-icon></button>
+            </ng-container>
+            <button *ngIf="!userAdmission?.justificatifInscription" class="btn-doc btn-attach"
+                    (click)="attachDocument('justificatifInscription')">
+              <mat-icon>attach_file</mat-icon> Joindre
+            </button>
           </div>
         </div>
-      </section>
+        <div class="doc-row">
+          <div class="doc-row-left">
+            <mat-icon>work</mat-icon>
+            <span class="doc-label">CV et justificatif(s) de stage</span>
+            <span [class]="userAdmission?.cvUrl ? 'doc-badge-present' : 'doc-badge-missing'">
+              {{ userAdmission?.cvUrl ? 'Présent' : 'Manquant' }}
+            </span>
+          </div>
+          <div class="doc-actions">
+            <ng-container *ngIf="userAdmission?.cvUrl">
+              <button class="btn-doc btn-view" (click)="viewDocument(userAdmission.cvUrl)"><mat-icon>visibility</mat-icon> Voir</button>
+              <button class="btn-doc btn-edit" (click)="updateDocument('cvUrl')"><mat-icon>edit</mat-icon></button>
+              <button class="btn-doc btn-del"  (click)="deleteDocument('cvUrl')"><mat-icon>delete</mat-icon></button>
+            </ng-container>
+            <button *ngIf="!userAdmission?.cvUrl" class="btn-doc btn-attach"
+                    (click)="attachDocument('cvUrl')">
+              <mat-icon>attach_file</mat-icon> Joindre
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    </div><!-- /detail-main -->
+    <!-- ══ Cursus ══ -->
+    <section class="detail-section" *ngIf="activeTab === 'cursus' && userAdmission">
+      <h2 class="section-title"><mat-icon>school</mat-icon> Cursus académique</h2>
 
-    <!-- ── Sidebar sommaire ── -->
-    <aside class="detail-sidebar">
-      <div class="sidebar-nav">
-        <p class="sidebar-title">SOMMAIRE</p>
-        <button class="sidebar-link" [class.active]="activeSection === 'profil'" (click)="scrollTo('profil')">
-          <span class="link-dot"></span><span>Profil</span>
-        </button>
-        <button class="sidebar-link" [class.active]="activeSection === 'statut'" (click)="scrollTo('statut')">
-          <span class="link-dot"></span><span>Statut & Paiement</span>
-        </button>
-        <button class="sidebar-link" [class.active]="activeSection === 'documents'" (click)="scrollTo('documents')">
-          <span class="link-dot"></span><span>Documents</span>
-        </button>
-        <button class="sidebar-link" [class.active]="activeSection === 'cursus'" (click)="scrollTo('cursus')">
-          <span class="link-dot"></span><span>Cursus</span>
+      <h3 class="subsection-title">Études Secondaires</h3>
+      <div *ngFor="let year of ['2nd', 'Première', 'Terminale']">
+        <div class="cursus-year-header"><mat-icon>book</mat-icon> {{ year }}</div>
+        <div *ngFor="let term of [1, 2, 3]" class="cursus-term-row">
+          <div class="cursus-term-info">
+            <span class="cursus-term-label">Trimestre {{ term }}</span>
+            <span class="cursus-term-avg">
+              {{ userAdmission['termAverage' + year + term] ? 'Moy. ' + userAdmission['termAverage' + year + term] + '/20' : 'Moyenne non renseignée' }}
+            </span>
+          </div>
+          <div class="doc-actions">
+            <ng-container *ngIf="userAdmission['term' + year + term + 'Url']">
+              <button class="btn-doc btn-view" (click)="viewDocument(userAdmission['term' + year + term + 'Url'])"><mat-icon>visibility</mat-icon> Voir</button>
+              <button class="btn-doc btn-edit" (click)="updateDocument('term' + year + term + 'Url')"><mat-icon>edit</mat-icon></button>
+              <button class="btn-doc btn-del"  (click)="deleteDocument('term' + year + term + 'Url')"><mat-icon>delete</mat-icon></button>
+            </ng-container>
+            <button *ngIf="!userAdmission['term' + year + term + 'Url']" class="btn-doc btn-attach"
+                    (click)="attachDocument('term' + year + term + 'Url')">
+              <mat-icon>attach_file</mat-icon> Joindre
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="subsection-title">Baccalauréat</h3>
+      <div class="cursus-term-row">
+        <div class="cursus-term-info">
+          <span class="cursus-term-label">Relevé de notes BAC</span>
+          <span class="cursus-term-avg">
+            {{ userAdmission?.bacAverage ? 'Moy. générale : ' + userAdmission.bacAverage + ' pts' : 'Moyenne non renseignée' }}
+          </span>
+        </div>
+        <div class="doc-actions">
+          <ng-container *ngIf="userAdmission?.bacUrl">
+            <button class="btn-doc btn-view" (click)="viewDocument(userAdmission.bacUrl)"><mat-icon>visibility</mat-icon> Voir</button>
+            <button class="btn-doc btn-edit" (click)="updateDocument('bacUrl')"><mat-icon>edit</mat-icon></button>
+            <button class="btn-doc btn-del"  (click)="deleteDocument('bacUrl')"><mat-icon>delete</mat-icon></button>
+          </ng-container>
+          <button *ngIf="!userAdmission?.bacUrl" class="btn-doc btn-attach"
+                  (click)="attachDocument('bacUrl')">
+            <mat-icon>attach_file</mat-icon> Joindre
+          </button>
+        </div>
+      </div>
+
+      <h3 class="subsection-title">Études Supérieures</h3>
+      <div *ngFor="let year of getYears(userAdmission.educationLevel)">
+        <div class="cursus-year-header"><mat-icon>school</mat-icon> Année {{ year }}</div>
+        <div *ngFor="let sem of [1, 2]" class="cursus-term-row">
+          <div class="cursus-term-info">
+            <span class="cursus-term-label">Semestre {{ sem }}</span>
+            <span class="cursus-term-avg">
+              {{ userAdmission['averageYear' + year + 'Sem' + sem] ? 'Moy. ' + userAdmission['averageYear' + year + 'Sem' + sem] + '/20' : 'Moyenne non renseignée' }}
+            </span>
+          </div>
+          <div class="doc-actions">
+            <ng-container *ngIf="userAdmission['year' + year + 'Sem' + sem + 'Url']">
+              <button class="btn-doc btn-view" (click)="viewDocument(userAdmission['year' + year + 'Sem' + sem + 'Url'])"><mat-icon>visibility</mat-icon> Voir</button>
+              <button class="btn-doc btn-edit" (click)="updateDocument('year' + year + 'Sem' + sem + 'Url')"><mat-icon>edit</mat-icon></button>
+              <button class="btn-doc btn-del"  (click)="deleteDocument('year' + year + 'Sem' + sem + 'Url')"><mat-icon>delete</mat-icon></button>
+            </ng-container>
+            <button *ngIf="!userAdmission['year' + year + 'Sem' + sem + 'Url']" class="btn-doc btn-attach"
+                    (click)="attachDocument('year' + year + 'Sem' + sem + 'Url')">
+              <mat-icon>attach_file</mat-icon> Joindre
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Accès plateformes ══ -->
+    <section class="detail-section" *ngIf="activeTab === 'acces'">
+      <h2 class="section-title"><mat-icon>vpn_key</mat-icon> Accès plateformes</h2>
+
+      <div class="credentials-grid">
+        <div class="cred-card" *ngFor="let platform of PLATFORMS">
+
+          <!-- Vue normale -->
+          <ng-container *ngIf="credentials.has(platform.id) && editingPlatform !== platform.id">
+            <div class="cred-card-header">
+              <div class="cred-platform-info">
+                <span class="cred-platform-icon" [style.background]="platform.color + '18'" [style.color]="platform.color">
+                  <mat-icon>{{ platform.icon }}</mat-icon>
+                </span>
+                <span class="cred-platform-name">{{ platform.label }}</span>
+              </div>
+              <div class="cred-card-actions">
+                <button class="cred-btn-icon" (click)="startEditCredential(platform.id)" title="Modifier">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button class="cred-btn-icon cred-btn-danger" (click)="deleteCredential(platform.id)" title="Supprimer">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="cred-field-row">
+              <span class="cred-field-label">Identifiant</span>
+              <span class="cred-field-value">{{ credentials.get(platform.id)?.username }}</span>
+              <button class="cred-btn-copy" (click)="openPlatform(platform)" title="Copier identifiant">
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </div>
+            <div class="cred-field-row">
+              <span class="cred-field-label">Mot de passe</span>
+              <span class="cred-field-value cred-password">
+                {{ showPasswordFor.has(platform.id) ? credentials.get(platform.id)?.password : '••••••••' }}
+              </span>
+              <button class="cred-btn-copy" (click)="toggleShowPassword(platform.id)" title="Voir">
+                <mat-icon>{{ showPasswordFor.has(platform.id) ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              <button class="cred-btn-copy" (click)="copyPassword(platform.id)" title="Copier mot de passe">
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </div>
+            <button class="cred-btn-open" (click)="openPlatform(platform)">
+              <mat-icon>open_in_new</mat-icon>
+              Ouvrir {{ platform.label }}
+            </button>
+          </ng-container>
+
+          <!-- Pas de credentials -->
+          <ng-container *ngIf="!credentials.has(platform.id) && editingPlatform !== platform.id">
+            <div class="cred-card-header">
+              <div class="cred-platform-info">
+                <span class="cred-platform-icon" [style.background]="platform.color + '18'" [style.color]="platform.color">
+                  <mat-icon>{{ platform.icon }}</mat-icon>
+                </span>
+                <span class="cred-platform-name">{{ platform.label }}</span>
+              </div>
+            </div>
+            <div class="cred-empty">
+              <mat-icon>lock</mat-icon>
+              <span>Aucun accès enregistré</span>
+            </div>
+            <button class="cred-btn-add" (click)="startEditCredential(platform.id)">
+              <mat-icon>add</mat-icon> Ajouter les accès
+            </button>
+          </ng-container>
+
+          <!-- Formulaire d'édition -->
+          <ng-container *ngIf="editingPlatform === platform.id">
+            <div class="cred-card-header">
+              <div class="cred-platform-info">
+                <span class="cred-platform-icon" [style.background]="platform.color + '18'" [style.color]="platform.color">
+                  <mat-icon>{{ platform.icon }}</mat-icon>
+                </span>
+                <span class="cred-platform-name">{{ platform.label }}</span>
+              </div>
+            </div>
+            <div class="cred-form">
+              <div class="cred-input-group">
+                <label>Identifiant</label>
+                <input type="text" [(ngModel)]="editForm.username" placeholder="Email ou identifiant" class="cred-input">
+              </div>
+              <div class="cred-input-group">
+                <label>Mot de passe</label>
+                <input type="text" [(ngModel)]="editForm.password" placeholder="Mot de passe" class="cred-input">
+              </div>
+              <div class="cred-form-actions">
+                <button class="cred-btn-cancel" (click)="cancelEditCredential()">Annuler</button>
+                <button class="cred-btn-save" (click)="saveCredential(platform)">
+                  <mat-icon>save</mat-icon> Enregistrer
+                </button>
+              </div>
+            </div>
+          </ng-container>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Réponses établissements ══ -->
+    <section class="detail-section" *ngIf="activeTab === 'reponses'">
+      <div class="cf-section-header">
+        <h2 class="section-title"><mat-icon>school</mat-icon> Réponses des établissements</h2>
+        <button class="btn-cf-sync" (click)="syncCampusFrance()" [disabled]="cfSyncing">
+          <mat-icon [class.spin]="cfSyncing">sync</mat-icon>
+          {{ cfSyncing ? 'Synchronisation...' : 'Synchroniser Campus France' }}
         </button>
       </div>
-    </aside>
+      <p *ngIf="userAdmission?.cfLastSync" class="cf-last-sync">
+        <mat-icon>schedule</mat-icon> Dernière sync : {{ formatAnyDate(userAdmission.cfLastSync) }}
+      </p>
 
-  </div><!-- /detail-layout -->
+      <div *ngIf="!userAdmission?.cfResponses?.length" class="cf-empty-state">
+        <mat-icon>info_outline</mat-icon>
+        <span>Aucune réponse synchronisée — cliquez "Synchroniser Campus France"</span>
+      </div>
+
+      <div class="cf-table-wrap" *ngIf="userAdmission?.cfResponses?.length">
+        <table class="cf-table">
+          <thead>
+            <tr>
+              <th>Formation</th>
+              <th>Établissement</th>
+              <th>Ville</th>
+              <th>Réponse</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of userAdmission.cfResponses">
+              <td class="cf-td-formation">{{ r.formation }}</td>
+              <td>{{ r.etablissement }}</td>
+              <td>{{ r.ville }}</td>
+              <td>
+                <span class="cf-badge" [ngClass]="getCfResponseClass(r.reponse)">
+                  {{ r.reponse || 'En attente' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div><!-- /detail-main -->
 
 </div>
