@@ -32,6 +32,7 @@ export class PaymentPageComponent implements OnInit {
   hebergementData: any;
   financeData: any;
   readonly otherServiceLabel = 'Autres';
+  private readonly noCodeServices = new Set(['Autres', 'Virement', 'Easy Transfer', 'PayPal']);
 
   constructor(
     private fb: FormBuilder,
@@ -75,7 +76,7 @@ export class PaymentPageComponent implements OnInit {
       if (!codeControl) {
         return;
       }
-      if (service === this.otherServiceLabel) {
+      if (this.isOtherServiceSelected(service)) {
         codeControl.clearValidators();
         codeControl.reset();
         codeControl.disable({emitEvent: false});
@@ -245,7 +246,7 @@ export class PaymentPageComponent implements OnInit {
   }
 
   isOtherServiceSelected(service: string): boolean {
-    return service === this.otherServiceLabel;
+    return this.noCodeServices.has(service);
   }
 
   openExistingFile(): void {

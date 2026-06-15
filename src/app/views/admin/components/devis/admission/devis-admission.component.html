@@ -147,6 +147,49 @@
       </div>
     </div>
 
+    <!-- Option Easy Transfer -->
+    <div class="doc-divider"></div>
+    <div class="doc-section-title">Option Easy Transfer — Paiement depuis l'Afrique</div>
+    <div class="doc-easy-transfer">
+      <div class="et-header">
+        <div class="et-badge">Easy Transfer</div>
+        <p class="et-description">
+          Easy Transfer vous permet de régler votre facture depuis votre compte Wave ou Mobile Money en quelques étapes simples, sans vous déplacer.
+        </p>
+      </div>
+      <div class="et-steps">
+        <div class="et-step">
+          <div class="et-step-num">1</div>
+          <div class="et-step-content">
+            <div class="et-step-title">Télécharger l'application Easy Transfer</div>
+            <div class="et-step-desc">Installez l'application <strong>Easy Transfer</strong> sur votre smartphone (disponible sur <strong>App Store</strong> et <strong>Google Play</strong>).</div>
+          </div>
+        </div>
+        <div class="et-step">
+          <div class="et-step-num">2</div>
+          <div class="et-step-content">
+            <div class="et-step-title">Configurer l'application avec votre compte</div>
+            <div class="et-step-desc">Dans Easy Transfer, liez votre compte <strong>Wave</strong> ou <strong>Mobile Money</strong> pour alimenter votre portefeuille et effectuer des virements internationaux.</div>
+          </div>
+        </div>
+        <div class="et-step">
+          <div class="et-step-num">3</div>
+          <div class="et-step-content">
+            <div class="et-step-title">Effectuer le virement en utilisant l'IBAN</div>
+            <div class="et-step-desc">Sélectionnez « Virement IBAN » dans l'application et saisissez les coordonnées bancaires suivantes :</div>
+            <div class="et-iban-box">
+              <span class="et-iban-label">IBAN</span>
+              <span class="et-iban-value">FR76 XXXX XXXX XXXX XXXX XXXX XXX</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="et-note">
+        <mat-icon>info_outline</mat-icon>
+        <span>Indiquez votre nom complet en référence du virement afin de faciliter l'identification de votre paiement.</span>
+      </div>
+    </div>
+
     <!-- Agent de réception -->
     <ng-container *ngIf="receptionAgent$ | async as agent">
       <div class="doc-divider"></div>
@@ -156,7 +199,10 @@
           <mat-icon>person</mat-icon>
         </div>
         <div class="agent-details">
-          <div class="agent-name">{{ agent.firstName || 'Eboua' }} - {{ agent.lastName || 'Attié Yves-Patrick' }}</div>
+          <div class="agent-name">
+            <div class="agent-name-row"><span class="agent-name-label">Nom</span><span>{{ agent.firstName || 'Eboua' }}</span></div>
+            <div class="agent-name-row"><span class="agent-name-label">Prénom(s)</span><span>{{ agent.lastName || 'Attié Yves-Patrick' }}</span></div>
+          </div>
           <div class="agent-info-grid">
             <div class="agent-info-item">
               <mat-icon>location_on</mat-icon>
