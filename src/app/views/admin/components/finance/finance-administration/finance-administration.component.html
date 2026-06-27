@@ -119,10 +119,10 @@
           </div>
           <div class="kb-card-badges">
             <span class="badge-status" [class.badge-yes]="card.justificatifPaiement" [class.badge-no]="!card.justificatifPaiement">
-              Payé : {{ card.justificatifPaiement ? 'Oui' : 'Non' }}
+              {{ card.justificatifPaiement ? 'Payé' : 'Non payé' }}
             </span>
-            <span class="badge-status" [class.badge-yes]="card.payout === 1" [class.badge-no]="card.payout !== 1">
-              Payout : {{ card.payout === 1 ? 'Oui' : 'Non' }}
+            <span class="badge-status" [class.badge-yes]="card.payout == 1" [class.badge-no]="card.payout != 1">
+              {{ card.payout == 1 ? 'Argent retiré' : 'Argent non retiré' }}
             </span>
           </div>
           <div class="kb-card-actions">
@@ -154,10 +154,10 @@
           </div>
           <div class="kb-card-badges">
             <span class="badge-status" [class.badge-yes]="card.justificatifPaiement" [class.badge-no]="!card.justificatifPaiement">
-              Payé : {{ card.justificatifPaiement ? 'Oui' : 'Non' }}
+              {{ card.justificatifPaiement ? 'Payé' : 'Non payé' }}
             </span>
-            <span class="badge-status" [class.badge-yes]="card.payout === 1" [class.badge-no]="card.payout !== 1">
-              Payout : {{ card.payout === 1 ? 'Oui' : 'Non' }}
+            <span class="badge-status" [class.badge-yes]="card.payout == 1" [class.badge-no]="card.payout != 1">
+              {{ card.payout == 1 ? 'Argent retiré' : 'Argent non retiré' }}
             </span>
           </div>
           <div class="kb-card-actions">
@@ -192,10 +192,10 @@
           </div>
           <div class="kb-card-badges">
             <span class="badge-status" [class.badge-yes]="card.justificatifPaiement" [class.badge-no]="!card.justificatifPaiement">
-              Payé : {{ card.justificatifPaiement ? 'Oui' : 'Non' }}
+              {{ card.justificatifPaiement ? 'Payé' : 'Non payé' }}
             </span>
-            <span class="badge-status" [class.badge-yes]="card.payout === 1" [class.badge-no]="card.payout !== 1">
-              Payout : {{ card.payout === 1 ? 'Oui' : 'Non' }}
+            <span class="badge-status" [class.badge-yes]="card.payout == 1" [class.badge-no]="card.payout != 1">
+              {{ card.payout == 1 ? 'Argent retiré' : 'Argent non retiré' }}
             </span>
           </div>
           <div class="kb-card-actions">
@@ -227,10 +227,10 @@
           </div>
           <div class="kb-card-badges">
             <span class="badge-status" [class.badge-yes]="card.justificatifPaiement" [class.badge-no]="!card.justificatifPaiement">
-              Payé : {{ card.justificatifPaiement ? 'Oui' : 'Non' }}
+              {{ card.justificatifPaiement ? 'Payé' : 'Non payé' }}
             </span>
-            <span class="badge-status" [class.badge-yes]="card.payout === 1" [class.badge-no]="card.payout !== 1">
-              Payout : {{ card.payout === 1 ? 'Oui' : 'Non' }}
+            <span class="badge-status" [class.badge-yes]="card.payout == 1" [class.badge-no]="card.payout != 1">
+              {{ card.payout == 1 ? 'Argent retiré' : 'Argent non retiré' }}
             </span>
           </div>
           <div class="kb-card-actions">
