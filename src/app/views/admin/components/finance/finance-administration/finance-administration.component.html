@@ -90,11 +90,11 @@
   <div class="kb-filter-bar">
     <label class="kb-filter-label">Afficher par colonne :</label>
     <select class="kb-page-select" [(ngModel)]="pageSize">
-      <option [value]="5">5</option>
-      <option [value]="10">10</option>
-      <option [value]="15">15</option>
-      <option [value]="30">30</option>
-      <option [value]="0">Tout</option>
+      <option [ngValue]="5">5</option>
+      <option [ngValue]="10">10</option>
+      <option [ngValue]="15">15</option>
+      <option [ngValue]="30">30</option>
+      <option [ngValue]="0">Tout</option>
     </select>
   </div>
 
