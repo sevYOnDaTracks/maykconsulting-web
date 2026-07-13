@@ -8,6 +8,10 @@
 
   <!-- Alerts -->
   <div class="alerts-zone">
+    <div *ngIf="pendingDocumentsCount > 0" class="alert alert-warning">
+      {{ pendingDocumentsCount }} document{{ pendingDocumentsCount > 1 ? 's vous sont demandés' : ' vous est demandé' }}.
+      <a routerLink="/admin/documents">Renseigner mes documents →</a>
+    </div>
     <div *ngIf="emailVerified === false" class="alert alert-danger">
       Votre adresse email n'est pas vérifiée. Vérifiez votre boîte aux lettres (expéditeur : <strong>no-reply&#64;maykconsulting.fr</strong>) et vos Spams si besoin.
     </div>

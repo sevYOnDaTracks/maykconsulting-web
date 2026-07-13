@@ -1,0 +1,78 @@
+<div class="doc-wrap">
+  <div class="doc-header">
+    <h2 class="doc-title">Mes documents</h2>
+    <p class="doc-sub">Retrouvez ici les documents demandés par l'équipe et le suivi de vos dépôts. Vous devez fournir impérativement des scans claires et lisibles sinon ils seront rejetés et cela ralentira votre demande. Merci !</p>
+  </div>
+
+  <div class="doc-tip">
+    <mat-icon>lightbulb</mat-icon>
+    <span>
+      Photo floue, document trop lourd ou plusieurs pages à assembler en un seul PDF ?
+      Utilisez <a href="https://www.ilovepdf.com/fr" target="_blank" rel="noopener">iLovePDF</a>
+      (gratuit) pour scanner, compresser ou convertir vos documents en PDF net et léger avant de les envoyer.
+    </span>
+  </div>
+
+  <!-- Documents demandés à fournir -->
+  <div class="doc-section" *ngIf="pendingDocuments.length">
+    <h3 class="doc-section-title doc-section-title-urgent">
+      <mat-icon>priority_high</mat-icon>
+      Documents à fournir
+    </h3>
+    <div class="doc-card doc-card-urgent" *ngFor="let doc of pendingDocuments">
+      <div class="doc-card-info">
+        <span class="doc-urgent-pill"><mat-icon>schedule</mat-icon> En attente</span>
+        <span class="doc-card-label">{{ doc.label }}</span>
+      </div>
+      <div class="doc-card-actions">
+        <input type="file" [id]="'file-' + doc.id" class="doc-file-input" accept="image/*,application/pdf" (change)="onFileSelected($event, doc.id)">
+        <label [for]="'file-' + doc.id" class="doc-btn doc-btn-outline">
+          <mat-icon>attach_file</mat-icon>
+          {{ selectedFiles[doc.id]?.name || 'Choisir un fichier' }}
+        </label>
+        <button class="doc-btn doc-btn-urgent" [disabled]="!selectedFiles[doc.id] || isSubmitting[doc.id]" (click)="submitDocument(doc)">
+          {{ isSubmitting[doc.id] ? 'Envoi...' : 'Envoyer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Documents envoyés -->
+  <div class="doc-section" *ngIf="submittedDocuments.length">
+    <h3 class="doc-section-title">Documents envoyés</h3>
+    <div class="doc-card" *ngFor="let doc of submittedDocuments">
+      <div class="doc-card-info">
+        <span class="doc-card-label">{{ doc.label }}</span>
+        <span class="doc-card-meta" *ngIf="doc.commentaireAdmin">Motif : {{ doc.commentaireAdmin }}</span>
+      </div>
+      <div class="doc-card-actions">
+        <a *ngIf="doc.fileUrl" [href]="doc.fileUrl" target="_blank" class="doc-btn doc-btn-outline">
+          <mat-icon>visibility</mat-icon> Voir
+        </a>
+        <span class="doc-status" [style.background]="getEtatColor(doc.statut) + '18'" [style.color]="getEtatColor(doc.statut)">
+          {{ getEtatLabel(doc.statut) }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-empty" *ngIf="!pendingDocuments.length && !submittedDocuments.length">
+    Aucun document demandé pour le moment.
+  </div>
+
+  <!-- Ajout spontané -->
+  <div class="doc-section">
+    <h3 class="doc-section-title">Transmettre un document</h3>
+    <div class="doc-add-card">
+      <input type="text" class="doc-add-input" placeholder="Nom du document (ex : Attestation employeur)" [(ngModel)]="newDocLabel">
+      <input type="file" id="new-doc-file" class="doc-file-input" accept="image/*,application/pdf" (change)="onNewDocFileSelected($event)">
+      <label for="new-doc-file" class="doc-btn doc-btn-outline">
+        <mat-icon>attach_file</mat-icon>
+        {{ newDocFile?.name || 'Choisir un fichier' }}
+      </label>
+      <button class="doc-btn doc-btn-primary" [disabled]="!newDocLabel.trim() || !newDocFile || isAddingDocument" (click)="addSpontaneousDocument()">
+        {{ isAddingDocument ? 'Envoi...' : 'Envoyer' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,15 +1,16 @@
-<div class="request-dialog">
+<div class="request-dialog finance-workflow-page">
   <div class="request-dialog__header">
     <div>
-      <h2 mat-dialog-title>Demande de garant financier</h2>
-      <p class="request-dialog__subtitle">Completez le formulaire pour ouvrir votre dossier.</p>
+      <h2>Demande de garant financier</h2>
+      <p class="request-dialog__subtitle">Completez chaque section avec attention avant de soumettre votre dossier.</p>
     </div>
-    <button mat-icon-button type="button" (click)="closeDialog()" aria-label="Fermer">
-      <mat-icon>close</mat-icon>
+    <button mat-stroked-button type="button" (click)="closeDialog()" aria-label="Retour">
+      <mat-icon>arrow_back</mat-icon>
+      Retour
     </button>
   </div>
 
-  <mat-dialog-content class="request-dialog__content">
+  <div class="request-dialog__content">
     <div *ngIf="isLoading" class="request-loading">
       <mat-spinner diameter="62"></mat-spinner>
       <p>Veuillez patienter, envoi en cours...</p>
@@ -23,26 +24,137 @@
 
       <p *ngIf="errorMessage" class="request-error">{{ errorMessage }}</p>
 
-      <div class="request-grid">
-        <div class="input-block">
-          <label for="financeCountry">Pays*</label>
-          <select id="financeCountry" class="request-control" formControlName="country">
-            <option value="" disabled>Selectionner un pays</option>
-            <option *ngFor="let country of countries" [value]="country.value">{{ country.viewValue }}</option>
-          </select>
-          <small class="file-field__error" *ngIf="financeForm.get('country')?.invalid && financeForm.get('country')?.touched">
-            Ce champ est requis.
-          </small>
+      <div class="request-warning">
+        <mat-icon>warning_amber</mat-icon>
+        <span>Attention : verifiez soigneusement chaque information avant de soumettre. Une erreur de nom, date, passeport, ecole ou pays peut retarder le traitement de votre dossier.</span>
+      </div>
+
+      <section class="form-section">
+        <div class="form-section__head">
+          <span class="form-section__eyebrow">Section 1</span>
+          <h3>L'etudiant</h3>
         </div>
 
-        <div class="input-block">
-          <label for="financeCity">Ville*</label>
-          <input id="financeCity" class="request-control" formControlName="city" type="text" placeholder="Ex: Paris">
-          <small class="file-field__error" *ngIf="financeForm.get('city')?.invalid && financeForm.get('city')?.touched">
-            Ce champ est requis.
-          </small>
+        <div class="request-grid">
+          <div class="input-block">
+            <label for="studentLastName">Nom*</label>
+            <input id="studentLastName" class="request-control" formControlName="studentLastName" type="text">
+            <small class="file-field__error" *ngIf="financeForm.get('studentLastName')?.invalid && financeForm.get('studentLastName')?.touched">Ce champ est requis.</small>
+          </div>
+
+          <div class="input-block">
+            <label for="studentFirstName">Prenoms*</label>
+            <input id="studentFirstName" class="request-control" formControlName="studentFirstName" type="text">
+            <small class="file-field__error" *ngIf="financeForm.get('studentFirstName')?.invalid && financeForm.get('studentFirstName')?.touched">Ce champ est requis.</small>
+          </div>
         </div>
-      </div>
+
+        <div class="request-grid">
+          <div class="input-block">
+            <label for="studentBirthDate">Date de naissance*</label>
+            <input id="studentBirthDate" class="request-control" formControlName="studentBirthDate" type="date">
+            <small class="file-field__error" *ngIf="financeForm.get('studentBirthDate')?.invalid && financeForm.get('studentBirthDate')?.touched">Ce champ est requis.</small>
+          </div>
+
+          <div class="input-block">
+            <label for="birthPlace">Lieu de naissance*</label>
+            <input id="birthPlace" class="request-control" formControlName="birthPlace" type="text" placeholder="Ex: Abidjan">
+            <small class="file-field__error" *ngIf="financeForm.get('birthPlace')?.invalid && financeForm.get('birthPlace')?.touched">Ce champ est requis.</small>
+          </div>
+        </div>
+
+        <div class="request-grid">
+          <div class="input-block">
+            <label for="studentEmail">Adresse email*</label>
+            <input id="studentEmail" class="request-control" formControlName="studentEmail" type="email">
+            <small class="file-field__error" *ngIf="financeForm.get('studentEmail')?.invalid && financeForm.get('studentEmail')?.touched">Email requis.</small>
+          </div>
+
+          <div class="input-block">
+            <label for="studentPhone">Numero de telephone*</label>
+            <input id="studentPhone" class="request-control" formControlName="studentPhone" type="tel">
+            <small class="file-field__error" *ngIf="financeForm.get('studentPhone')?.invalid && financeForm.get('studentPhone')?.touched">Ce champ est requis.</small>
+          </div>
+        </div>
+
+        <div class="request-grid">
+          <div class="input-block">
+            <label for="studentAddress">Adresse (lieu d'habitation, quartier)*</label>
+            <input id="studentAddress" class="request-control" formControlName="studentAddress" type="text" placeholder="Ex: Riviera Palmeraie">
+            <small class="file-field__error" *ngIf="financeForm.get('studentAddress')?.invalid && financeForm.get('studentAddress')?.touched">Ce champ est requis.</small>
+          </div>
+
+          <div class="input-block">
+            <label for="studentCity">Ville d'habitation*</label>
+            <input id="studentCity" class="request-control" formControlName="studentCity" type="text" placeholder="Ex: Abidjan">
+            <small class="file-field__error" *ngIf="financeForm.get('studentCity')?.invalid && financeForm.get('studentCity')?.touched">Ce champ est requis.</small>
+          </div>
+        </div>
+
+        <div class="request-grid request-grid--single">
+          <div class="input-block">
+            <label for="passportNumber">Numero de passeport*</label>
+            <input id="passportNumber" class="request-control" formControlName="passportNumber" type="text">
+            <small class="file-field__error" *ngIf="financeForm.get('passportNumber')?.invalid && financeForm.get('passportNumber')?.touched">Ce champ est requis.</small>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="form-section">
+        <div class="form-section__head">
+          <span class="form-section__eyebrow">Section 2</span>
+          <h3>Les etudes</h3>
+        </div>
+
+        <div class="request-grid">
+          <div class="input-block">
+            <label for="studyField">Filiere*</label>
+            <input id="studyField" class="request-control" formControlName="studyField" type="text" placeholder="Ex: Informatique">
+            <small class="file-field__error" *ngIf="financeForm.get('studyField')?.invalid && financeForm.get('studyField')?.touched">Ce champ est requis.</small>
+          </div>
+
+          <div class="input-block">
+            <label for="academicYear">Annee universitaire*</label>
+            <input id="academicYear" class="request-control" formControlName="academicYear" type="text" readonly>
+          </div>
+        </div>
+
+        <div class="request-grid">
+          <div class="input-block">
+            <label for="financeCountry">Pays*</label>
+            <select id="financeCountry" class="request-control" formControlName="country">
+              <option value="" disabled>Selectionner un pays</option>
+              <option *ngFor="let country of countries" [value]="country.value">{{ country.viewValue }}</option>
+            </select>
+            <small class="file-field__error" *ngIf="financeForm.get('country')?.invalid && financeForm.get('country')?.touched">
+              Ce champ est requis.
+            </small>
+          </div>
+
+          <div class="input-block">
+            <label for="financeCity">Ville d'etude*</label>
+            <input id="financeCity" class="request-control" formControlName="city" type="text" placeholder="Ex: Paris">
+            <small class="file-field__error" *ngIf="financeForm.get('city')?.invalid && financeForm.get('city')?.touched">
+              Ce champ est requis.
+            </small>
+          </div>
+        </div>
+
+        <div class="request-grid request-grid--single">
+          <div class="input-block">
+            <label for="universityName">Universite / ecole*</label>
+            <input id="universityName" class="request-control" formControlName="universityName" type="text" placeholder="Ex: Universite de Lille">
+            <small class="file-field__error" *ngIf="financeForm.get('universityName')?.invalid && financeForm.get('universityName')?.touched">Ce champ est requis.</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <div class="form-section__head">
+          <span class="form-section__eyebrow">Section 3</span>
+          <h3>Pieces jointes</h3>
+        </div>
 
       <div class="request-grid">
         <div class="file-field">
@@ -89,15 +201,43 @@
 
         <div class="file-field">
           <label class="file-field__label">Preuve d'admission</label>
-          <button mat-stroked-button type="button" (click)="admissionInput.click()">
+
+          <div class="file-field__hint" *ngIf="hasStoredAdmissionDocument && !selectedFiles['admissionFile']">
+            <span>
+              Admission existante detectee. Le document officiel sera reutilise automatiquement.
+            </span>
+            <div class="file-field__actions">
+              <button mat-button type="button" class="file-field__view-btn" (click)="viewStoredAdmissionDocument()">
+                <mat-icon>visibility</mat-icon>
+                Voir
+              </button>
+              <button mat-stroked-button type="button" (click)="admissionInput.click()">
+                Remplacer pour cette demande
+              </button>
+            </div>
+          </div>
+
+          <button mat-stroked-button type="button" (click)="admissionInput.click()" *ngIf="!hasStoredAdmissionDocument || selectedFiles['admissionFile']">
             <mat-icon>upload_file</mat-icon>
             Choisir un fichier
           </button>
           <input #admissionInput type="file" hidden accept="image/*,application/pdf" (change)="onFileSelected($event, 'admissionFile')">
-          <span class="file-field__name">{{ selectedFiles['admissionFile']?.name || 'Aucun fichier selectionne' }}</span>
+          <span class="file-field__name">
+            {{ selectedFiles['admissionFile']?.name || (hasStoredAdmissionDocument ? 'Document admission reutilise' : 'Aucun fichier selectionne') }}
+          </span>
+          <button
+            mat-button
+            type="button"
+            class="file-field__restore"
+            *ngIf="hasStoredAdmissionDocument && selectedFiles['admissionFile']"
+            (click)="restoreStoredAdmissionDocument()"
+          >
+            Utiliser le document admission
+          </button>
           <small class="file-field__error" *ngIf="financeForm.get('admissionFile')?.invalid">Ce champ est requis.</small>
         </div>
       </div>
+      </section>
 
       <div class="input-block">
         <label for="financeOther">Autres informations (facultatif)</label>
@@ -113,12 +253,12 @@
         </small>
       </div>
     </form>
-  </mat-dialog-content>
+  </div>
 
-  <mat-dialog-actions align="end" class="request-dialog__actions">
+  <div class="request-dialog__actions">
     <button mat-stroked-button type="button" (click)="closeDialog()" [disabled]="isLoading">Annuler</button>
     <button mat-flat-button type="button" class="submit-btn" [disabled]="isLoading || isSubmitting" (click)="onSubmit()">
       {{ isLoading ? 'Envoi...' : 'Soumettre ma demande' }}
     </button>
-  </mat-dialog-actions>
+  </div>
 </div>

@@ -9,6 +9,7 @@ import {UserInfoNewForProviderComponent} from '../user-info-new-for-provider/use
 import {NgbCarouselConfig} from '@ng-bootstrap/ng-bootstrap';
 import {HebergementService} from '../../services/hebergement.service';
 import {FinanceService} from '../../services/finance.service';
+import {DocumentService} from '../../services/document.service';
 
 @Component({
   selector: 'app-home-content',
@@ -30,8 +31,9 @@ export class HomeContentComponent implements OnInit {
   admissionData: any;
   financeData: any;
   hebergementData: any;
+  pendingDocumentsCount = 0;
   // tslint:disable-next-line:max-line-length
-  constructor(private auth: AuthenticationService , private admissionService: AdmissionService , private snackBar: MatSnackBar , private dialog: MatDialog , config: NgbCarouselConfig , private hebergementService: HebergementService , private financeService: FinanceService) {
+  constructor(private auth: AuthenticationService , private admissionService: AdmissionService , private snackBar: MatSnackBar , private dialog: MatDialog , config: NgbCarouselConfig , private hebergementService: HebergementService , private financeService: FinanceService , private documentService: DocumentService) {
     config.interval = 10000;
     config.wrap = false;
     config.keyboard = false;
@@ -83,6 +85,10 @@ export class HomeContentComponent implements OnInit {
               // tslint:disable-next-line:no-unused-expression
               this.financeData = null;
             });
+
+        this.documentService.getDocumentsForUser(user.uid).subscribe((docs) => {
+          this.pendingDocumentsCount = docs.filter((d) => d.statut === 0).length;
+        });
       }
     });
   }

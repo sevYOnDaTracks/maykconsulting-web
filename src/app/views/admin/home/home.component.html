@@ -18,6 +18,10 @@
           routerLinkActive="active-nav-link"
           [routerLinkActiveOptions]="{ exact: nav.path === '/admin/' }"
           class="nav-link"
+          [matBadge]="pendingDocumentsBadge"
+          [matBadgeHidden]="nav.path !== '/admin/documents' || pendingDocumentsCount === 0"
+          matBadgeColor="warn"
+          matBadgeSize="small"
         >
           {{ nav.label }}
         </a>
@@ -73,6 +77,10 @@
       <mat-icon>work</mat-icon>
       <span>Garant financier : {{ financeData?.dateDemande ? 'Ouvert...' : 'Aucune demande' }}</span>
     </button>
+    <button *ngIf="pendingDocumentsCount > 0" mat-menu-item routerLink="/admin/documents">
+      <mat-icon>folder</mat-icon>
+      <span>Documents : {{ pendingDocumentsCount }} document{{ pendingDocumentsCount > 1 ? 's' : '' }} à fournir</span>
+    </button>
     <span *ngIf="demandesCount === 0" class="empty-notification">Rien par ici...</span>
   </mat-menu>
 
@@ -93,6 +101,15 @@
     <button mat-menu-item routerLink="/admin/finance">
       <mat-icon>work</mat-icon>
       <span>Garantie Financiere</span>
+    </button>
+    <button mat-menu-item routerLink="/admin/documents">
+      <mat-icon
+        [matBadge]="pendingDocumentsBadge"
+        [matBadgeHidden]="pendingDocumentsCount === 0"
+        matBadgeColor="warn"
+        matBadgeSize="small"
+      >folder</mat-icon>
+      <span>Mes documents</span>
     </button>
     <mat-divider></mat-divider>
     <button mat-menu-item routerLink="/admin/user">

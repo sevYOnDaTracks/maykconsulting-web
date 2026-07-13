@@ -1,11 +1,11 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import {Router} from '@angular/router';
 import {AuthenticationService} from '../../../../landing/services/authentication.service';
 import {MatDialog} from '@angular/material/dialog';
 import {FinanceService} from '../../../services/finance.service';
 import {map, switchMap} from 'rxjs/operators';
 import {combineLatest, of, Subscription} from 'rxjs';
-import {FinanceEditDemandeComponent} from '../finance-edit-demande/finance-edit-demande.component';
 import {EmailService} from '../../../services/email.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -54,7 +54,8 @@ export class FinanceAdministrationComponent implements OnInit, OnDestroy {
     private emailService:   EmailService,
     private fb:             FormBuilder,
     private snackBar:       MatSnackBar,
-    private elRef:          ElementRef
+    private elRef:          ElementRef,
+    private router:         Router
   ) {
     this.replyForm = this.fb.group({
       to:      ['', [Validators.required, Validators.email]],
@@ -199,7 +200,7 @@ export class FinanceAdministrationComponent implements OnInit, OnDestroy {
 
   openEditFinanceDemande(id: string): void {
     if (!id) { this.snackBar.open('Identifiant manquant', 'Fermer', { duration: 3000 }); return; }
-    this.dialog.open(FinanceEditDemandeComponent, { data: { financeId: id } });
+    this.router.navigate(['/admin/finance/gestion/user', id]);
   }
 
   openReply(element: any): void {

@@ -7,6 +7,7 @@ import { sidenavOptions, SidenavOption } from '../components/data/nav.data';
 import { AdmissionService } from '../services/admission.service';
 import { HebergementService } from '../services/hebergement.service';
 import { FinanceService } from '../services/finance.service';
+import { DocumentService } from '../services/document.service';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +26,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     { path: '/admin/user/gestion', label: 'Gestion utilisateurs', icon: 'groups' },
     { path: '/admin/messagerie', label: 'Gestion messagerie', icon: 'chat' },
     { path: '/admin/reception-agents', label: 'Agents de reception', icon: 'badge' },
-    { path: '/admin/rapports', label: 'Rapports', icon: 'analytics' }
+    { path: '/admin/rapports', label: 'Rapports', icon: 'analytics' },
+    { path: '/admin/documents/gestion', label: 'Gestion documents', icon: 'folder' },
+    { path: '/admin/dossiers', label: 'Dossier Visa', icon: 'folder_shared' }
   ];
   isSidenavOpened: boolean;
   user$: Observable<User | null>;
@@ -34,6 +37,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   financeData: any;
   hebergementData: any;
   demandesCount = 0;
+  pendingDocumentsCount = 0;
   isAdmin = false;
   showAdminMenu = false;
 
@@ -45,7 +49,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private authenticationService: AuthenticationService,
     private admissionService: AdmissionService,
     private hebergementService: HebergementService,
-    private financeService: FinanceService
+    private financeService: FinanceService,
+    private documentService: DocumentService
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 1000px)');
     this.isSidenavOpened = false;
@@ -86,7 +91,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       }).catch(() => {
         this.financeData = null;
       });
+
+      this.documentService.getDocumentsForUser(user.uid).subscribe((docs) => {
+        this.pendingDocumentsCount = docs.filter((d) => d.statut === 0).length;
+        this.updateDemandesCount();
+      });
     });
+  }
+
+  get pendingDocumentsBadge(): string {
+    return this.pendingDocumentsCount > 9 ? '9+' : String(this.pendingDocumentsCount);
   }
 
   updateDemandesCount(): void {
@@ -101,6 +115,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     if (this.financeData) {
+      this.demandesCount++;
+    }
+
+    if (this.pendingDocumentsCount > 0) {
       this.demandesCount++;
     }
   }

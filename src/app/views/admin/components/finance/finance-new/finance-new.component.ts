@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { Optional } from '@angular/core';
 import { User } from '../../../../landing/model/user';
 import { AuthenticationService } from '../../../../landing/services/authentication.service';
+import { AdmissionService } from '../../../services/admission.service';
 import { EmailFinanceService } from '../../../services/email-finance.service';
 import { FinanceService } from '../../../services/finance.service';
 
@@ -23,6 +26,7 @@ export class FinanceNewComponent implements OnInit {
   userUid: string | null = null;
   storedIdentityDocumentUrl: string | null = null;
   storedIdentityDocumentType: 'passport' | 'cni' | null = null;
+  storedAdmissionDocumentUrl: string | null = null;
   countries = [
     { value: 'France', viewValue: 'France' },
     { value: 'Canada', viewValue: 'Canada' },
@@ -32,10 +36,12 @@ export class FinanceNewComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private financeService: FinanceService,
+    private admissionService: AdmissionService,
     private authService: AuthenticationService,
     private snackbar: MatSnackBar,
     private emailService: EmailFinanceService,
-    private dialogRef: MatDialogRef<FinanceNewComponent>
+    private router: Router,
+    @Optional() private dialogRef?: MatDialogRef<FinanceNewComponent>
   ) {}
 
   ngOnInit(): void {
@@ -45,6 +51,7 @@ export class FinanceNewComponent implements OnInit {
         this.user = user;
         this.initializeForm();
         this.prepareIdentityDocument();
+        this.prefillFromAdmission();
       } else {
         this.errorMessage = 'Utilisateur non authentifie.';
       }
@@ -52,7 +59,11 @@ export class FinanceNewComponent implements OnInit {
   }
 
   closeDialog(): void {
-    this.dialogRef.close();
+    if (this.dialogRef) {
+      this.dialogRef.close();
+      return;
+    }
+    this.router.navigate(['/admin/finance']);
   }
 
   initializeForm(): void {
@@ -61,8 +72,20 @@ export class FinanceNewComponent implements OnInit {
     }
 
     this.financeForm = this.fb.group({
+      studentFirstName: [this.user?.lastName || '', Validators.required],
+      studentLastName: [this.user?.firstName || '', Validators.required],
+      studentBirthDate: [this.formatDateForInput(this.getUserValue('birthDate')), Validators.required],
+      studentEmail: [this.user?.email || '', [Validators.required, Validators.email]],
+      studentPhone: [this.user?.phone || '', Validators.required],
+      studentAddress: [this.getUserValue('address', 'adresse', 'studentAddress'), Validators.required],
+      studentCity: [this.getUserValue('city', 'ville', 'studentCity'), Validators.required],
+      passportNumber: [this.getUserValue('passportNumber', 'numeroPasseport', 'passportNo'), Validators.required],
+      birthPlace: [this.getUserValue('birthPlace', 'lieuNaissance', 'placeOfBirth'), Validators.required],
+      studyField: [this.getUserValue('studyField', 'fieldOfStudy', 'filiere'), Validators.required],
+      academicYear: [this.getAcademicYear(), Validators.required],
       country: ['', Validators.required],
       city: ['', Validators.required],
+      universityName: [this.getUserValue('universityName', 'nomUniversite', 'schoolName'), Validators.required],
       passport: [null, Validators.required],
       admissionFile: [null, Validators.required],
       other: [''],
@@ -73,6 +96,80 @@ export class FinanceNewComponent implements OnInit {
       garantFile: [''],
       certification: [false, Validators.requiredTrue]
     });
+  }
+
+  private getUserValue(...keys: string[]): string {
+    const source = this.user as any;
+    if (!source) {
+      return '';
+    }
+
+    for (const key of keys) {
+      const value = source[key];
+      if (value !== undefined && value !== null && `${value}`.trim()) {
+        return `${value}`.trim();
+      }
+    }
+
+    return '';
+  }
+
+  private formatDateForInput(value: any): string {
+    if (!value) {
+      return '';
+    }
+
+    const date = value?.toDate ? value.toDate() : new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+
+    return date.toISOString().slice(0, 10);
+  }
+
+  private getAcademicYear(): string {
+    const currentYear = new Date().getFullYear();
+    return `${currentYear}-${currentYear + 1}`;
+  }
+
+  private async prefillFromAdmission(): Promise<void> {
+    if (!this.userUid || !this.financeForm) {
+      return;
+    }
+
+    try {
+      const admission = await this.admissionService.getAdmissionByUserId(this.userUid);
+      if (!admission) {
+        return;
+      }
+
+      this.patchIfEmpty('country', admission.country || admission.pays);
+      this.patchIfEmpty('studyField', admission.fieldOfStudy || admission.studyField || admission.filiere);
+      this.patchIfEmpty('universityName', admission.nomUniversite || admission.universityName || admission.schoolName);
+
+      if (admission.admissionFileOfi) {
+        this.storedAdmissionDocumentUrl = admission.admissionFileOfi;
+        this.financeForm.patchValue({ admissionFile: admission.admissionFileOfi });
+        this.financeForm.get('admissionFile')?.markAsUntouched();
+        this.financeForm.get('admissionFile')?.updateValueAndValidity();
+      }
+    } catch (error) {
+      console.error('Erreur lors du pre-remplissage depuis admission:', error);
+    }
+  }
+
+  private patchIfEmpty(controlName: string, value: any): void {
+    if (!value) {
+      return;
+    }
+
+    const control = this.financeForm.get(controlName);
+    if (!control || control.value) {
+      return;
+    }
+
+    control.patchValue(value);
+    control.updateValueAndValidity();
   }
 
   get hasStoredIdentityDocument(): boolean {
@@ -118,6 +215,26 @@ export class FinanceNewComponent implements OnInit {
     this.financeForm.get('passport')?.updateValueAndValidity();
   }
 
+  get hasStoredAdmissionDocument(): boolean {
+    return !!this.storedAdmissionDocumentUrl;
+  }
+
+  viewStoredAdmissionDocument(): void {
+    if (this.storedAdmissionDocumentUrl) {
+      window.open(this.storedAdmissionDocumentUrl, '_blank');
+    }
+  }
+
+  restoreStoredAdmissionDocument(): void {
+    if (!this.storedAdmissionDocumentUrl) {
+      return;
+    }
+    delete this.selectedFiles['admissionFile'];
+    this.financeForm.patchValue({ admissionFile: this.storedAdmissionDocumentUrl });
+    this.financeForm.get('admissionFile')?.markAsTouched();
+    this.financeForm.get('admissionFile')?.updateValueAndValidity();
+  }
+
   onFileSelected(event: Event, fieldName: string): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -161,13 +278,17 @@ export class FinanceNewComponent implements OnInit {
       await this.sendNotificationMailToUser();
       await this.sendNotificationMailToAdmin();
       this.snackbar.open('Demande envoyee avec succes.', 'Fermer', { duration: 2500 });
+      if (this.dialogRef) {
+        this.dialogRef.close(true);
+      } else {
+        this.router.navigate(['/admin/finance']);
+      }
     } catch (error) {
       this.errorMessage = 'Une erreur est survenue lors de la soumission du formulaire.';
       console.error('Erreur de soumission:', error);
     } finally {
-      setTimeout(() => {
-        window.location.reload();
-      }, 11000);
+      this.isSubmitting = false;
+      this.isLoading = false;
     }
   }
 

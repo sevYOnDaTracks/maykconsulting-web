@@ -17,6 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
@@ -40,6 +41,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {UserInfoNewForProviderComponent} from './components/user-info-new-for-provider/user-info-new-for-provider.component';
 import {FinanceNewComponent} from './components/finance/finance-new/finance-new.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDividerModule} from '@angular/material/divider';
 import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import {JustificatifPaiementComponent} from './components/finance/justificatif-paiement/justificatif-paiement.component';
 import {GarantComponent} from './components/devis/garant/garant.component';
@@ -54,9 +56,13 @@ import {UserGestionComponent} from './components/user-gestion/user-gestion.compo
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableModule} from '@angular/material/table';
-import {HebergementEditDemandeComponent} from './components/hebergement/hebergement-edit-demande/hebergement-edit-demande.component';
+import {
+  HebergementUserDetailComponent
+} from './components/hebergement/hebergement-user-detail/hebergement-user-detail.component';
 import {FinanceAdministrationComponent} from './components/finance/finance-administration/finance-administration.component';
-import {FinanceEditDemandeComponent} from './components/finance/finance-edit-demande/finance-edit-demande.component';
+import {
+  FinanceUserDetailComponent
+} from './components/finance/finance-user-detail/finance-user-detail.component';
 import {AdmissionAdministrationComponent} from './components/admission/admission-administration/admission-administration.component';
 import {AdmissionEditDemandeComponent} from './components/admission/admission-edit-demande/admission-edit-demande.component';
 import {AdmissionUserDetailComponent} from './components/admission/admission-user-detail/admission-user-detail.component';
@@ -66,6 +72,16 @@ import {UserDetailComponent} from './components/user-detail/user-detail.componen
 import {PaymentPageComponent} from './components/payment-page/payment-page.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ReceptionAgentGestionComponent} from './components/reception-agent-gestion/reception-agent-gestion.component';
+import {DocumentsComponent} from './components/documents/documents/documents.component';
+import {
+  DocumentAdministrationComponent
+} from './components/documents/document-administration/document-administration.component';
+import {
+  DocumentRequestDialogComponent
+} from './components/documents/document-request-dialog/document-request-dialog.component';
+import {
+  DossierAdministrationComponent
+} from './components/dossier/dossier-administration/dossier-administration.component';
 
 @NgModule({
   declarations: [
@@ -92,16 +108,20 @@ import {ReceptionAgentGestionComponent} from './components/reception-agent-gesti
       HebergementAdministrationComponent,
       RapportsComponent,
       UserGestionComponent,
-      HebergementEditDemandeComponent,
+      HebergementUserDetailComponent,
       FinanceAdministrationComponent,
-      FinanceEditDemandeComponent,
+      FinanceUserDetailComponent,
       AdmissionAdministrationComponent,
       AdmissionEditDemandeComponent,
       AdmissionUserDetailComponent,
       MessageGestionComponent,
       UserDetailComponent,
       PaymentPageComponent,
-      ReceptionAgentGestionComponent
+      ReceptionAgentGestionComponent,
+      DocumentsComponent,
+      DocumentAdministrationComponent,
+      DocumentRequestDialogComponent,
+      DossierAdministrationComponent
   ],
     imports: [
         CommonModule,
@@ -117,6 +137,7 @@ import {ReceptionAgentGestionComponent} from './components/reception-agent-gesti
         MatTabsModule,
         MatButtonModule,
         MatInputModule,
+        MatAutocompleteModule,
         MatRadioModule,
         MatProgressSpinnerModule,
         MatToolbarModule,
@@ -130,6 +151,7 @@ import {ReceptionAgentGestionComponent} from './components/reception-agent-gesti
         MatExpansionModule,
         MatStepperModule,
         MatCheckboxModule,
+        MatDividerModule,
         NgbCarouselModule,
         MatTableModule,
         MatPaginatorModule,

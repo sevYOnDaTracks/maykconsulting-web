@@ -1,0 +1,367 @@
+<div class="hud-wrap">
+
+  <div *ngIf="isSubmitting" class="hud-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <button type="button" class="hud-back" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon> Retour au kanban
+  </button>
+
+  <div *ngIf="isLoading" class="hud-loading">
+    <mat-spinner diameter="60"></mat-spinner>
+  </div>
+
+  <ng-container *ngIf="!isLoading && hebergementData">
+
+    <div class="hud-header">
+      <img [src]="userData?.identityPhotoUrl || 'assets/images/landing/lOGO_d/logo.png'" alt="" class="hud-avatar">
+      <div class="hud-header-info">
+        <h2 class="hud-name">{{ userData?.firstName }} {{ userData?.lastName }}</h2>
+        <span class="hud-email">{{ userData?.email }}</span>
+      </div>
+      <span class="hud-status-badge" [style.background]="getEtatColor(hebergementData.etatDemande) + '18'" [style.color]="getEtatColor(hebergementData.etatDemande)">
+        {{ getEtatLabel(hebergementData.etatDemande) }}
+      </span>
+    </div>
+
+    <!-- ── Onglets ── -->
+    <div class="hud-tabs-bar">
+      <button type="button" class="hud-tab-chip" [class.active]="activeTab === 'profil'" (click)="setTab('profil')">
+        <mat-icon>person</mat-icon><span>Profil étudiant</span>
+      </button>
+      <button type="button" class="hud-tab-chip" [class.active]="activeTab === 'etudes'" (click)="setTab('etudes')">
+        <mat-icon>school</mat-icon><span>Études</span>
+      </button>
+      <button type="button" class="hud-tab-chip" [class.active]="activeTab === 'garant'" (click)="setTab('garant')">
+        <mat-icon>groups</mat-icon><span>Garant financier</span>
+      </button>
+      <button type="button" class="hud-tab-chip" [class.active]="activeTab === 'documents'" (click)="setTab('documents')">
+        <mat-icon>folder_open</mat-icon><span>Documents</span>
+      </button>
+      <button type="button" class="hud-tab-chip" [class.active]="activeTab === 'statut'" (click)="setTab('statut')">
+        <mat-icon>assignment</mat-icon><span>Statut & Paiement</span>
+      </button>
+    </div>
+
+    <form class="hud-content">
+
+      <!-- ══ Profil étudiant ══ -->
+      <ng-container *ngIf="activeTab === 'profil'">
+        <div class="hud-card">
+          <div class="hud-card-header">Identité</div>
+          <div class="hud-card-body hud-grid-2">
+            <div class="hud-field">
+              <label>Nom</label>
+              <input type="text" class="hud-input" [(ngModel)]="hebergementData.studentLastName" name="studentLastName">
+            </div>
+            <div class="hud-field">
+              <label>Prénoms</label>
+              <input type="text" class="hud-input" [(ngModel)]="hebergementData.studentFirstName" name="studentFirstName">
+            </div>
+            <div class="hud-field">
+              <label>Date de naissance</label>
+              <input type="date" class="hud-input" [(ngModel)]="hebergementData.studentBirthDate" name="studentBirthDate">
+            </div>
+            <div class="hud-field">
+              <label>Lieu de naissance</label>
+              <input type="text" class="hud-input" [(ngModel)]="hebergementData.birthPlace" name="birthPlace">
+            </div>
+            <div class="hud-field">
+              <label>N° passeport</label>
+              <input type="text" class="hud-input" [(ngModel)]="hebergementData.passportNumber" name="passportNumber">
+            </div>
+          </div>
+        </div>
+
+        <div class="hud-card">
+          <div class="hud-card-header">Coordonnées</div>
+          <div class="hud-card-body hud-grid-2">
+            <div class="hud-field">
+              <label>Email</label>
+              <input type="email" class="hud-input" [(ngModel)]="hebergementData.studentEmail" name="studentEmail">
+            </div>
+            <div class="hud-field">
+              <label>Téléphone</label>
+              <input type="tel" class="hud-input" [(ngModel)]="hebergementData.studentPhone" name="studentPhone">
+            </div>
+            <div class="hud-field">
+              <label>Adresse</label>
+              <input type="text" class="hud-input" [(ngModel)]="hebergementData.studentAddress" name="studentAddress">
+            </div>
+            <div class="hud-field">
+              <label>Ville d'habitation</label>
+              <input type="text" class="hud-input" [(ngModel)]="hebergementData.studentCity" name="studentCity">
+            </div>
+          </div>
+        </div>
+
+        <div class="hud-card">
+          <div class="hud-card-header">Signature de l'étudiant</div>
+          <div class="hud-card-body">
+            <div class="hud-doc">
+              <span class="hud-doc-label">Signature</span>
+              <div class="hud-doc-actions" *ngIf="hebergementData.studentSignature; else uploadStudentSignature">
+                <button type="button" class="hud-btn hud-btn-view" (click)="viewDocument(hebergementData.studentSignature)"><mat-icon>visibility</mat-icon></button>
+                <button type="button" class="hud-btn hud-btn-del" (click)="deleteDocument('studentSignature')"><mat-icon>delete</mat-icon></button>
+              </div>
+              <ng-template #uploadStudentSignature>
+                <input type="file" (change)="onFileSelected($event)" hidden #studentSignatureInput accept="image/*,application/pdf">
+                <button type="button" class="hud-btn hud-btn-upload" (click)="studentSignatureInput.click()"><mat-icon>cloud_upload</mat-icon> Ajouter</button>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ══ Études ══ -->
+      <ng-container *ngIf="activeTab === 'etudes'">
+        <div class="hud-card">
+          <div class="hud-card-header">Parcours & destination</div>
+          <div class="hud-card-body hud-grid-2">
+            <div class="hud-field">
+              <label>Filière</label>
+              <input type="text" class="hud-input" [(ngModel)]="hebergementData.studyField" name="studyField">
+            </div>
+            <div class="hud-field">
+              <label>Année universitaire</label>
+              <input type="text" class="hud-input" [(ngModel)]="hebergementData.academicYear" name="academicYear">
+            </div>
+            <div class="hud-field">
+              <label>Pays</label>
+              <input type="text" class="hud-input" [(ngModel)]="hebergementData.country" name="country">
+            </div>
+            <div class="hud-field">
+              <label>Ville d'étude</label>
+              <input type="text" class="hud-input" [(ngModel)]="hebergementData.city" name="city">
+            </div>
+            <div class="hud-field">
+              <label>Université / École</label>
+              <input type="text" class="hud-input" [(ngModel)]="hebergementData.universityName" name="universityName">
+            </div>
+          </div>
+        </div>
+
+        <div class="hud-card">
+          <div class="hud-card-header">Autres informations</div>
+          <div class="hud-card-body">
+            <div class="hud-field">
+              <label>Notes du candidat</label>
+              <textarea class="hud-input" rows="3" [(ngModel)]="hebergementData.other" name="other"></textarea>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ══ Garant financier ══ -->
+      <ng-container *ngIf="activeTab === 'garant'">
+        <div class="hud-card">
+          <div class="hud-card-header">Garant financier déclaré</div>
+          <div class="hud-card-body">
+            <div class="hud-field">
+              <label>Le candidat a-t-il déjà un garant financier ?</label>
+              <select class="hud-select" [(ngModel)]="hebergementData.hasFinancialGuarantor" name="hasFinancialGuarantor">
+                <option [ngValue]="true">Oui</option>
+                <option [ngValue]="false">Non</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <ng-container *ngIf="hebergementData.hasFinancialGuarantor; else noGuarantor">
+          <div class="hud-card">
+            <div class="hud-card-header">Identité du garant</div>
+            <div class="hud-card-body hud-grid-2">
+              <div class="hud-field">
+                <label>Nom</label>
+                <input type="text" class="hud-input" [(ngModel)]="hebergementData.guarantorLastName" name="guarantorLastName">
+              </div>
+              <div class="hud-field">
+                <label>Prénoms</label>
+                <input type="text" class="hud-input" [(ngModel)]="hebergementData.guarantorFirstName" name="guarantorFirstName">
+              </div>
+              <div class="hud-field">
+                <label>Nationalité</label>
+                <input type="text" class="hud-input" [(ngModel)]="hebergementData.guarantorNationality" name="guarantorNationality">
+              </div>
+              <div class="hud-field">
+                <label>N° passeport / CNI</label>
+                <input type="text" class="hud-input" [(ngModel)]="hebergementData.guarantorIdentityNumber" name="guarantorIdentityNumber">
+              </div>
+              <div class="hud-field">
+                <label>Date de naissance</label>
+                <input type="date" class="hud-input" [(ngModel)]="hebergementData.guarantorBirthDate" name="guarantorBirthDate">
+              </div>
+              <div class="hud-field">
+                <label>Lieu de naissance</label>
+                <input type="text" class="hud-input" [(ngModel)]="hebergementData.guarantorBirthPlace" name="guarantorBirthPlace">
+              </div>
+            </div>
+          </div>
+
+          <div class="hud-card">
+            <div class="hud-card-header">Situation professionnelle & contact</div>
+            <div class="hud-card-body hud-grid-2">
+              <div class="hud-field">
+                <label>Profession</label>
+                <input type="text" class="hud-input" [(ngModel)]="hebergementData.guarantorProfession" name="guarantorProfession">
+              </div>
+              <div class="hud-field">
+                <label>Entreprise</label>
+                <input type="text" class="hud-input" [(ngModel)]="hebergementData.guarantorCompany" name="guarantorCompany">
+              </div>
+              <div class="hud-field">
+                <label>Téléphone</label>
+                <input type="tel" class="hud-input" [(ngModel)]="hebergementData.guarantorPhone" name="guarantorPhone">
+              </div>
+              <div class="hud-field">
+                <label>Email</label>
+                <input type="email" class="hud-input" [(ngModel)]="hebergementData.guarantorEmail" name="guarantorEmail">
+              </div>
+              <div class="hud-field">
+                <label>Adresse</label>
+                <input type="text" class="hud-input" [(ngModel)]="hebergementData.guarantorAddress" name="guarantorAddress">
+              </div>
+              <div class="hud-field">
+                <label>Ville de résidence</label>
+                <input type="text" class="hud-input" [(ngModel)]="hebergementData.guarantorCity" name="guarantorCity">
+              </div>
+              <div class="hud-field">
+                <label>Montant prise en charge AVI</label>
+                <input type="text" class="hud-input" [(ngModel)]="hebergementData.guarantorAviAmount" name="guarantorAviAmount">
+              </div>
+            </div>
+          </div>
+
+          <div class="hud-card">
+            <div class="hud-card-header">Signature du garant</div>
+            <div class="hud-card-body">
+              <div class="hud-doc">
+                <span class="hud-doc-label">Signature</span>
+                <div class="hud-doc-actions" *ngIf="hebergementData.guarantorSignature; else uploadGuarantorSignature">
+                  <button type="button" class="hud-btn hud-btn-view" (click)="viewDocument(hebergementData.guarantorSignature)"><mat-icon>visibility</mat-icon></button>
+                  <button type="button" class="hud-btn hud-btn-del" (click)="deleteDocument('guarantorSignature')"><mat-icon>delete</mat-icon></button>
+                </div>
+                <ng-template #uploadGuarantorSignature>
+                  <input type="file" (change)="onFileSelected($event)" hidden #guarantorSignatureInput accept="image/*,application/pdf">
+                  <button type="button" class="hud-btn hud-btn-upload" (click)="guarantorSignatureInput.click()"><mat-icon>cloud_upload</mat-icon> Ajouter</button>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #noGuarantor>
+          <div class="hud-empty-note">Le candidat n'a pas déclaré de garant financier existant.</div>
+        </ng-template>
+      </ng-container>
+
+      <!-- ══ Documents ══ -->
+      <ng-container *ngIf="activeTab === 'documents'">
+        <div class="hud-card">
+          <div class="hud-card-header">Documents</div>
+          <div class="hud-card-body hud-grid-2">
+
+            <div class="hud-doc">
+              <span class="hud-doc-label">Passeport</span>
+              <div class="hud-doc-actions">
+                <button type="button" class="hud-btn hud-btn-view" [disabled]="!hebergementData.passport" (click)="viewDocument(hebergementData.passport)"><mat-icon>visibility</mat-icon></button>
+                <button type="button" class="hud-btn hud-btn-del" [disabled]="!hebergementData.passport" (click)="deleteDocument('passport')"><mat-icon>delete</mat-icon></button>
+              </div>
+            </div>
+
+            <div class="hud-doc">
+              <span class="hud-doc-label">Preuve d'admission</span>
+              <div class="hud-doc-actions">
+                <button type="button" class="hud-btn hud-btn-view" [disabled]="!hebergementData.admissionFile" (click)="viewDocument(hebergementData.admissionFile)"><mat-icon>visibility</mat-icon></button>
+                <button type="button" class="hud-btn hud-btn-del" [disabled]="!hebergementData.admissionFile" (click)="deleteDocument('admissionFile')"><mat-icon>delete</mat-icon></button>
+              </div>
+            </div>
+
+            <div class="hud-doc">
+              <span class="hud-doc-label">Justificatif de paiement</span>
+              <div class="hud-doc-actions" *ngIf="hebergementData.justificatifPaiement; else uploadPayment">
+                <button type="button" class="hud-btn hud-btn-view" (click)="viewDocument(hebergementData.justificatifPaiement)"><mat-icon>visibility</mat-icon></button>
+                <button type="button" class="hud-btn hud-btn-del" (click)="deleteDocument('justificatifPaiement')"><mat-icon>delete</mat-icon></button>
+              </div>
+              <ng-template #uploadPayment>
+                <input type="file" (change)="onPaymentFileSelected($event)" hidden #paymentFileInput accept="image/*,application/pdf">
+                <button type="button" class="hud-btn hud-btn-upload" (click)="paymentFileInput.click()"><mat-icon>cloud_upload</mat-icon> Ajouter</button>
+              </ng-template>
+            </div>
+
+            <div class="hud-doc">
+              <span class="hud-doc-label">Document hébergement</span>
+              <div class="hud-doc-actions" *ngIf="hebergementData.hebergemntFile; else uploadHebergement">
+                <button type="button" class="hud-btn hud-btn-view" (click)="viewDocument(hebergementData.hebergemntFile)"><mat-icon>visibility</mat-icon></button>
+                <button type="button" class="hud-btn hud-btn-del" (click)="deleteDocument('hebergemntFile')"><mat-icon>delete</mat-icon></button>
+              </div>
+              <ng-template #uploadHebergement>
+                <input type="file" (change)="onFileSelected($event)" hidden #fileInput accept="image/*,application/pdf">
+                <button type="button" class="hud-btn hud-btn-upload" (click)="fileInput.click()"><mat-icon>cloud_upload</mat-icon> Ajouter</button>
+              </ng-template>
+            </div>
+
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ══ Statut & Paiement ══ -->
+      <ng-container *ngIf="activeTab === 'statut'">
+        <div class="hud-card">
+          <div class="hud-card-header">Statut & Paiement</div>
+          <div class="hud-card-body hud-grid-2">
+            <div class="hud-field">
+              <label>État de la demande</label>
+              <select class="hud-select" [(ngModel)]="hebergementData.etatDemande" name="etatDemande">
+                <option [value]="0">En attente</option>
+                <option [value]="1">En cours</option>
+                <option [value]="2">Validée</option>
+                <option [value]="3">Archivée</option>
+              </select>
+            </div>
+            <div class="hud-field">
+              <label>Argent retiré ?</label>
+              <select class="hud-select" [(ngModel)]="hebergementData.payout" name="payout">
+                <option value="0">Non</option>
+                <option value="1">Oui</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="hud-card">
+          <div class="hud-card-header">Informations de paiement</div>
+          <div class="hud-card-body hud-grid-3">
+            <div class="hud-field">
+              <label>Service de paiement</label>
+              <select class="hud-select" [(ngModel)]="hebergementData.paiementService" name="paiementService">
+                <option value="">Sélectionner</option>
+                <option>Western Union</option>
+                <option>Ria</option>
+                <option>MoneyGram</option>
+                <option>Autres</option>
+              </select>
+            </div>
+            <div class="hud-field">
+              <label>N° de retrait</label>
+              <input type="text" class="hud-input" [(ngModel)]="hebergementData.paiementCode" name="paiementCode" placeholder="Code / Référence">
+            </div>
+            <div class="hud-field">
+              <label>Montant payé</label>
+              <input type="number" min="0" step="0.01" class="hud-input" [(ngModel)]="hebergementData.paiementMontant" name="paiementMontant" placeholder="Ex : 200000">
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="hud-actions">
+        <button type="button" class="hud-btn-cancel" (click)="goBack()">Annuler</button>
+        <button type="button" class="hud-btn-save" [disabled]="isSubmitting" (click)="updateHebergement()">
+          {{ isSubmitting ? 'Enregistrement...' : 'Mettre à jour' }}
+        </button>
+      </div>
+    </form>
+  </ng-container>
+
+</div>

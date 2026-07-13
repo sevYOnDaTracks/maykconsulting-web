@@ -16,19 +16,45 @@
     <!-- ── Nouvelle demande ── -->
     <div *ngIf="!hasExistingFinance; else financeInProgress" class="heb-intro-card">
       <p class="heb-intro-lead">Suivez les étapes ci-dessous pour soumettre votre demande d'hébergement.</p>
-      <ul class="heb-steps-list">
-        <li>Choisissez votre pays de destination pour les études (France ou Canada).</li>
-        <li>Précisez la ville où vous êtes admis pour étude.</li>
-        <li>Joignez votre attestation ou preuve d'admission ainsi que votre passeport ou autres documents d'identité le cas échéant.</li>
-        <li class="heb-warn"><strong>Attention, les documents illisibles seront rejetés ! Veuillez fournir des scans de très bonne qualité.</strong></li>
-        <li>Enfin, révisez votre demande et soumettez-la.</li>
-      </ul>
-      <p class="heb-tarif">
-        Notre service fournira les documents nécessaires pour le volet "hébergement" de votre demande de visa après paiement des frais :
-        <strong class="heb-price">200 000 FCFA</strong> pour la France.
+
+      <div class="heb-steps-numbered">
+        <div class="heb-step-item">
+          <span class="heb-step-num">1</span>
+          <span>Choisissez votre pays de destination pour les études (France ou Canada).</span>
+        </div>
+        <div class="heb-step-item">
+          <span class="heb-step-num">2</span>
+          <span>Précisez la ville où vous êtes admis pour étude.</span>
+        </div>
+        <div class="heb-step-item">
+          <span class="heb-step-num">3</span>
+          <span>Joignez votre attestation ou preuve d'admission ainsi que votre passeport ou autres documents d'identité le cas échéant.</span>
+        </div>
+        <div class="heb-step-item">
+          <span class="heb-step-num">4</span>
+          <span>Révisez votre demande et soumettez-la.</span>
+        </div>
+      </div>
+
+      <div class="heb-price-card">
+        <div class="heb-price-tile">
+          <span class="heb-price-flag">🇫🇷</span>
+          <span class="heb-price-label">France</span>
+          <span class="heb-price-value">200 000 FCFA</span>
+        </div>
+      </div>
+      <p class="heb-price-note">Ce tarif couvre les documents nécessaires pour le volet "hébergement" de votre demande de visa et n'est pas remboursable, même en cas de refus.</p>
+
+      <div class="heb-alert-warn">
+        <mat-icon>warning_amber</mat-icon>
+        Les documents illisibles seront rejetés — merci de fournir des scans de très bonne qualité.
+      </div>
+
+      <p class="heb-notice-info">
+        <mat-icon>info_outline</mat-icon>
+        Nous ne fournissons que des documents officiels. Il serait préférable d'envisager une alternative une fois arrivé en France ; ces documents vous aideront à obtenir votre Visa Étude.
       </p>
-      <p class="heb-notice-warn"><strong>Ces frais ne sont pas remboursables, même en cas de refus de visa.</strong></p>
-      <p class="heb-notice-warn"><u>NB</u> : Nous ne fournissons que des documents officiels. Il serait préférable d'envisager une alternative une fois arrivé en France. Ces documents vous aideront à obtenir votre Visa Étude.</p>
+
       <div class="heb-intro-action">
         <button mat-raised-button class="btn-primary-mk" (click)="openHebergementNewComponent()">Faire une demande</button>
       </div>
@@ -212,6 +238,59 @@
               </tbody>
             </table>
 
+            <div class="heb-more-actions">
+              <button type="button" class="btn-outline-mk" (click)="toggleMoreInfo()">
+                <mat-icon>{{ showMoreInfo ? 'expand_less' : 'expand_more' }}</mat-icon>
+                {{ showMoreInfo ? 'Masquer' : 'Voir plus' }}
+              </button>
+            </div>
+
+            <form *ngIf="showMoreInfo" [formGroup]="hebergementForm" class="heb-more-form">
+              <div class="heb-more-grid">
+                <label>Nom<input formControlName="studentLastName"></label>
+                <label>Prenoms<input formControlName="studentFirstName"></label>
+                <label>Date de naissance<input type="date" formControlName="studentBirthDate"></label>
+                <label>Lieu de naissance<input formControlName="birthPlace"></label>
+                <label>Email<input formControlName="studentEmail"></label>
+                <label>Telephone<input formControlName="studentPhone"></label>
+                <label>Adresse<input formControlName="studentAddress"></label>
+                <label>Ville habitation<input formControlName="studentCity"></label>
+                <label>N passeport<input formControlName="passportNumber"></label>
+                <label>Filiere<input formControlName="studyField"></label>
+                <label>Annee universitaire<input formControlName="academicYear"></label>
+                <label>Pays<input formControlName="country"></label>
+                <label>Ville etude<input formControlName="city"></label>
+                <label>Universite / ecole<input formControlName="universityName"></label>
+              </div>
+
+              <div *ngIf="hebergementForm.get('hasFinancialGuarantor')?.value" class="heb-guarantor-more">
+                <h4>Garant financier</h4>
+                <div class="heb-more-grid">
+                  <label>Nom garant<input formControlName="guarantorLastName"></label>
+                  <label>Prenoms garant<input formControlName="guarantorFirstName"></label>
+                  <label>Nationalite<input formControlName="guarantorNationality"></label>
+                  <label>Passeport / CNI<input formControlName="guarantorIdentityNumber"></label>
+                  <label>Date naissance<input type="date" formControlName="guarantorBirthDate"></label>
+                  <label>Lieu naissance<input formControlName="guarantorBirthPlace"></label>
+                  <label>Profession<input formControlName="guarantorProfession"></label>
+                  <label>Entreprise<input formControlName="guarantorCompany"></label>
+                  <label>Telephone<input formControlName="guarantorPhone"></label>
+                  <label>Email<input formControlName="guarantorEmail"></label>
+                  <label>Adresse residence<input formControlName="guarantorAddress"></label>
+                  <label>Ville residence<input formControlName="guarantorCity"></label>
+                  <label>Montant AVI<input formControlName="guarantorAviAmount"></label>
+                </div>
+              </div>
+
+              <label class="heb-more-textarea">Autres informations<textarea formControlName="other" rows="3"></textarea></label>
+              <div class="heb-more-actions">
+                <button type="button" class="btn-primary-mk" (click)="saveMoreInfo()" [disabled]="isUpdatingInfo">
+                  <mat-icon>save</mat-icon>
+                  {{ isUpdatingInfo ? 'Sauvegarde...' : 'Mettre a jour' }}
+                </button>
+              </div>
+            </form>
+
             <p class="heb-info-note"><strong>NB :</strong> En cas d'erreur, contactez un agent Mayk Consulting ou retirez votre demande pour en soumettre une nouvelle.</p>
 
             <div *ngIf="hebergementData.etatDemande === 0" class="heb-withdraw-wrap">
@@ -220,10 +299,13 @@
           </div>
         </div>
 
-        <div *ngIf="hebergementData.country === 'France'" class="heb-card heb-card-mt">
-          <div class="heb-card-header">Documents à fournir pour le visa</div>
-          <div class="heb-card-body heb-text-center">
-            <p>Vous trouverez la liste des justificatifs nécessaires pour votre demande de visa.</p>
+        <div *ngIf="hebergementData.country === 'France'" class="heb-tip-card heb-card-mt">
+          <div class="heb-tip-header">
+            <mat-icon>tips_and_updates</mat-icon>
+            <span>Astuce : documents pour le visa</span>
+          </div>
+          <div class="heb-tip-body">
+            <p>Vous trouverez ici la liste des justificatifs nécessaires pour votre demande de visa.</p>
             <button (click)="viewDocument('https://firebasestorage.googleapis.com/v0/b/maykconsulting-7e0c1.appspot.com/o/divers%2Fliste_ls_etudiants_galbv.pdf?alt=media&token=6c952503-bdba-4512-a342-abc6523bdc4e')" class="btn-primary-mk">
               <mat-icon>download</mat-icon> Télécharger la liste
             </button>

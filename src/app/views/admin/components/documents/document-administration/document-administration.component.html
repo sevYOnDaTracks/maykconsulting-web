@@ -1,0 +1,190 @@
+<div class="adm-wrap">
+
+  <!-- ── Header ── -->
+  <div class="adm-header">
+    <div>
+      <h2 class="adm-title">Documents · Candidats</h2>
+      <p class="adm-sub">Demandez, examinez et validez les documents transmis par les candidats.</p>
+    </div>
+    <button class="btn-report" type="button" (click)="openRequestDialog()">
+      <mat-icon>add</mat-icon>
+      <span>Demander un document</span>
+    </button>
+  </div>
+
+  <!-- ── KPI Strip ── -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-amber"><mat-icon>hourglass_empty</mat-icon></div>
+      <div class="kpi-body">
+        <span class="kpi-value">{{ requestedCount }}</span>
+        <span class="kpi-label">Demandés</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-blue"><mat-icon>upload_file</mat-icon></div>
+      <div class="kpi-body">
+        <span class="kpi-value">{{ submittedCount }}</span>
+        <span class="kpi-label">À examiner</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-green"><mat-icon>check_circle</mat-icon></div>
+      <div class="kpi-body">
+        <span class="kpi-value">{{ validatedCount }}</span>
+        <span class="kpi-label">Validés</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-red"><mat-icon>cancel</mat-icon></div>
+      <div class="kpi-body">
+        <span class="kpi-value">{{ rejectedCount }}</span>
+        <span class="kpi-label">Rejetés</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Filtre d'affichage ── -->
+  <div class="kb-filter-bar">
+    <label class="kb-filter-label">Afficher par colonne :</label>
+    <select class="kb-page-select" [(ngModel)]="pageSize">
+      <option [ngValue]="5">5</option>
+      <option [ngValue]="10">10</option>
+      <option [ngValue]="15">15</option>
+      <option [ngValue]="30">30</option>
+      <option [ngValue]="0">Tout</option>
+    </select>
+  </div>
+
+  <!-- ── Kanban Board ── -->
+  <div class="kanban-board" cdkDropListGroup>
+
+    <!-- Colonne 1 : Demandé (statut = 0) -->
+    <div class="kb-col">
+      <div class="kb-col-header kb-amber">
+        <span class="kb-col-title">Demandés</span>
+        <span class="kb-col-count">{{ requestedCards.length }}</span>
+      </div>
+      <div cdkDropList [cdkDropListData]="requestedCards" (cdkDropListDropped)="onCardDrop($event, 0)" class="kb-list">
+        <div *ngFor="let card of (pageSize === 0 ? requestedCards : requestedCards.slice(0, pageSize))" cdkDrag class="kb-card">
+          <div class="kb-drag-handle" cdkDragHandle><mat-icon>drag_indicator</mat-icon></div>
+          <div class="kb-card-top">
+            <img [src]="card.photo || 'assets/images/landing/lOGO_d/logo.png'" alt="" class="kb-avatar">
+            <div class="kb-card-info">
+              <span class="kb-card-name">{{ card.candidateName }}</span>
+              <span class="kb-card-meta">{{ card.label }}</span>
+            </div>
+          </div>
+          <div class="kb-card-actions">
+            <button class="act-del" (click)="deleteRequest(card)" matTooltip="Annuler la demande"><mat-icon>delete</mat-icon></button>
+          </div>
+          <div *cdkDragPlaceholder class="kb-placeholder"></div>
+        </div>
+        <div *ngIf="requestedCards.length === 0" class="kb-empty">Aucune demande</div>
+      </div>
+    </div>
+
+    <!-- Colonne 2 : Déposé (statut = 1) -->
+    <div class="kb-col">
+      <div class="kb-col-header kb-blue">
+        <span class="kb-col-title">À examiner</span>
+        <span class="kb-col-count">{{ submittedCards.length }}</span>
+      </div>
+      <div cdkDropList [cdkDropListData]="submittedCards" (cdkDropListDropped)="onCardDrop($event, 1)" class="kb-list">
+        <div *ngFor="let card of (pageSize === 0 ? submittedCards : submittedCards.slice(0, pageSize))" cdkDrag class="kb-card">
+          <div class="kb-drag-handle" cdkDragHandle><mat-icon>drag_indicator</mat-icon></div>
+          <div class="kb-card-top">
+            <img [src]="card.photo || 'assets/images/landing/lOGO_d/logo.png'" alt="" class="kb-avatar">
+            <div class="kb-card-info">
+              <span class="kb-card-name">{{ card.candidateName }}</span>
+              <span class="kb-card-meta">{{ card.label }}</span>
+            </div>
+          </div>
+          <div class="kb-card-actions">
+            <button class="act-msg" (click)="viewFile(card)" matTooltip="Voir le fichier"><mat-icon>visibility</mat-icon></button>
+            <button class="act-edit" (click)="validate(card)" matTooltip="Valider"><mat-icon>check</mat-icon></button>
+            <button class="act-del" (click)="openReject(card)" matTooltip="Rejeter"><mat-icon>close</mat-icon></button>
+          </div>
+          <div *cdkDragPlaceholder class="kb-placeholder"></div>
+        </div>
+        <div *ngIf="submittedCards.length === 0" class="kb-empty">Aucun document à examiner</div>
+      </div>
+    </div>
+
+    <!-- Colonne 3 : Validé (statut = 2) -->
+    <div class="kb-col">
+      <div class="kb-col-header kb-green">
+        <span class="kb-col-title">Validés</span>
+        <span class="kb-col-count">{{ validatedCards.length }}</span>
+      </div>
+      <div cdkDropList [cdkDropListData]="validatedCards" (cdkDropListDropped)="onCardDrop($event, 2)" class="kb-list">
+        <div *ngFor="let card of (pageSize === 0 ? validatedCards : validatedCards.slice(0, pageSize))" cdkDrag class="kb-card">
+          <div class="kb-drag-handle" cdkDragHandle><mat-icon>drag_indicator</mat-icon></div>
+          <div class="kb-card-top">
+            <img [src]="card.photo || 'assets/images/landing/lOGO_d/logo.png'" alt="" class="kb-avatar">
+            <div class="kb-card-info">
+              <span class="kb-card-name">{{ card.candidateName }}</span>
+              <span class="kb-card-meta">{{ card.label }}</span>
+            </div>
+          </div>
+          <div class="kb-card-actions">
+            <button class="act-msg" (click)="viewFile(card)" matTooltip="Voir le fichier"><mat-icon>visibility</mat-icon></button>
+            <button class="act-del" (click)="deleteFile(card)" matTooltip="Supprimer et redemander"><mat-icon>delete</mat-icon></button>
+          </div>
+          <div *cdkDragPlaceholder class="kb-placeholder"></div>
+        </div>
+        <div *ngIf="validatedCards.length === 0" class="kb-empty">Aucun document validé</div>
+      </div>
+    </div>
+
+    <!-- Colonne 4 : Rejeté (statut = 3) -->
+    <div class="kb-col">
+      <div class="kb-col-header kb-red">
+        <span class="kb-col-title">Rejetés</span>
+        <span class="kb-col-count">{{ rejectedCards.length }}</span>
+      </div>
+      <div cdkDropList [cdkDropListData]="rejectedCards" (cdkDropListDropped)="onCardDrop($event, 3)" class="kb-list">
+        <div *ngFor="let card of (pageSize === 0 ? rejectedCards : rejectedCards.slice(0, pageSize))" cdkDrag class="kb-card kb-card-archived">
+          <div class="kb-drag-handle" cdkDragHandle><mat-icon>drag_indicator</mat-icon></div>
+          <div class="kb-card-top">
+            <img [src]="card.photo || 'assets/images/landing/lOGO_d/logo.png'" alt="" class="kb-avatar">
+            <div class="kb-card-info">
+              <span class="kb-card-name">{{ card.candidateName }}</span>
+              <span class="kb-card-meta">{{ card.label }}</span>
+            </div>
+          </div>
+          <div *ngIf="card.commentaireAdmin" class="kb-card-doc">
+            <mat-icon>comment</mat-icon> {{ card.commentaireAdmin }}
+          </div>
+          <div class="kb-card-actions">
+            <button class="act-msg" (click)="viewFile(card)" matTooltip="Voir le fichier" *ngIf="card.fileUrl"><mat-icon>visibility</mat-icon></button>
+            <button class="act-del" (click)="deleteFile(card)" matTooltip="Supprimer et redemander"><mat-icon>delete</mat-icon></button>
+          </div>
+          <div *cdkDragPlaceholder class="kb-placeholder"></div>
+        </div>
+        <div *ngIf="rejectedCards.length === 0" class="kb-empty">Aucun document rejeté</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ── Dialog de rejet ── -->
+<ng-template #rejectDialog>
+  <div class="reply-dialog-wrap">
+    <h3 class="reply-dialog-title">Rejeter le document</h3>
+    <form [formGroup]="rejectForm" (ngSubmit)="confirmReject()" class="reply-form">
+      <mat-form-field appearance="outline" class="reply-field">
+        <mat-label>Motif du rejet</mat-label>
+        <textarea matInput formControlName="comment" rows="4" placeholder="Ex : photo illisible, document expiré..."></textarea>
+      </mat-form-field>
+      <div class="reply-dialog-actions">
+        <button mat-stroked-button type="button" (click)="dialog.closeAll()">Annuler</button>
+        <button mat-flat-button color="warn" type="submit" [disabled]="rejectForm.invalid || isRejecting">
+          {{ isRejecting ? 'Envoi...' : 'Rejeter' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>

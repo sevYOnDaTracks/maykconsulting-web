@@ -1,0 +1,251 @@
+<div class="fud-wrap">
+
+  <div *ngIf="isSubmitting" class="fud-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <button type="button" class="fud-back" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon> Retour au kanban
+  </button>
+
+  <div *ngIf="isLoading" class="fud-loading">
+    <mat-spinner diameter="60"></mat-spinner>
+  </div>
+
+  <ng-container *ngIf="!isLoading && financeData">
+
+    <div class="fud-header">
+      <img [src]="userData?.identityPhotoUrl || 'assets/images/landing/lOGO_d/logo.png'" alt="" class="fud-avatar">
+      <div class="fud-header-info">
+        <h2 class="fud-name">{{ userData?.firstName }} {{ userData?.lastName }}</h2>
+        <span class="fud-email">{{ userData?.email }}</span>
+      </div>
+      <span class="fud-status-badge" [style.background]="getEtatColor(financeData.etatDemande) + '18'" [style.color]="getEtatColor(financeData.etatDemande)">
+        {{ getEtatLabel(financeData.etatDemande) }}
+      </span>
+    </div>
+
+    <!-- ── Onglets ── -->
+    <div class="fud-tabs-bar">
+      <button type="button" class="fud-tab-chip" [class.active]="activeTab === 'profil'" (click)="setTab('profil')">
+        <mat-icon>person</mat-icon><span>Profil étudiant</span>
+      </button>
+      <button type="button" class="fud-tab-chip" [class.active]="activeTab === 'etudes'" (click)="setTab('etudes')">
+        <mat-icon>school</mat-icon><span>Études</span>
+      </button>
+      <button type="button" class="fud-tab-chip" [class.active]="activeTab === 'documents'" (click)="setTab('documents')">
+        <mat-icon>folder_open</mat-icon><span>Documents</span>
+      </button>
+      <button type="button" class="fud-tab-chip" [class.active]="activeTab === 'statut'" (click)="setTab('statut')">
+        <mat-icon>assignment</mat-icon><span>Statut & Paiement</span>
+      </button>
+    </div>
+
+    <form class="fud-content">
+
+      <!-- ══ Profil étudiant ══ -->
+      <ng-container *ngIf="activeTab === 'profil'">
+        <div class="fud-card">
+          <div class="fud-card-header">Identité</div>
+          <div class="fud-card-body fud-grid-2">
+            <div class="fud-field">
+              <label>Nom</label>
+              <input type="text" class="fud-input" [(ngModel)]="financeData.studentLastName" name="studentLastName">
+            </div>
+            <div class="fud-field">
+              <label>Prénoms</label>
+              <input type="text" class="fud-input" [(ngModel)]="financeData.studentFirstName" name="studentFirstName">
+            </div>
+            <div class="fud-field">
+              <label>Date de naissance</label>
+              <input type="date" class="fud-input" [(ngModel)]="financeData.studentBirthDate" name="studentBirthDate">
+            </div>
+            <div class="fud-field">
+              <label>Lieu de naissance</label>
+              <input type="text" class="fud-input" [(ngModel)]="financeData.birthPlace" name="birthPlace">
+            </div>
+            <div class="fud-field">
+              <label>N° passeport</label>
+              <input type="text" class="fud-input" [(ngModel)]="financeData.passportNumber" name="passportNumber">
+            </div>
+          </div>
+        </div>
+
+        <div class="fud-card">
+          <div class="fud-card-header">Coordonnées</div>
+          <div class="fud-card-body fud-grid-2">
+            <div class="fud-field">
+              <label>Email</label>
+              <input type="email" class="fud-input" [(ngModel)]="financeData.studentEmail" name="studentEmail">
+            </div>
+            <div class="fud-field">
+              <label>Téléphone</label>
+              <input type="tel" class="fud-input" [(ngModel)]="financeData.studentPhone" name="studentPhone">
+            </div>
+            <div class="fud-field">
+              <label>Adresse</label>
+              <input type="text" class="fud-input" [(ngModel)]="financeData.studentAddress" name="studentAddress">
+            </div>
+            <div class="fud-field">
+              <label>Ville d'habitation</label>
+              <input type="text" class="fud-input" [(ngModel)]="financeData.studentCity" name="studentCity">
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ══ Études ══ -->
+      <ng-container *ngIf="activeTab === 'etudes'">
+        <div class="fud-card">
+          <div class="fud-card-header">Parcours & destination</div>
+          <div class="fud-card-body fud-grid-2">
+            <div class="fud-field">
+              <label>Filière</label>
+              <input type="text" class="fud-input" [(ngModel)]="financeData.studyField" name="studyField">
+            </div>
+            <div class="fud-field">
+              <label>Année universitaire</label>
+              <input type="text" class="fud-input" [(ngModel)]="financeData.academicYear" name="academicYear">
+            </div>
+            <div class="fud-field">
+              <label>Pays</label>
+              <input type="text" class="fud-input" [(ngModel)]="financeData.country" name="country">
+            </div>
+            <div class="fud-field">
+              <label>Ville d'étude</label>
+              <input type="text" class="fud-input" [(ngModel)]="financeData.city" name="city">
+            </div>
+            <div class="fud-field">
+              <label>Université / École</label>
+              <input type="text" class="fud-input" [(ngModel)]="financeData.universityName" name="universityName">
+            </div>
+          </div>
+        </div>
+
+        <div class="fud-card">
+          <div class="fud-card-header">Autres informations</div>
+          <div class="fud-card-body">
+            <div class="fud-field">
+              <label>Notes du candidat</label>
+              <textarea class="fud-input" rows="3" [(ngModel)]="financeData.other" name="other"></textarea>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ══ Documents ══ -->
+      <ng-container *ngIf="activeTab === 'documents'">
+        <div class="fud-card">
+          <div class="fud-card-header">Documents</div>
+          <div class="fud-card-body fud-grid-2">
+
+            <div class="fud-doc">
+              <span class="fud-doc-label">Passeport</span>
+              <div class="fud-doc-actions">
+                <button type="button" class="fud-btn fud-btn-view" [disabled]="!financeData.passport" (click)="viewDocument(financeData.passport)"><mat-icon>visibility</mat-icon></button>
+                <button type="button" class="fud-btn fud-btn-del" [disabled]="!financeData.passport" (click)="deleteDocument('passport')"><mat-icon>delete</mat-icon></button>
+              </div>
+            </div>
+
+            <div class="fud-doc">
+              <span class="fud-doc-label">Preuve d'admission</span>
+              <div class="fud-doc-actions">
+                <button type="button" class="fud-btn fud-btn-view" [disabled]="!financeData.admissionFile" (click)="viewDocument(financeData.admissionFile)"><mat-icon>visibility</mat-icon></button>
+                <button type="button" class="fud-btn fud-btn-del" [disabled]="!financeData.admissionFile" (click)="deleteDocument('admissionFile')"><mat-icon>delete</mat-icon></button>
+              </div>
+            </div>
+
+            <div class="fud-doc">
+              <span class="fud-doc-label">Justificatif de paiement</span>
+              <div class="fud-doc-actions" *ngIf="financeData.justificatifPaiement; else uploadPayment">
+                <button type="button" class="fud-btn fud-btn-view" (click)="viewDocument(financeData.justificatifPaiement)"><mat-icon>visibility</mat-icon></button>
+                <button type="button" class="fud-btn fud-btn-del" (click)="deleteDocument('justificatifPaiement')"><mat-icon>delete</mat-icon></button>
+              </div>
+              <ng-template #uploadPayment>
+                <input type="file" (change)="onPaymentFileSelected($event)" hidden #paymentFileInput accept="image/*,application/pdf">
+                <button type="button" class="fud-btn fud-btn-upload" (click)="paymentFileInput.click()"><mat-icon>cloud_upload</mat-icon> Ajouter</button>
+              </ng-template>
+            </div>
+
+            <div class="fud-doc">
+              <span class="fud-doc-label">Document garant financier</span>
+              <div class="fud-doc-actions" *ngIf="financeData.garantFile; else uploadGarant">
+                <button type="button" class="fud-btn fud-btn-view" (click)="viewDocument(financeData.garantFile)"><mat-icon>visibility</mat-icon></button>
+                <button type="button" class="fud-btn fud-btn-del" (click)="deleteDocument('garantFile')"><mat-icon>delete</mat-icon></button>
+              </div>
+              <ng-template #uploadGarant>
+                <input type="file" (change)="onFileSelected($event)" hidden #fileInput accept="image/*,application/pdf">
+                <button type="button" class="fud-btn fud-btn-upload" (click)="fileInput.click()"><mat-icon>cloud_upload</mat-icon> Ajouter</button>
+              </ng-template>
+            </div>
+
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ══ Statut & Paiement ══ -->
+      <ng-container *ngIf="activeTab === 'statut'">
+        <div class="fud-card">
+          <div class="fud-card-header">Statut & Paiement</div>
+          <div class="fud-card-body fud-grid-3">
+            <div class="fud-field">
+              <label>État de la demande</label>
+              <select class="fud-select" [(ngModel)]="financeData.etatDemande" name="etatDemande">
+                <option [value]="0">En attente</option>
+                <option [value]="1">En cours</option>
+                <option [value]="2">Traitement terminée</option>
+                <option [value]="3">Archivée</option>
+              </select>
+            </div>
+            <div class="fud-field">
+              <label>Argent retiré ?</label>
+              <select class="fud-select" [(ngModel)]="financeData.payout" name="payout">
+                <option value="0">Non</option>
+                <option value="1">Oui</option>
+              </select>
+            </div>
+            <div class="fud-field">
+              <label>Visa obtenu ?</label>
+              <select class="fud-select" [(ngModel)]="financeData.visa" name="visa">
+                <option value="0">Non</option>
+                <option value="1">Oui</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="fud-card">
+          <div class="fud-card-header">Informations de paiement</div>
+          <div class="fud-card-body fud-grid-3">
+            <div class="fud-field">
+              <label>Service de paiement</label>
+              <select class="fud-select" [(ngModel)]="financeData.paiementService" name="paiementService">
+                <option value="">Sélectionner</option>
+                <option>Western Union</option>
+                <option>Ria</option>
+                <option>MoneyGram</option>
+                <option>Autres</option>
+              </select>
+            </div>
+            <div class="fud-field">
+              <label>N° de retrait</label>
+              <input type="text" class="fud-input" [(ngModel)]="financeData.paiementCode" name="paiementCode" placeholder="Code / Référence">
+            </div>
+            <div class="fud-field">
+              <label>Montant payé</label>
+              <input type="number" min="0" step="0.01" class="fud-input" [(ngModel)]="financeData.paiementMontant" name="paiementMontant" placeholder="Ex : 400000">
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="fud-actions">
+        <button type="button" class="fud-btn-cancel" (click)="goBack()">Annuler</button>
+        <button type="button" class="fud-btn-save" [disabled]="isSubmitting" (click)="updateFinance()">
+          {{ isSubmitting ? 'Enregistrement...' : 'Mettre à jour' }}
+        </button>
+      </div>
+    </form>
+  </ng-container>
+
+</div>

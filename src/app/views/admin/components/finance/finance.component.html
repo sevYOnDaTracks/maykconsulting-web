@@ -16,19 +16,45 @@
     <!-- ── Nouvelle demande ── -->
     <div *ngIf="!hasExistingFinance; else financeInProgress" class="fin-intro-card">
       <p class="fin-intro-lead">Suivez les étapes ci-dessous pour soumettre votre demande de garant financier.</p>
-      <ul class="fin-steps-list">
-        <li>Choisissez votre pays de destination pour les études (France 🇫🇷 ou Canada 🇨🇦).</li>
-        <li>Précisez la ville où vous êtes admis pour étude.</li>
-        <li>Joignez votre attestation ou preuve d'admission ainsi que votre passeport ou autres documents d'identité le cas échéant.</li>
-        <li class="fin-warn"><strong>Attention, les documents illisibles seront rejetés ! Veuillez fournir des scans de très bonne qualité.</strong></li>
-        <li>Enfin, révisez votre demande et soumettez-la.</li>
-      </ul>
-      <p class="fin-tarif">
-        Notre service fournira les documents de garantie financière après paiement des frais :
-        <strong class="fin-price">400 000 FCFA</strong> pour la France et
-        <strong class="fin-price">1 000 000 FCFA</strong> pour le Canada.
-      </p>
-      <p class="fin-notice-warn"><strong>Ces frais ne sont pas remboursables, même en cas de refus de visa.</strong></p>
+
+      <div class="fin-steps-numbered">
+        <div class="fin-step-item">
+          <span class="fin-step-num">1</span>
+          <span>Choisissez votre pays de destination pour les études (France 🇫🇷 ou Canada 🇨🇦).</span>
+        </div>
+        <div class="fin-step-item">
+          <span class="fin-step-num">2</span>
+          <span>Précisez la ville où vous êtes admis pour étude.</span>
+        </div>
+        <div class="fin-step-item">
+          <span class="fin-step-num">3</span>
+          <span>Joignez votre attestation ou preuve d'admission ainsi que votre passeport ou autres documents d'identité le cas échéant.</span>
+        </div>
+        <div class="fin-step-item">
+          <span class="fin-step-num">4</span>
+          <span>Révisez votre demande et soumettez-la.</span>
+        </div>
+      </div>
+
+      <div class="fin-price-card">
+        <div class="fin-price-tile">
+          <span class="fin-price-flag">🇫🇷</span>
+          <span class="fin-price-label">France</span>
+          <span class="fin-price-value">400 000 FCFA</span>
+        </div>
+        <div class="fin-price-tile">
+          <span class="fin-price-flag">🇨🇦</span>
+          <span class="fin-price-label">Canada</span>
+          <span class="fin-price-value">1 000 000 FCFA</span>
+        </div>
+      </div>
+      <p class="fin-price-note">Ces frais couvrent la fourniture des documents de garantie financière et ne sont pas remboursables, même en cas de refus de visa.</p>
+
+      <div class="fin-alert-warn">
+        <mat-icon>warning_amber</mat-icon>
+        Les documents illisibles seront rejetés — merci de fournir des scans de très bonne qualité.
+      </div>
+
       <div class="fin-intro-action">
         <button mat-raised-button class="btn-primary-mk" (click)="openFinanceNewComponent()">Faire une demande</button>
       </div>
@@ -208,6 +234,39 @@
               </tbody>
             </table>
 
+            <div class="fin-more-actions">
+              <button type="button" class="btn-outline-mk" (click)="toggleMoreInfo()">
+                <mat-icon>{{ showMoreInfo ? 'expand_less' : 'expand_more' }}</mat-icon>
+                {{ showMoreInfo ? 'Masquer' : 'Voir plus' }}
+              </button>
+            </div>
+
+            <form *ngIf="showMoreInfo" [formGroup]="financeForm" class="fin-more-form">
+              <div class="fin-more-grid">
+                <label>Nom<input formControlName="studentLastName"></label>
+                <label>Prenoms<input formControlName="studentFirstName"></label>
+                <label>Date de naissance<input type="date" formControlName="studentBirthDate"></label>
+                <label>Lieu de naissance<input formControlName="birthPlace"></label>
+                <label>Email<input formControlName="studentEmail"></label>
+                <label>Telephone<input formControlName="studentPhone"></label>
+                <label>Adresse<input formControlName="studentAddress"></label>
+                <label>Ville habitation<input formControlName="studentCity"></label>
+                <label>N passeport<input formControlName="passportNumber"></label>
+                <label>Filiere<input formControlName="studyField"></label>
+                <label>Annee universitaire<input formControlName="academicYear"></label>
+                <label>Pays<input formControlName="country"></label>
+                <label>Ville etude<input formControlName="city"></label>
+                <label>Universite / ecole<input formControlName="universityName"></label>
+              </div>
+              <label class="fin-more-textarea">Autres informations<textarea formControlName="other" rows="3"></textarea></label>
+              <div class="fin-more-actions">
+                <button type="button" class="btn-primary-mk" (click)="saveMoreInfo()" [disabled]="isUpdatingInfo">
+                  <mat-icon>save</mat-icon>
+                  {{ isUpdatingInfo ? 'Sauvegarde...' : 'Mettre a jour' }}
+                </button>
+              </div>
+            </form>
+
             <p class="fin-info-note"><strong>NB :</strong> En cas d'erreur, contactez un agent Mayk Consulting ou retirez votre demande pour en soumettre une nouvelle.</p>
 
             <div *ngIf="financeData.etatDemande === 0" class="fin-withdraw-wrap">
@@ -216,10 +275,13 @@
           </div>
         </div>
 
-        <div *ngIf="financeData.country === 'France'" class="fin-card fin-card-mt">
-          <div class="fin-card-header">Documents à fournir pour le visa</div>
-          <div class="fin-card-body fin-text-center">
-            <p>Vous trouverez la liste des justificatifs nécessaires pour votre demande de visa.</p>
+        <div *ngIf="financeData.country === 'France'" class="fin-tip-card fin-card-mt">
+          <div class="fin-tip-header">
+            <mat-icon>tips_and_updates</mat-icon>
+            <span>Astuce : documents pour le visa</span>
+          </div>
+          <div class="fin-tip-body">
+            <p>Vous trouverez ici la liste des justificatifs nécessaires pour votre demande de visa.</p>
             <button (click)="viewDocument('https://firebasestorage.googleapis.com/v0/b/maykconsulting-7e0c1.appspot.com/o/divers%2Fliste_ls_etudiants_galbv.pdf?alt=media&token=6c952503-bdba-4512-a342-abc6523bdc4e')" class="btn-primary-mk">
               <mat-icon>download</mat-icon> Télécharger la liste
             </button>

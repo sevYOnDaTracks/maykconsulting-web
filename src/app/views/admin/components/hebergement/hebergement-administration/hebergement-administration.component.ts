@@ -1,11 +1,11 @@
 import {Component, ElementRef, HostListener, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import {Router} from '@angular/router';
 import {HebergementService} from '../../../services/hebergement.service';
 import {AuthenticationService} from '../../../../landing/services/authentication.service';
 import {map, switchMap} from 'rxjs/operators';
 import {combineLatest, of} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
-import {HebergementEditDemandeComponent} from '../hebergement-edit-demande/hebergement-edit-demande.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {EmailService} from '../../../services/email.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -51,7 +51,8 @@ export class HebergementAdministrationComponent implements OnInit {
     private snackBar:           MatSnackBar,
     private emailService:       EmailService,
     private fb:                 FormBuilder,
-    private elRef:              ElementRef
+    private elRef:              ElementRef,
+    private router:             Router
   ) {
     this.replyForm = this.fb.group({
       to:      ['', [Validators.required, Validators.email]],
@@ -181,7 +182,7 @@ export class HebergementAdministrationComponent implements OnInit {
 
   openEditHebergementDemande(id: string): void {
     if (!id) return;
-    this.dialog.open(HebergementEditDemandeComponent, { data: { hebergementId: id } });
+    this.router.navigate(['/admin/hebergement/gestion/user', id]);
   }
 
   openReply(element: any): void {

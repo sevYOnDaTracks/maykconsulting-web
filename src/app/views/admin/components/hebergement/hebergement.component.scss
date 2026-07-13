@@ -44,17 +44,73 @@ $radius:  12px;
 .heb-intro-lead {
   font-size: 15px;
   color: #374151;
-  margin-bottom: 12px;
-}
-.heb-steps-list {
-  padding-left: 20px;
   margin-bottom: 16px;
-  li { margin-bottom: 6px; color: #374151; }
 }
-.heb-warn { color: $pink !important; }
-.heb-tarif { color: #374151; margin-top: 16px; }
-.heb-price { color: $pink; font-size: 16px; }
-.heb-notice-warn { color: #6b7280; font-size: 13px; margin-top: 6px; }
+
+.heb-steps-numbered {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.heb-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: #374151;
+}
+.heb-step-num {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: $navy;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.heb-price-card {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.heb-price-tile {
+  flex: 1;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: $light;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 14px 10px;
+}
+.heb-price-flag { font-size: 22px; }
+.heb-price-label { font-size: 12px; color: $gray; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+.heb-price-value { font-size: 18px; color: $pink; font-weight: 700; }
+.heb-price-note { font-size: 12px; color: $gray; text-align: center; margin: 0 0 16px; }
+
+.heb-notice-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-top: 10px;
+  mat-icon { font-size: 18px; width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+}
+
 .heb-intro-action { text-align: center; margin-top: 24px; }
 
 /* ── Statut card ── */
@@ -220,6 +276,31 @@ $radius:  12px;
 }
 .heb-card-mt { margin-top: 20px; }
 .heb-card-mb { margin-bottom: 20px; }
+
+/* ── Tip / astuce card ── */
+.heb-tip-card {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: $radius;
+  overflow: hidden;
+}
+.heb-tip-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(30, 64, 175, 0.08);
+  border-bottom: 1px solid #bfdbfe;
+  padding: 12px 18px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #1e40af;
+  mat-icon { font-size: 18px; width: 18px; height: 18px; color: #2563eb; }
+}
+.heb-tip-body {
+  padding: 20px 18px;
+  text-align: center;
+  p { color: #1e3a5f; margin-bottom: 14px; }
+}
 .heb-card-header {
   background: $light;
   border-bottom: 1px solid $border;
@@ -366,6 +447,72 @@ $radius:  12px;
 .heb-info-note { font-size: 12px; color: $gray; margin-top: 4px; margin-bottom: 12px; }
 .heb-withdraw-wrap { text-align: center; margin-top: 12px; }
 
+.heb-more-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.heb-more-form {
+  background: $light;
+  border: 1px solid $border;
+  border-radius: 12px;
+  padding: 14px;
+  margin: 12px 0 16px;
+}
+
+.heb-more-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.heb-more-grid label,
+.heb-more-textarea {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: $gray;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.heb-more-grid input,
+.heb-more-textarea textarea {
+  width: 100%;
+  border: 1px solid $border;
+  border-radius: 8px;
+  background: #fff;
+  color: #0f172a;
+  padding: 8px 10px;
+  font: inherit;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+
+  &:focus {
+    border-color: #1e40af;
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, .12);
+  }
+}
+
+.heb-more-textarea {
+  margin-top: 10px;
+}
+
+.heb-guarantor-more {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid $border;
+}
+
+.heb-guarantor-more h4 {
+  margin: 0 0 10px;
+  color: #0f172a;
+  font-size: 14px;
+}
+
 /* ── Vidéo ── */
 .heb-video { display: block; border-radius: 8px; }
 .heb-no-video { color: $gray; font-size: 13px; text-align: center; }
@@ -410,6 +557,10 @@ $radius:  12px;
   .heb-info-table {
     th, td { padding: 7px 8px; font-size: 12px; }
     th { width: 38%; }
+  }
+
+  .heb-more-grid {
+    grid-template-columns: 1fr;
   }
 
   .heb-contact-footer { font-size: 12px; margin-top: 20px; }

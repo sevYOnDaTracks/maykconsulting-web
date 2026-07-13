@@ -1,0 +1,53 @@
+<h2 mat-dialog-title class="request-title">Demander un document</h2>
+<div mat-dialog-content class="request-content">
+  <form [formGroup]="requestForm" class="request-form">
+    <div class="candidate-field-wrap">
+      <mat-form-field appearance="outline" class="request-field" floatLabel="always">
+        <mat-label>Candidat</mat-label>
+        <input
+          matInput
+          formControlName="candidateQuery"
+          [readonly]="!!data?.user"
+          (focus)="onCandidateFieldFocus()"
+          placeholder="Rechercher par nom, prénom ou email"
+          autocomplete="off"
+        >
+      </mat-form-field>
+      <div class="candidate-dropdown" *ngIf="showCandidateDropdown && filteredUsers.length && !data?.user">
+        <div
+          *ngFor="let u of filteredUsers"
+          class="candidate-option"
+          (mousedown)="onCandidateSelected(u)"
+        >
+          <img [src]="u.identityPhotoUrl || 'assets/images/landing/lOGO_d/logo.png'" alt="" class="candidate-avatar">
+          <div class="candidate-info">
+            <span class="candidate-name">{{ u.firstName }} {{ u.lastName }}</span>
+            <span class="candidate-email">{{ u.email }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <mat-form-field appearance="outline" class="request-field" floatLabel="always">
+      <mat-label>Document demandé</mat-label>
+      <select matNativeControl formControlName="documentTemplate">
+        <option value="" disabled selected hidden></option>
+        <option *ngFor="let documentTemplate of documentTemplates" [value]="documentTemplate">
+          {{ documentTemplate }}
+        </option>
+      </select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="requestForm.get('documentTemplate')?.value === otherDocumentValue" appearance="outline" class="request-field" floatLabel="always">
+      <mat-label>Document demandé</mat-label>
+      <input matInput formControlName="customLabel" placeholder="Saisir le document à demander">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end" class="request-actions">
+  <button mat-button type="button" class="request-cancel" (click)="closeDialog()">Annuler</button>
+  <button mat-flat-button color="primary" type="button" class="request-submit" (click)="onSubmit()" [disabled]="requestForm.invalid || isSubmitting">
+    <mat-spinner *ngIf="isSubmitting" diameter="18" class="request-submit-spinner"></mat-spinner>
+    {{ isSubmitting ? 'Envoi en cours...' : 'Envoyer la demande' }}
+  </button>
+</div>

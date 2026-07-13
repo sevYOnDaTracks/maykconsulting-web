@@ -408,4 +408,161 @@ export class EmailService {
 
         return this.http.post(this.apiUrl, body, { headers });
     }
+
+    sendEmailNotificationDocumentDemande(to: string, subject: string, label: string): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        const htmlContent = `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { background-color: #ffffff; padding: 20px; margin: 20px auto; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); max-width: 600px; }
+        .header { text-align: center; padding: 10px 0; background-color: #242a75; color: #ffffff; border-radius: 8px 8px 0 0; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .content { padding: 20px; text-align: center; }
+        .content p { font-size: 16px; color: #333333; line-height: 1.5; }
+        .footer { text-align: center; padding: 10px; font-size: 12px; color: #777777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Un document vous est demandé</h1>
+        </div>
+        <div class="content">
+            <p>Nous vous invitons à transmettre le document suivant : <strong>${label}</strong>.</p>
+            <p>Connectez-vous à votre espace, rubrique "Mes documents", pour le déposer.</p>
+        </div>
+        <div class="footer">
+            <p>Cet e-mail vous a été envoyé automatiquement par Maykconsulting. Merci de ne pas y repondre</p>
+        </div>
+    </div>
+</body>
+</html>
+`;
+        const body = { to, subject, html: htmlContent };
+
+        return this.http.post(this.apiUrl, body, { headers });
+    }
+
+    sendEmailNotificationDocumentDepose(to: string, subject: string, candidat: string, label: string): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        const htmlContent = `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { background-color: #ffffff; padding: 20px; margin: 20px auto; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); max-width: 600px; }
+        .header { text-align: center; padding: 10px 0; background-color: #242a75; color: #ffffff; border-radius: 8px 8px 0 0; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .content { padding: 20px; text-align: center; }
+        .content p { font-size: 16px; color: #333333; line-height: 1.5; }
+        .footer { text-align: center; padding: 10px; font-size: 12px; color: #777777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Un document a été déposé</h1>
+        </div>
+        <div class="content">
+            <p>L'utilisateur <strong>${candidat}</strong> vient de déposer le document : <strong>${label}</strong>.</p>
+            <p>Rendez-vous dans Administration &gt; Gestion documents pour l'examiner.</p>
+        </div>
+        <div class="footer">
+            <p>Cet e-mail vous a été envoyé automatiquement par Maykconsulting. Merci de ne pas y repondre</p>
+        </div>
+    </div>
+</body>
+</html>
+`;
+        const body = { to, subject, html: htmlContent };
+
+        return this.http.post(this.apiUrl, body, { headers });
+    }
+
+    sendEmailNotificationDocumentValide(to: string, subject: string, label: string): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        const htmlContent = `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { background-color: #ffffff; padding: 20px; margin: 20px auto; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); max-width: 600px; }
+        .header { text-align: center; padding: 10px 0; background-color: #242a75; color: #ffffff; border-radius: 8px 8px 0 0; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .content { padding: 20px; text-align: center; }
+        .content p { font-size: 16px; color: #333333; line-height: 1.5; }
+        .footer { text-align: center; padding: 10px; font-size: 12px; color: #777777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Document validé</h1>
+        </div>
+        <div class="content">
+            <p>Votre document <strong>${label}</strong> a été validé par notre équipe.</p>
+            <p>Connectez-vous à votre espace, rubrique "Mes documents", pour vérifier si un autre document vous est demandé et, le cas échéant, le transmettre.</p>
+        </div>
+        <div class="footer">
+            <p>Cet e-mail vous a été envoyé automatiquement par Maykconsulting. Merci de ne pas y repondre</p>
+        </div>
+    </div>
+</body>
+</html>
+`;
+        const body = { to, subject, html: htmlContent };
+
+        return this.http.post(this.apiUrl, body, { headers });
+    }
+
+    sendEmailNotificationDocumentRejete(to: string, subject: string, label: string, commentaire: string): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        const htmlContent = `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { background-color: #ffffff; padding: 20px; margin: 20px auto; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); max-width: 600px; }
+        .header { text-align: center; padding: 10px 0; background-color: #242a75; color: #ffffff; border-radius: 8px 8px 0 0; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .content { padding: 20px; text-align: center; }
+        .content p { font-size: 16px; color: #333333; line-height: 1.5; }
+        .footer { text-align: center; padding: 10px; font-size: 12px; color: #777777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Document rejeté</h1>
+        </div>
+        <div class="content">
+            <p>Votre document <strong>${label}</strong> a été rejeté par notre équipe.</p>
+            <p><strong>Motif :</strong> ${commentaire}</p>
+            <p>Merci de vous connecter à votre espace, rubrique "Mes documents", pour renseigner un autre document une fois celui-ci réouvert par notre équipe.</p>
+        </div>
+        <div class="footer">
+            <p>Cet e-mail vous a été envoyé automatiquement par Maykconsulting. Merci de ne pas y repondre</p>
+        </div>
+    </div>
+</body>
+</html>
+`;
+        const body = { to, subject, html: htmlContent };
+
+        return this.http.post(this.apiUrl, body, { headers });
+    }
 }

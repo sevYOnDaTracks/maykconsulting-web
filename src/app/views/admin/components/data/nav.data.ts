@@ -29,5 +29,10 @@ export const sidenavOptions: SidenavOption[] = [
     icon: 'work',
     path: '/admin/finance',
     label: 'Garantie Financiere'
+  },
+  {
+    icon: 'folder',
+    path: '/admin/documents',
+    label: 'Mes documents'
   }
 ];

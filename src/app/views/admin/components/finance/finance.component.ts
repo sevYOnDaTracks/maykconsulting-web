@@ -6,7 +6,6 @@ import { AuthenticationService } from '../../../landing/services/authentication.
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { FinanceService } from '../../services/finance.service';
-import {FinanceNewComponent} from './finance-new/finance-new.component';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {Router} from '@angular/router';
@@ -24,6 +23,8 @@ export class FinanceComponent implements OnInit {
   errorMessage: string | null = null;
   hasExistingFinance = false;
   isLoading = true;
+  showMoreInfo = false;
+  isUpdatingInfo = false;
   dateDemande: string;
   youtubeUrl: SafeResourceUrl;  // Nouvelle propriété pour l'URL YouTube
   youtubeUrl2: SafeResourceUrl;
@@ -46,7 +47,7 @@ export class FinanceComponent implements OnInit {
           this.hasExistingFinance = !!data;
           this.financeData = data;
           this.userUid = user.uid;
-          this.dateDemande = this.formatDateTime(data.dateDemande);
+          this.dateDemande = data?.dateDemande ? this.formatDateTime(data.dateDemande) : '';
           this.initializeForm(); // Initialiser le formulaire après avoir les données
           this.isLoading = false;  // Fin du chargement
         }).catch(error => {
@@ -69,24 +70,55 @@ export class FinanceComponent implements OnInit {
 
   async initializeForm() {
     this.financeForm = this.fb.group({
-      country: ['', Validators.required],
-      city: ['', Validators.required],
-      admissionFile: ['', Validators.required],
-      passport: ['', Validators.required],
+      studentLastName: [this.financeData?.studentLastName || ''],
+      studentFirstName: [this.financeData?.studentFirstName || ''],
+      studentBirthDate: [this.formatDateInput(this.financeData?.studentBirthDate)],
+      birthPlace: [this.financeData?.birthPlace || ''],
+      studentEmail: [this.financeData?.studentEmail || ''],
+      studentPhone: [this.financeData?.studentPhone || ''],
+      studentAddress: [this.financeData?.studentAddress || ''],
+      studentCity: [this.financeData?.studentCity || ''],
+      passportNumber: [this.financeData?.passportNumber || ''],
+      studyField: [this.financeData?.studyField || ''],
+      academicYear: [this.financeData?.academicYear || ''],
+      country: [this.financeData?.country || '', Validators.required],
+      city: [this.financeData?.city || '', Validators.required],
+      universityName: [this.financeData?.universityName || this.financeData?.nomUniversite || ''],
+      other: [this.financeData?.other || ''],
       userId: [this.userUid, Validators.required],
-      dateDemande: [new Date()],
-      etatDemande: [0],
-      justificatifPaiement: [''],
-      garantFile: [''],
     });
   }
 
+  toggleMoreInfo(): void {
+    this.showMoreInfo = !this.showMoreInfo;
+  }
+
+  saveMoreInfo(): void {
+    if (!this.userUid || this.financeForm.invalid || this.isUpdatingInfo) {
+      this.financeForm.markAllAsTouched();
+      return;
+    }
+
+    this.isUpdatingInfo = true;
+    this.financeService.updateFinanceData(this.userUid, this.financeForm.value)
+      .then(() => {
+        this.financeData = { ...this.financeData, ...this.financeForm.value };
+        this.snackBar.open('Informations mises a jour', 'Fermer', { duration: 3000 });
+      })
+      .catch(() => this.snackBar.open('Erreur lors de la mise a jour', 'Fermer', { duration: 4000 }))
+      .finally(() => this.isUpdatingInfo = false);
+  }
+
+  private formatDateInput(value: any): string {
+    if (!value) {
+      return '';
+    }
+    const date = value?.toDate ? value.toDate() : new Date(value);
+    return Number.isNaN(date.getTime()) ? '' : date.toISOString().slice(0, 10);
+  }
+
   openFinanceNewComponent(): void {
-    this.dialog.open(FinanceNewComponent, {
-      width: '860px',
-      maxWidth: '95vw',
-      panelClass: 'mk-request-dialog'
-    });
+    this.router.navigate(['/admin/finance/nouveau']);
   }
 
 

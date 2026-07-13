@@ -41,16 +41,58 @@ $radius:  12px;
   box-shadow: 0 1px 4px rgba(0,0,0,.06);
   margin-bottom: 20px;
 }
-.fin-intro-lead { font-size: 15px; color: #374151; margin-bottom: 12px; }
-.fin-steps-list {
-  padding-left: 20px;
-  margin-bottom: 16px;
-  li { margin-bottom: 6px; color: #374151; }
+.fin-intro-lead { font-size: 15px; color: #374151; margin-bottom: 16px; }
+
+.fin-steps-numbered {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
 }
-.fin-warn { color: $pink !important; }
-.fin-tarif { color: #374151; margin-top: 16px; }
-.fin-price { color: $pink; font-size: 16px; }
-.fin-notice-warn { color: $gray; font-size: 13px; margin-top: 6px; }
+.fin-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: #374151;
+}
+.fin-step-num {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: $navy;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.fin-price-card {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.fin-price-tile {
+  flex: 1;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: $light;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 14px 10px;
+}
+.fin-price-flag { font-size: 22px; }
+.fin-price-label { font-size: 12px; color: $gray; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+.fin-price-value { font-size: 18px; color: $pink; font-weight: 700; }
+.fin-price-note { font-size: 12px; color: $gray; text-align: center; margin: 0 0 16px; }
+
 .fin-intro-action { text-align: center; margin-top: 24px; }
 
 /* ── Statut card ── */
@@ -194,6 +236,31 @@ $radius:  12px;
 }
 .fin-card-mt { margin-top: 20px; }
 .fin-card-mb { margin-bottom: 20px; }
+
+/* ── Tip / astuce card ── */
+.fin-tip-card {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: $radius;
+  overflow: hidden;
+}
+.fin-tip-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(30, 64, 175, 0.08);
+  border-bottom: 1px solid #bfdbfe;
+  padding: 12px 18px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #1e40af;
+  mat-icon { font-size: 18px; width: 18px; height: 18px; color: #2563eb; }
+}
+.fin-tip-body {
+  padding: 20px 18px;
+  text-align: center;
+  p { color: #1e3a5f; margin-bottom: 14px; }
+}
 .fin-card-header {
   background: $light;
   border-bottom: 1px solid $border;
@@ -311,6 +378,60 @@ $radius:  12px;
 .fin-info-note { font-size: 12px; color: $gray; margin-top: 4px; margin-bottom: 12px; }
 .fin-withdraw-wrap { text-align: center; margin-top: 12px; }
 
+.fin-more-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.fin-more-form {
+  background: $light;
+  border: 1px solid $border;
+  border-radius: 12px;
+  padding: 14px;
+  margin: 12px 0 16px;
+}
+
+.fin-more-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.fin-more-grid label,
+.fin-more-textarea {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: $gray;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.fin-more-grid input,
+.fin-more-textarea textarea {
+  width: 100%;
+  border: 1px solid $border;
+  border-radius: 8px;
+  background: #fff;
+  color: #0f172a;
+  padding: 8px 10px;
+  font: inherit;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+
+  &:focus {
+    border-color: $blue;
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, .12);
+  }
+}
+
+.fin-more-textarea {
+  margin-top: 10px;
+}
+
 /* ── Vidéo ── */
 .fin-video { display: block; border-radius: 8px; }
 .fin-no-video { color: $gray; font-size: 13px; text-align: center; }
@@ -355,6 +476,10 @@ $radius:  12px;
   .fin-info-table {
     th, td { padding: 7px 8px; font-size: 12px; }
     th { width: 38%; }
+  }
+
+  .fin-more-grid {
+    grid-template-columns: 1fr;
   }
 
   .fin-contact-footer { font-size: 12px; margin-top: 20px; }

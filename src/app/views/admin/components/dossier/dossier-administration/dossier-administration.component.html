@@ -1,0 +1,339 @@
+<div class="dossier-wrap">
+  <div class="dossier-header">
+    <div>
+      <h2 class="dossier-title">Dossier Visa</h2>
+      <p class="dossier-sub">Retrouvez rapidement les candidats en cours de traitement et centralisez leurs pieces visa.</p>
+    </div>
+    <button class="clear-btn" type="button" *ngIf="selectedUser" (click)="clearSelection()">
+      <mat-icon>close</mat-icon>
+      <span>Changer de candidat</span>
+    </button>
+  </div>
+
+  <form [formGroup]="dossierForm" class="search-zone">
+    <mat-form-field appearance="outline" class="candidate-search" floatLabel="always">
+      <mat-label>Candidat</mat-label>
+      <input
+        matInput
+        formControlName="userQuery"
+        [matAutocomplete]="candidateAutocomplete"
+        placeholder="Rechercher par nom, prenom, email ou telephone"
+        autocomplete="off"
+      >
+      <mat-autocomplete
+        #candidateAutocomplete="matAutocomplete"
+        [displayWith]="displayUser"
+        panelClass="dossier-autocomplete-panel"
+        (optionSelected)="selectUser($event.option.value)"
+      >
+        <mat-option *ngFor="let user of filteredUsers" [value]="user">
+          <div class="candidate-option">
+            <img [src]="user.identityPhotoUrl || 'assets/images/landing/lOGO_d/logo.png'" alt="" class="candidate-avatar">
+            <div class="candidate-info">
+              <span class="candidate-name">{{ user.firstName }} {{ user.lastName }}</span>
+              <span class="candidate-email">{{ user.email }}</span>
+            </div>
+          </div>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+
+  <section class="panel visa-queue-panel">
+    <div class="panel-head">
+      <h3>Candidats en cours de traitement</h3>
+      <span class="count-pill">{{ visaQueueRows.length }}</span>
+    </div>
+
+    <div class="visa-table-wrap" *ngIf="visaQueueRows.length; else noVisaQueue">
+      <table class="visa-table">
+        <thead>
+          <tr>
+            <th>Candidat</th>
+            <th>Service</th>
+            <th>Pays</th>
+            <th>Ville</th>
+            <th>Date RDV</th>
+            <th>Email</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of visaQueueRows" (click)="selectVisaQueueRow(row)">
+            <td>
+              <div class="queue-user">
+                <img [src]="row.user?.identityPhotoUrl || 'assets/images/landing/lOGO_d/logo.png'" alt="" class="queue-avatar">
+                <strong>{{ getVisaQueueName(row) }}</strong>
+              </div>
+            </td>
+            <td>
+              <div class="service-list">
+                <span class="service-chip" *ngIf="row.services.includes('Garant financier')">
+                  <mat-icon>work</mat-icon>
+                  Garant financier
+                </span>
+                <span class="service-chip" *ngIf="row.services.includes('Hebergement')">
+                  <mat-icon>weekend</mat-icon>
+                  Hebergement
+                </span>
+              </div>
+            </td>
+            <td>{{ row.financeRequest?.country || row.hebergementRequest?.country || 'Non renseigne' }}</td>
+            <td>{{ row.financeRequest?.city || row.hebergementRequest?.city || 'Non renseignee' }}</td>
+            <td>
+              <span class="deadline-chip" [class.deadline-missing]="!getVisaQueueDeadline(row)">
+                {{ getVisaQueueDeadline(row) ? (getVisaQueueDeadline(row) | date:'dd/MM/yyyy') : 'Non renseignee' }}
+              </span>
+            </td>
+            <td>{{ row.user?.email || 'Email indisponible' }}</td>
+            <td>
+              <button type="button" class="icon-action" (click)="selectVisaQueueRow(row); $event.stopPropagation()">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noVisaQueue>
+      <p class="soft-empty">Aucun candidat en cours de traitement pour le garant financier ou l'hebergement.</p>
+    </ng-template>
+  </section>
+
+  <div *ngIf="!selectedUser" class="empty-state">
+    <mat-icon>folder_open</mat-icon>
+    <p>Selectionnez un candidat pour ouvrir son dossier.</p>
+  </div>
+
+  <ng-container *ngIf="selectedUser">
+    <div class="dossier-grid">
+      <section class="panel identity-panel">
+        <div class="person-card">
+          <img [src]="selectedUser.identityPhotoUrl || 'assets/images/landing/lOGO_d/logo.png'" alt="" class="person-photo">
+          <div class="person-info">
+            <h3>{{ selectedUser.firstName }} {{ selectedUser.lastName }}</h3>
+            <span>{{ selectedUser.email }}</span>
+            <span>{{ selectedUser.phone || 'Telephone non renseigne' }}</span>
+          </div>
+        </div>
+
+        <div class="info-list">
+          <div>
+            <span>Niveau</span>
+            <strong>{{ selectedUser.degreeLevel || 'Non renseigne' }}</strong>
+          </div>
+          <div>
+            <span>Role</span>
+            <strong>{{ selectedUser.roles || 'Utilisateur' }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel notes-panel">
+        <div class="panel-head">
+          <h3>Suivi interne</h3>
+          <div class="panel-actions">
+            <button class="secondary-btn" type="button" (click)="openDocumentRequestDialog()">
+              <mat-icon>add</mat-icon>
+              <span>Demander un document</span>
+            </button>
+            <button class="save-btn" type="button" (click)="saveDossier()" [disabled]="isSaving">
+              <mat-icon>save</mat-icon>
+              <span>{{ isSaving ? 'Sauvegarde...' : 'Sauvegarder' }}</span>
+            </button>
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline" class="deadline-field" floatLabel="always">
+          <mat-label>Date butoir de demande de visa</mat-label>
+          <input matInput [matDatepicker]="deadlinePicker" formControlName="deadline">
+          <mat-datepicker-toggle matSuffix [for]="deadlinePicker"></mat-datepicker-toggle>
+          <mat-datepicker #deadlinePicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="notes-field" floatLabel="always">
+          <mat-label>Notes internes</mat-label>
+          <textarea matInput formControlName="notes" rows="7" placeholder="Ajouter une note sur le candidat, les pieces attendues, les relances..."></textarea>
+        </mat-form-field>
+      </section>
+    </div>
+
+    <section class="panel documents-panel">
+      <div class="panel-head">
+        <h3>Pieces jointes du profil</h3>
+      </div>
+      <div class="document-grid">
+        <div class="document-card" *ngFor="let document of profileDocuments">
+          <div class="document-icon"><mat-icon>{{ document.icon }}</mat-icon></div>
+          <div class="document-body">
+            <strong>{{ document.label }}</strong>
+            <span [class.missing]="!document.url">{{ document.url ? 'Disponible' : 'Manquant' }}</span>
+          </div>
+          <button type="button" class="icon-action" [disabled]="!document.url" (click)="viewDocument(document.url)">
+            <mat-icon>open_in_new</mat-icon>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel applications-panel">
+      <div class="panel-head">
+        <h3>Demandes effectuees par le candidat</h3>
+      </div>
+
+      <div class="application-stack" *ngIf="financeRequest || hebergementRequest; else noApplications">
+        <form class="application-card application-card-wide" *ngIf="financeRequest" [formGroup]="financeForm">
+          <div class="application-head">
+            <div class="application-title">
+              <mat-icon>{{ financeRequest.icon }}</mat-icon>
+              <strong>{{ financeRequest.title }}</strong>
+            </div>
+            <div class="application-actions">
+              <span class="status-pill status-submitted">{{ getApplicationStatusLabel(financeRequest.data.etatDemande) }}</span>
+              <button type="button" class="save-btn compact" (click)="saveFinanceRequest()" [disabled]="isSavingFinance">
+                <mat-icon>save</mat-icon>
+                <span>{{ isSavingFinance ? 'Sauvegarde...' : 'Sauvegarder' }}</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="editable-grid">
+            <label>Nom<input formControlName="studentLastName"></label>
+            <label>Prenoms<input formControlName="studentFirstName"></label>
+            <label>Date naissance<input formControlName="studentBirthDate" type="date"></label>
+            <label>Lieu naissance<input formControlName="birthPlace"></label>
+            <label>Email<input formControlName="studentEmail"></label>
+            <label>Telephone<input formControlName="studentPhone"></label>
+            <label>Adresse<input formControlName="studentAddress"></label>
+            <label>Ville habitation<input formControlName="studentCity"></label>
+            <label>N passeport<input formControlName="passportNumber"></label>
+            <label>Filiere<input formControlName="studyField"></label>
+            <label>Annee universitaire<input formControlName="academicYear"></label>
+            <label>Pays<input formControlName="country"></label>
+            <label>Ville etude<input formControlName="city"></label>
+            <label>Universite / ecole<input formControlName="universityName"></label>
+          </div>
+
+          <label class="editable-textarea">Autres informations<textarea formControlName="other" rows="3"></textarea></label>
+
+          <div class="application-documents">
+            <div class="mini-doc" *ngFor="let document of financeRequest.documents">
+              <span [class.missing]="!document.url">{{ document.label }}</span>
+              <div class="doc-actions">
+                <button type="button" class="icon-action" [disabled]="!document.url" (click)="viewDocument(document.url)">
+                  <mat-icon>open_in_new</mat-icon>
+                </button>
+                <button type="button" class="icon-action" (click)="financeDocInput.click()">
+                  <mat-icon>upload_file</mat-icon>
+                </button>
+                <input #financeDocInput type="file" hidden accept="image/*,application/pdf" (change)="replaceApplicationDocument($event, 'finance', document.field)">
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <form class="application-card application-card-wide" *ngIf="hebergementRequest" [formGroup]="hebergementForm">
+          <div class="application-head">
+            <div class="application-title">
+              <mat-icon>{{ hebergementRequest.icon }}</mat-icon>
+              <strong>{{ hebergementRequest.title }}</strong>
+            </div>
+            <div class="application-actions">
+              <span class="status-pill status-submitted">{{ getApplicationStatusLabel(hebergementRequest.data.etatDemande) }}</span>
+              <button type="button" class="save-btn compact" (click)="saveHebergementRequest()" [disabled]="isSavingHebergement">
+                <mat-icon>save</mat-icon>
+                <span>{{ isSavingHebergement ? 'Sauvegarde...' : 'Sauvegarder' }}</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="editable-grid">
+            <label>Nom<input formControlName="studentLastName"></label>
+            <label>Prenoms<input formControlName="studentFirstName"></label>
+            <label>Date naissance<input formControlName="studentBirthDate" type="date"></label>
+            <label>Lieu naissance<input formControlName="birthPlace"></label>
+            <label>Email<input formControlName="studentEmail"></label>
+            <label>Telephone<input formControlName="studentPhone"></label>
+            <label>Adresse<input formControlName="studentAddress"></label>
+            <label>Ville habitation<input formControlName="studentCity"></label>
+            <label>N passeport<input formControlName="passportNumber"></label>
+            <label>Filiere<input formControlName="studyField"></label>
+            <label>Annee universitaire<input formControlName="academicYear"></label>
+            <label>Pays<input formControlName="country"></label>
+            <label>Ville etude<input formControlName="city"></label>
+            <label>Universite / ecole<input formControlName="universityName"></label>
+          </div>
+
+          <div class="guarantor-detail" *ngIf="hebergementForm.get('hasFinancialGuarantor')?.value">
+            <h4>Garant financier declare</h4>
+            <div class="editable-grid">
+              <label>Nom garant<input formControlName="guarantorLastName"></label>
+              <label>Prenoms garant<input formControlName="guarantorFirstName"></label>
+              <label>Nationalite<input formControlName="guarantorNationality"></label>
+              <label>Passeport / CNI<input formControlName="guarantorIdentityNumber"></label>
+              <label>Date naissance<input formControlName="guarantorBirthDate" type="date"></label>
+              <label>Lieu naissance<input formControlName="guarantorBirthPlace"></label>
+              <label>Profession<input formControlName="guarantorProfession"></label>
+              <label>Entreprise<input formControlName="guarantorCompany"></label>
+              <label>Telephone<input formControlName="guarantorPhone"></label>
+              <label>Email<input formControlName="guarantorEmail"></label>
+              <label>Adresse residence<input formControlName="guarantorAddress"></label>
+              <label>Ville residence<input formControlName="guarantorCity"></label>
+              <label>Montant AVI<input formControlName="guarantorAviAmount"></label>
+            </div>
+          </div>
+
+          <label class="editable-textarea">Autres informations<textarea formControlName="other" rows="3"></textarea></label>
+
+          <div class="application-documents">
+            <div class="mini-doc" *ngFor="let document of hebergementRequest.documents">
+              <span [class.missing]="!document.url">{{ document.label }}</span>
+              <div class="doc-actions">
+                <button type="button" class="icon-action" [disabled]="!document.url" (click)="viewDocument(document.url)">
+                  <mat-icon>open_in_new</mat-icon>
+                </button>
+                <button type="button" class="icon-action" (click)="hebergementDocInput.click()">
+                  <mat-icon>upload_file</mat-icon>
+                </button>
+                <input #hebergementDocInput type="file" hidden accept="image/*,application/pdf" (change)="replaceApplicationDocument($event, 'hebergement', document.field)">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <ng-template #noApplications>
+        <p class="soft-empty">Aucune demande de maison ou de garant financier pour ce candidat.</p>
+      </ng-template>
+    </section>
+
+    <section class="panel documents-panel">
+      <div class="panel-head">
+        <h3>Documents demandes</h3>
+        <button class="secondary-btn compact" type="button" (click)="openDocumentRequestDialog()">
+          <mat-icon>add</mat-icon>
+          <span>Demander</span>
+        </button>
+        <span class="count-pill">{{ requestedDocuments.length }}</span>
+      </div>
+      <div class="request-list" *ngIf="requestedDocuments.length; else noRequestedDocuments">
+        <div class="request-row" *ngFor="let document of requestedDocuments">
+          <div class="request-main">
+            <strong>{{ document.label }}</strong>
+            <span>{{ document.fileName || 'Aucun fichier depose' }}</span>
+          </div>
+          <span class="status-pill" [ngClass]="getDocumentStatusClass(document.statut)">
+            {{ getDocumentStatusLabel(document.statut) }}
+          </span>
+          <button type="button" class="icon-action" [disabled]="!document.fileUrl" (click)="viewDocument(document.fileUrl)">
+            <mat-icon>open_in_new</mat-icon>
+          </button>
+        </div>
+      </div>
+      <ng-template #noRequestedDocuments>
+        <p class="soft-empty">Aucun document demande pour ce candidat.</p>
+      </ng-template>
+    </section>
+  </ng-container>
+</div>
