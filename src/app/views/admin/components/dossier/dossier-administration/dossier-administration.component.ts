@@ -181,20 +181,40 @@ export class DossierAdministrationComponent implements OnInit, OnDestroy {
     }
 
     this.isSaving = true;
-    const admin = await this.authService.getCurrentUser();
-    const { notes, deadline } = this.dossierForm.value;
+    try {
+      const admin = await this.authService.getCurrentUser();
+      const userId = this.selectedUser.uid;
+      const { notes, deadline } = this.dossierForm.value;
+      const dossierChanges: Partial<Dossier> = {
+        notes: notes || '',
+        deadline: deadline || null,
+        updatedBy: admin?.uid || ''
+      };
+      const savedDossier: Dossier = {
+        ...this.dossier,
+        id: userId,
+        userId,
+        ...dossierChanges
+      };
 
-    this.dossierService.saveDossier(this.selectedUser.uid, {
-      notes: notes || '',
-      deadline: deadline || null,
-      updatedBy: admin?.uid || ''
-    }).then(() => {
+      await this.dossierService.saveDossier(userId, dossierChanges);
+
+      this.dossier = savedDossier;
+      const dossierIndex = this.dossiers.findIndex(item => item.userId === userId || item.id === userId);
+      this.dossiers = dossierIndex === -1
+        ? [...this.dossiers, savedDossier]
+        : this.dossiers.map((item, index) => index === dossierIndex ? savedDossier : item);
+      this.visaQueueRows = this.visaQueueRows.map(row =>
+        row.userId === userId ? { ...row, dossier: savedDossier } : row
+      );
+
       this.snackBar.open('Dossier sauvegarde', 'Fermer', { duration: 3000 });
-    }).catch(() => {
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde du dossier:', error);
       this.snackBar.open('Erreur lors de la sauvegarde du dossier', 'Fermer', { duration: 4000 });
-    }).finally(() => {
+    } finally {
       this.isSaving = false;
-    });
+    }
   }
 
   viewDocument(url?: string): void {
@@ -316,7 +336,15 @@ export class DossierAdministrationComponent implements OnInit, OnDestroy {
   }
 
   getVisaQueueDeadline(row: VisaQueueRow): Date | null {
-    return this.toDate(row.dossier?.deadline);
+    if (this.selectedUser?.uid === row.userId) {
+      const selectedDeadline = this.dossierForm.get('deadline')?.value;
+      return this.toDate(selectedDeadline);
+    }
+
+    const latestDossier = this.dossiers.find(
+      dossier => dossier.userId === row.userId || dossier.id === row.userId
+    );
+    return this.toDate(latestDossier ? latestDossier.deadline : row.dossier?.deadline);
   }
 
   private filterUsers(query: string): void {
