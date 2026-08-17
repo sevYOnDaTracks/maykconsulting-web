@@ -1,3 +1,34 @@
-:host {
-  display: block;
+:host { display: block; }
+
+.hero { scroll-margin-top: 80px; padding: 80px 16px 0; background: #fff; color: #111; }
+.hero-grid { width: min(100%, 1216px); min-height: 680px; margin: auto; display: grid; }
+.hero-copy { display: flex; flex-direction: column; justify-content: center; padding: 88px 32px 72px; }
+.hero-kicker { display: flex; align-items: center; gap: 9px; margin: 0 0 24px; color: #151515; font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.hero-kicker span { width: 22px; height: 3px; background: #000; }
+h1 { max-width: 960px; margin: 0; color: #000; font-size: clamp(3.5rem, 6.5vw, 7rem); font-weight: 700; line-height: .94; letter-spacing: -.065em; }
+.hero-text { max-width: 610px; margin: 28px 0 0; color: #535353; font-size: 1.16rem; line-height: 1.65; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+.primary-action, .secondary-action { min-height: 56px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 0 22px; font-weight: 750; text-decoration: none; transition: transform .2s ease, background .2s ease; }
+.primary-action { background: #000; color: #fff; }
+.primary-action mat-icon { width: 20px; height: 20px; font-size: 20px; }
+.primary-action:hover { background: #282828; transform: translateY(-2px); }
+.secondary-action { border: 1px solid #a8a8a8; color: #111; }
+.secondary-action:hover { border-color: #000; background: #f4f4f4; }
+.hero-stats { display: flex; gap: 56px; max-width: 720px; margin-top: 48px; padding-top: 22px; border-top: 1px solid #cfcfcf; }
+.hero-stats div { display: grid; gap: 3px; }
+.hero-stats strong { color: #000; font-size: 1.65rem; line-height: 1; }
+.hero-stats span { color: #666; font-size: .8rem; }
+@media (max-width: 1000px) {
+  .hero-grid { min-height: auto; }
+  .hero-copy { padding: 72px 24px 56px; }
+}
+@media (max-width: 600px) {
+  .hero { padding-top: 70px !important; }
+  .hero-copy { padding: 54px 4px 44px; }
+  h1 { font-size: clamp(2.85rem, 13vw, 4rem); }
+  .hero-text { font-size: 1rem; }
+  .hero-actions a { width: 100%; }
+  .hero-stats { gap: 18px; justify-content: space-between; }
+  .hero-stats strong { font-size: 1.35rem; }
+  .hero-stats span { font-size: .7rem; }
 }

@@ -20,7 +20,7 @@
   padding: 7px 14px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #1e3c72;
+  color: #000;
   cursor: pointer;
   transition: background 0.15s;
   mat-icon { font-size: 18px; width: 18px; height: 18px; }
@@ -105,7 +105,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: #1e3c72;
+  background: #000;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -115,7 +115,7 @@
   cursor: pointer;
   transition: background 0.15s;
   mat-icon { font-size: 17px; width: 17px; height: 17px; }
-  &:hover:not(:disabled) { background: #0c2e68; }
+  &:hover:not(:disabled) { background: #292929; }
   &:disabled { opacity: 0.45; cursor: default; }
 }
 
@@ -150,8 +150,8 @@
   width: 34px;
   height: 34px;
   border-radius: 9px;
-  background: rgba(30, 60, 114, 0.08);
-  color: #1e3c72;
+  background: #f4f4f4;
+  color: #000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -286,7 +286,7 @@
   transition: background 0.15s;
   mat-icon { font-size: 14px; width: 14px; height: 14px; }
 }
-.btn-view { color: #1e3c72; &:hover { background: rgba(30, 60, 114, 0.08); } }
+.btn-view { color: #000; &:hover { background: #eeeeee; } }
 
 /* ── Empty state ── */
 .empty-state {
@@ -326,8 +326,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(30, 60, 114, 0.1);
-    color: #1e3c72;
+    background: #f4f4f4;
+    color: #000;
     font-size: 20px;
     flex-shrink: 0;
   }
@@ -382,7 +382,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #1e3c72;
+  background: #000;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -395,7 +395,7 @@
   mat-icon { font-size: 17px; width: 17px; height: 17px; }
   mat-spinner { --mdc-circular-progress-active-indicator-color: #fff; }
 
-  &:hover:not(:disabled) { background: #0c2e68; }
+  &:hover:not(:disabled) { background: #292929; }
   &:disabled { opacity: 0.5; cursor: default; }
 }
 

@@ -61,12 +61,6 @@ export class LoginComponent implements OnInit {
 
   togglePasswordVisibility() {
     this.passwordVisible = !this.passwordVisible;
-    const passwordField = document.getElementById('password') as HTMLInputElement;
-    if (this.passwordVisible) {
-      passwordField.type = 'text';
-    } else {
-      passwordField.type = 'password';
-    }
   }
 
   loginWithGoogle() {

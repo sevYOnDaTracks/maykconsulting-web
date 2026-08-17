@@ -14,10 +14,10 @@
   gap: 0.8rem;
   padding: 1.1rem 1.2rem;
   margin-bottom: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
+  border: 1px solid #c9c9c9;
+  border-radius: 0;
   background: #ffffff;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+  box-shadow: none;
 }
 
 .request-dialog__header h2 {
@@ -28,7 +28,7 @@
 
 .request-dialog__subtitle {
   margin: 0.2rem 0 0;
-  color: #64748b;
+  color: #666666;
 }
 
 .request-dialog__content {
@@ -41,19 +41,19 @@
   gap: 0.75rem;
   margin-top: 1rem;
   padding: 1rem 1.2rem !important;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
+  border: 1px solid #c9c9c9;
+  border-radius: 0;
   background: #ffffff;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+  box-shadow: none;
 }
 
 .request-help {
   margin: 0 0 1rem;
-  color: #475569;
+  color: #555555;
 }
 
 .request-help a {
-  color: #1e40af;
+  color: #000000;
   text-decoration: underline;
 }
 
@@ -100,10 +100,10 @@
 }
 
 .form-section {
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
+  border: 1px solid #c9c9c9;
+  border-radius: 0;
   background: #ffffff;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+  box-shadow: none;
   padding: 0.95rem;
   display: flex;
   flex-direction: column;
@@ -115,11 +115,11 @@
   flex-direction: column;
   gap: 0.15rem;
   padding-bottom: 0.25rem;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #dedede;
 }
 
 .form-section__eyebrow {
-  color: #1e40af;
+  color: #000000;
   font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -127,7 +127,7 @@
 
 .form-section__head h3 {
   margin: 0;
-  color: #0f172a;
+  color: #111111;
   font-size: 1rem;
   font-weight: 800;
 }
@@ -140,24 +140,24 @@
 
 .input-block label {
   font-weight: 600;
-  color: #334155;
+  color: #333333;
 }
 
 .request-control {
   width: 100%;
   min-height: 44px;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
+  border: 1px solid #aaaaaa;
+  border-radius: 0;
   padding: 0.58rem 0.72rem;
   background: #ffffff;
-  color: #0f172a;
+  color: #111111;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .request-control:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.14);
+  border-color: #000000;
+  box-shadow: 0 0 0 2px #dedede;
 }
 
 textarea.request-control {
@@ -166,8 +166,8 @@ textarea.request-control {
 }
 
 .file-field {
-  border: 1px solid #dbe3ef;
-  border-radius: 11px;
+  border: 1px solid #c9c9c9;
+  border-radius: 0;
   padding: 0.8rem;
   display: flex;
   flex-direction: column;
@@ -176,17 +176,17 @@ textarea.request-control {
 
 .file-field__label {
   font-weight: 600;
-  color: #1e293b;
+  color: #111111;
 }
 
 .file-field__hint {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  border: 1px dashed #cbd5e1;
-  border-radius: 9px;
-  background: #f8fafc;
-  color: #334155;
+  border: 1px dashed #aaaaaa;
+  border-radius: 0;
+  background: #f4f4f4;
+  color: #333333;
   padding: 0.55rem 0.65rem;
   font-size: 0.85rem;
 }
@@ -201,28 +201,29 @@ textarea.request-control {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  color: #0b5ed7 !important;
+  color: #ffffff !important;
   font-weight: 700;
-  background: rgba(11, 94, 215, 0.08);
-  border-radius: 8px;
-  padding: 0.1rem 0.45rem;
+  background: #000000;
+  border-radius: 0;
+  padding: 0.25rem 0.65rem;
 }
 
 .file-field__view-btn .mat-icon {
   font-size: 18px;
   width: 18px;
   height: 18px;
-  color: #0b5ed7;
+  color: #ffffff;
 }
 
 .file-field__name {
   font-size: 0.86rem;
-  color: #64748b;
+  color: #666666;
 }
 
 .file-field__restore {
   width: fit-content;
   padding-left: 0;
+  color: #000000 !important;
 }
 
 .file-field__error {
@@ -234,7 +235,7 @@ textarea.request-control {
 }
 
 .submit-btn {
-  background: #1e40af !important;
+  background: #000000 !important;
   color: #ffffff !important;
 }
 
@@ -245,7 +246,19 @@ textarea.request-control {
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  color: #334155;
+  color: #333333;
+}
+
+:host ::ng-deep .request-dialog button[mat-stroked-button] {
+  border-color: #000000 !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+}
+
+:host ::ng-deep .request-dialog .mat-mdc-checkbox.mat-mdc-checkbox-checked .mdc-checkbox__background,
+:host ::ng-deep .request-dialog .mat-mdc-checkbox.mat-mdc-checkbox-indeterminate .mdc-checkbox__background {
+  border-color: #000000 !important;
+  background: #000000 !important;
 }
 
 @media (max-width: 760px) {

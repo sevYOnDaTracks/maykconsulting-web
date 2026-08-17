@@ -1,99 +1,32 @@
-<section class="flex min-h-screen items-center px-4 py-6">
-  <div class="mx-auto w-full max-w-3xl">
-    <div class="glass-card p-6 sm:p-7">
-      <div class="mb-5 flex justify-center">
-        <a routerLink="/" class="inline-flex">
-          <img src="assets/images/landing/lOGO_d/logo.png" alt="Maykconsulting logo" class="h-14 w-14 rounded-xl border border-slate-300/70 bg-white/95 p-1.5 object-contain shadow-[0_10px_28px_rgba(0,0,0,0.28)]" />
-        </a>
-      </div>
+<main class="auth-page auth-page--register">
+  <aside class="auth-aside">
+    <a routerLink="/" class="auth-brand"><img src="assets/images/landing/lOGO_d/logo.png" alt="" /><span>Maykconsulting</span></a>
+    <div class="aside-copy"><p class="auth-kicker">Commencez aujourd'hui</p><h1>Votre avenir ne devrait pas attendre.</h1><p>Créez votre espace et avancez avec un conseiller dédié à chaque étape.</p></div>
+    <div class="aside-steps"><span>Admission</span><span>Visa</span><span>Logement</span><span>Garantie</span></div>
+  </aside>
 
-      <h1 class="text-center text-3xl font-semibold text-white">Inscription</h1>
-      <p class="mt-1 text-center text-sm text-white/95">Creez votre espace client en 1 minute.</p>
-
-      <button type="button" (click)="loginWithGoogle()" class="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-500/45 bg-slate-900/70 py-2.5 text-sm font-semibold text-slate-100 transition hover:bg-slate-800">
-        S'inscrire avec Google
-        <img src="assets/images/google.webp" alt="Google" class="h-6 w-6" />
-      </button>
-
-      <div class="relative my-5 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/50">
-        <span class="flex-1 border-t border-slate-500/35"></span>
-        <span>ou</span>
-        <span class="flex-1 border-t border-slate-500/35"></span>
-      </div>
-
-      <form [formGroup]="registerForm" (ngSubmit)="register()" class="mt-6">
-        <div class="grid gap-3 sm:grid-cols-2">
-          <label class="block">
-            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Nom</span>
-            <input type="text" class="input-dark" formControlName="lastName" id="lastName" placeholder="Nom" />
-          </label>
-
-          <label class="block">
-            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Prenom</span>
-            <input type="text" class="input-dark" formControlName="firstName" id="firstName" placeholder="Prenom" />
-          </label>
-
-          <label class="block">
-            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Telephone</span>
-            <input type="text" class="input-dark" formControlName="phone" id="phone" placeholder="Telephone" />
-          </label>
-
-          <label class="block">
-            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Date de naissance</span>
-            <input type="date" class="input-dark" formControlName="birthDate" id="birthDate" />
-          </label>
-
-          <label class="block sm:col-span-2">
-            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Niveau d'etude actuel</span>
-            <select class="input-dark" formControlName="degreeLevel" id="degreeLevel">
-              <option value="BAC+1">BAC +1</option>
-              <option value="BAC+2">BAC +2</option>
-              <option value="BAC+3">BAC +3</option>
-              <option value="BAC+4">BAC +4</option>
-              <option value="BAC+5">BAC +5</option>
-            </select>
-          </label>
-
-          <label class="block sm:col-span-2">
-            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Email</span>
-            <input type="email" class="input-dark" formControlName="email" id="email" placeholder="Adresse email" />
-          </label>
-
-          <label class="block">
-            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Mot de passe</span>
-            <div class="relative">
-              <input type="password" class="input-dark pr-20" formControlName="password" id="password" placeholder="Mot de passe" />
-              <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold uppercase tracking-wide text-cyan-300" (click)="togglePasswordVisibility()">Afficher</button>
-            </div>
-          </label>
-
-          <label class="block">
-            <span class="mb-1.5 block text-sm font-semibold text-slate-200">Confirmer</span>
-            <div class="relative">
-              <input type="password" class="input-dark pr-20" formControlName="confirmPassword" id="confirmPassword" placeholder="Confirmer le mot de passe" />
-              <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold uppercase tracking-wide text-cyan-300" (click)="togglePasswordVisibility()">Afficher</button>
-            </div>
-          </label>
+  <section class="auth-main">
+    <div class="auth-card auth-card--wide">
+      <a routerLink="/" class="mobile-auth-brand"><img src="assets/images/landing/lOGO_d/logo.png" alt="" />Maykconsulting</a>
+      <p class="auth-kicker">Créer mon espace</p><h2>Parlez-nous de vous</h2><p class="auth-intro">Ces informations nous permettront de mieux orienter votre projet.</p>
+      <button type="button" (click)="loginWithGoogle()" class="google-button"><img src="assets/images/google.webp" alt="" />S'inscrire avec Google</button>
+      <div class="auth-divider"><span>ou remplir le formulaire</span></div>
+      <form [formGroup]="registerForm" (ngSubmit)="register()" novalidate>
+        <div class="auth-form-grid">
+          <label><span>Nom</span><input type="text" formControlName="lastName" id="lastName" placeholder="Votre nom" autocomplete="family-name" /></label>
+          <label><span>Prénom</span><input type="text" formControlName="firstName" id="firstName" placeholder="Votre prénom" autocomplete="given-name" /></label>
+          <label><span>Téléphone</span><input type="tel" formControlName="phone" id="phone" placeholder="Votre numéro" autocomplete="tel" /></label>
+          <label><span>Date de naissance</span><input type="date" formControlName="birthDate" id="birthDate" autocomplete="bday" /></label>
+          <label class="grid-wide"><span>Niveau d'étude actuel</span><select formControlName="degreeLevel" id="degreeLevel"><option value="" disabled>Sélectionnez votre niveau</option><option value="BAC+1">BAC +1</option><option value="BAC+2">BAC +2</option><option value="BAC+3">BAC +3</option><option value="BAC+4">BAC +4</option><option value="BAC+5">BAC +5</option></select></label>
+          <label class="grid-wide"><span>Adresse email</span><input type="email" formControlName="email" id="email" placeholder="vous@email.com" autocomplete="email" /></label>
+          <label><span>Mot de passe</span><div class="password-input"><input [type]="passwordVisible ? 'text' : 'password'" formControlName="password" id="password" placeholder="6 caractères minimum" autocomplete="new-password" /><button type="button" (click)="togglePasswordVisibility()">{{ passwordVisible ? 'Masquer' : 'Afficher' }}</button></div></label>
+          <label><span>Confirmation</span><div class="password-input"><input [type]="passwordVisible ? 'text' : 'password'" formControlName="confirmPassword" id="confirmPassword" placeholder="Confirmez le mot de passe" autocomplete="new-password" /><button type="button" (click)="togglePasswordVisibility()">{{ passwordVisible ? 'Masquer' : 'Afficher' }}</button></div></label>
         </div>
-
-        <button class="mk-btn-primary mt-5 w-full" type="submit" [disabled]="loading">
-          <ng-container *ngIf="!loading; else loadingTemplate">Creer mon compte</ng-container>
-          <ng-template #loadingTemplate>
-            <div class="flex items-center justify-center">
-              <mat-spinner diameter="22"></mat-spinner>
-            </div>
-          </ng-template>
-        </button>
+        <p class="field-error" *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched">Les mots de passe ne correspondent pas.</p>
+        <button class="auth-submit" type="submit" [disabled]="loading"><span *ngIf="!loading">Créer mon compte <mat-icon>arrow_forward</mat-icon></span><mat-spinner *ngIf="loading" diameter="22"></mat-spinner></button>
       </form>
-
-      <p class="mt-4 text-center text-sm">
-        <a routerLink="/login" class="font-semibold text-cyan-300 hover:text-cyan-200">J'ai deja un compte</a>
-      </p>
-
-      <p class="mt-2 text-center text-sm">
-        <a routerLink="/" class="font-semibold text-white/95 hover:text-white">Retour a l'accueil</a>
-      </p>
+      <p class="auth-switch">Vous avez déjà un compte ? <a routerLink="/login">Se connecter</a></p>
+      <a routerLink="/" class="back-home">← Retour à l'accueil</a>
     </div>
-  </div>
-</section>
-
+  </section>
+</main>

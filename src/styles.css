@@ -444,9 +444,15 @@
   border-radius: 16px !important;
 }
 
-/* Admin light mode override: only navbar stays dark/blue */
+/* Admin monochrome visual system — shared with the landing. */
 .admin-theme {
-  color: #0f172a !important;
+  --admin-black: #000000;
+  --admin-ink: #111111;
+  --admin-muted: #666666;
+  --admin-line: #c9c9c9;
+  --admin-soft: #f2f2f2;
+  --admin-surface: #ffffff;
+  color: var(--admin-ink) !important;
 }
 
 .admin-theme .admin-main,
@@ -454,31 +460,31 @@
 .admin-theme .example-sidenav-container,
 .admin-theme .container,
 .admin-theme .container-fluid {
-  color: #0f172a !important;
-  background: #f4f6fb !important;
+  color: var(--admin-ink) !important;
+  background: var(--admin-soft) !important;
 }
 
 .admin-theme .text-dark,
 .admin-theme .text-body-secondary {
-  color: #0f172a !important;
+  color: var(--admin-ink) !important;
 }
 
 .admin-theme .card,
 .admin-theme mat-card {
-  background: #ffffff !important;
-  color: #0f172a !important;
-  border: 1px solid #dbe3ef !important;
-  border-radius: 14px !important;
-  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08) !important;
+  background: var(--admin-surface) !important;
+  color: var(--admin-ink) !important;
+  border: 1px solid var(--admin-line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   backdrop-filter: none !important;
 }
 
 .admin-theme .card-header,
 .admin-theme .card-footer,
 .admin-theme mat-card-header {
-  background: #f8fafc !important;
-  color: #0f172a !important;
-  border-color: #e2e8f0 !important;
+  background: #f4f4f4 !important;
+  color: var(--admin-ink) !important;
+  border-color: var(--admin-line) !important;
 }
 
 .admin-theme .table,
@@ -488,37 +494,40 @@
 .admin-theme .mat-cell,
 .admin-theme .mat-mdc-header-cell,
 .admin-theme .mat-mdc-cell {
-  color: #0f172a;
-  border-color: #e2e8f0 !important;
+  color: var(--admin-ink);
+  border-color: #d8d8d8 !important;
 }
 
 .admin-theme .table thead th {
-  color: #1e3a8a !important;
+  background: #f4f4f4 !important;
+  color: #000 !important;
 }
 
 .admin-theme a {
-  color: #1e3a8a;
+  color: #000;
 }
 
 .admin-theme a:hover {
-  color: #1d4ed8;
+  color: #333;
 }
 
 .admin-theme button[mat-stroked-button] {
-  border-color: #cbd5e1 !important;
-  color: #1e3a8a !important;
+  border-color: #000 !important;
+  border-radius: 0 !important;
+  color: #000 !important;
   background: #ffffff !important;
 }
 
 .admin-theme button[mat-flat-button]:not([disabled]),
 .admin-theme button[mat-raised-button]:not([disabled]) {
-  background: #1e40af !important;
+  border-radius: 0 !important;
+  background: #000 !important;
   color: #ffffff !important;
 }
 
 .admin-theme .alert {
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 12px !important;
+  border: 1px solid #d0d0d0 !important;
+  border-radius: 0 !important;
 }
 
 .admin-theme .alert-warning {
@@ -537,75 +546,78 @@
 }
 
 .admin-theme .progress {
-  background: #e2e8f0 !important;
+  background: #dedede !important;
 }
 
 .admin-theme .mat-tab-label,
 .admin-theme .mat-mdc-tab {
-  color: #334155 !important;
+  color: #555 !important;
 }
 
 .admin-theme .mat-tab-label.mat-tab-label-active,
 .admin-theme .mat-mdc-tab.mdc-tab--active {
-  color: #1e3a8a !important;
+  color: #000 !important;
 }
 
 .admin-theme .mat-ink-bar,
 .admin-theme .mdc-tab-indicator__content--underline {
-  border-color: #1e40af !important;
-  background-color: #1e40af !important;
+  border-color: #000 !important;
+  background-color: #000 !important;
 }
 
 .admin-theme .mat-form-field-appearance-fill .mat-form-field-flex {
   background: #ffffff !important;
-  border: 1px solid #cbd5e1 !important;
-  border-radius: 10px !important;
+  border: 1px solid #aaa !important;
+  border-radius: 0 !important;
 }
 
 .admin-theme .mat-form-field-appearance-outline .mat-form-field-outline-start,
 .admin-theme .mat-form-field-appearance-outline .mat-form-field-outline-gap,
 .admin-theme .mat-form-field-appearance-outline .mat-form-field-outline-end {
-  border-color: #cbd5e1 !important;
+  border-color: #aaa !important;
 }
 
 .admin-theme .mat-form-field-label {
-  color: #64748b !important;
+  color: #666 !important;
 }
 
 .admin-theme .mat-input-element,
 .admin-theme .mat-select-value,
 .admin-theme .mat-select-arrow,
 .admin-theme .mat-datepicker-toggle {
-  color: #0f172a !important;
+  color: #111 !important;
 }
 
 .admin-theme .mat-mdc-form-field .mat-mdc-text-field-wrapper {
   background: #ffffff !important;
-  border-radius: 10px !important;
+  border-radius: 0 !important;
 }
 
 .admin-theme .mat-mdc-form-field .mdc-notched-outline__leading,
 .admin-theme .mat-mdc-form-field .mdc-notched-outline__notch,
 .admin-theme .mat-mdc-form-field .mdc-notched-outline__trailing {
-  border-color: #cbd5e1 !important;
+  border-color: #aaa !important;
 }
 
 .admin-theme .mat-mdc-form-field .mdc-floating-label,
-.admin-theme .mat-mdc-form-field .mat-mdc-form-field-hint,
+.admin-theme .mat-mdc-form-field .mat-mdc-form-field-hint {
+  color: #666 !important;
+}
+
 .admin-theme .mat-mdc-form-field .mat-mdc-form-field-error {
-  color: #64748b !important;
+  color: #b91c1c !important;
 }
 
 .admin-theme .mat-mdc-form-field .mat-mdc-input-element,
 .admin-theme .mat-mdc-select-value-text,
 .admin-theme .mat-mdc-select-arrow {
-  color: #0f172a !important;
+  color: #111 !important;
 }
 
 .admin-theme .mat-paginator,
 .admin-theme .mat-mdc-paginator {
   background: #ffffff !important;
-  color: #334155 !important;
+  color: #333 !important;
 }
 
 .admin-theme .mat-table,
@@ -616,33 +628,35 @@
 .cdk-overlay-container .mat-mdc-menu-panel,
 .cdk-overlay-container .mat-menu-panel {
   background: #ffffff !important;
-  color: #0f172a !important;
-  border: 1px solid #dbe3ef !important;
+  color: #111 !important;
+  border: 1px solid #c9c9c9 !important;
 }
 
 .cdk-overlay-container .mat-mdc-menu-item,
 .cdk-overlay-container .mat-menu-item {
-  color: #0f172a !important;
+  color: #111 !important;
 }
 
 .cdk-overlay-container .mat-mdc-dialog-container .mdc-dialog__surface,
 .cdk-overlay-container .mat-dialog-container {
   background: #ffffff !important;
-  color: #0f172a !important;
-  border: 1px solid #dbe3ef !important;
+  color: #111 !important;
+  border: 1px solid #c9c9c9 !important;
+  border-radius: 0 !important;
 }
 
 .cdk-overlay-container .mat-mdc-select-panel,
 .cdk-overlay-container .mat-select-panel {
   background: #ffffff !important;
-  color: #0f172a !important;
-  border: 1px solid #dbe3ef !important;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18) !important;
+  color: #111 !important;
+  border: 1px solid #c9c9c9 !important;
+  border-radius: 0 !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18) !important;
 }
 
 .cdk-overlay-container .mat-mdc-option,
 .cdk-overlay-container .mat-option {
-  color: #0f172a !important;
+  color: #111 !important;
 }
 
 .cdk-overlay-container,
@@ -660,9 +674,9 @@
 
 .cdk-overlay-pane.mk-request-dialog .mat-mdc-dialog-surface,
 .cdk-overlay-pane.mk-request-dialog .mat-dialog-container {
-  border-radius: 16px !important;
-  border: 1px solid #dbe3ef !important;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25) !important;
+  border-radius: 0 !important;
+  border: 1px solid #c9c9c9 !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22) !important;
   overflow: hidden;
 }
 
@@ -679,33 +693,494 @@
 }
 
 .admin-theme .mk-nav-gradient-btn {
-  background: linear-gradient(110deg, #072150, #0a2a63 55%, #072047) !important;
+  background: #000 !important;
   color: #ffffff !important;
-  border-radius: 10px !important;
+  border-radius: 0 !important;
 }
 
 .admin-theme button.mk-nav-gradient-btn[mat-flat-button]:not([disabled]),
 .admin-theme button.mk-nav-gradient-btn[mat-raised-button]:not([disabled]),
 .admin-theme button.mk-nav-gradient-btn[mat-stroked-button]:not([disabled]) {
-  background: linear-gradient(110deg, #072150, #0a2a63 55%, #072047) !important;
+  background: #000 !important;
   color: #ffffff !important;
 }
 
 .admin-theme .mk-nav-solid-btn {
-  background: #072150 !important;
+  background: #000 !important;
   color: #ffffff !important;
-  border: 1px solid #0b2a63 !important;
-  border-radius: 10px !important;
+  border: 1px solid #000 !important;
+  border-radius: 0 !important;
 }
 
 .admin-theme button.mk-nav-solid-btn[mat-flat-button]:not([disabled]),
 .admin-theme button.mk-nav-solid-btn[mat-raised-button]:not([disabled]),
 .admin-theme button.mk-nav-solid-btn[mat-stroked-button]:not([disabled]) {
-  background: #072150 !important;
+  background: #000 !important;
   color: #ffffff !important;
-  border: 1px solid #0b2a63 !important;
+  border: 1px solid #000 !important;
 }
 
 .admin-theme .mk-nav-solid-btn:hover:not([disabled]) {
-  filter: brightness(1.08);
+  background: #292929 !important;
+}
+
+/* Normalisation des composants admin historiques. Les couleurs d'état
+   (succès, attente, erreur) restent volontairement intactes. */
+.admin-theme :is(
+  .adm-page-title-card,
+  .heb-page-title-card,
+  .fin-page-title-card,
+  .adm-intro-card,
+  .heb-intro-card,
+  .fin-intro-card,
+  .adm-form-card,
+  .adm-status-card,
+  .heb-status-card,
+  .fin-status-card,
+  .adm-card,
+  .heb-card,
+  .fin-card,
+  .hud-card,
+  .fud-card,
+  .ud-card,
+  .ug-card,
+  .doc-card,
+  .doc-add-card,
+  .form-card,
+  .cred-card,
+  .application-card,
+  .document-card,
+  .person-card,
+  .preview-card,
+  .kpi-card,
+  .chart-card,
+  .panel,
+  .applications-panel,
+  .documents-panel,
+  .identity-panel,
+  .notes-panel,
+  .archive-panel,
+  .visa-queue-panel
+) {
+  border: 1px solid #c9c9c9 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  color: #111 !important;
+  box-shadow: none !important;
+}
+
+.admin-theme :is(
+  .adm-title,
+  .heb-title,
+  .fin-title,
+  .adm-title-icon,
+  .heb-title-icon,
+  .fin-title-icon,
+  .ug-title,
+  .doc-title,
+  .dossier-title,
+  .dash-title,
+  .section-title,
+  .subsection-title,
+  .card-title,
+  .panel-title,
+  .chart-title,
+  .application-title
+) {
+  color: #000 !important;
+}
+
+.admin-theme :is(
+  .adm-form-card-header,
+  .adm-status-header,
+  .heb-status-header,
+  .fin-status-header,
+  .adm-card-header-dark,
+  .heb-card-header-dark,
+  .fin-card-header-dark
+) {
+  border-color: #000 !important;
+  border-radius: 0 !important;
+  background: #000 !important;
+  color: #fff !important;
+}
+
+.admin-theme :is(
+  .adm-card-header,
+  .heb-card-header,
+  .fin-card-header,
+  .hud-card-header,
+  .fud-card-header,
+  .card-header,
+  .cred-card-header,
+  .kb-col-header
+):not(.adm-card-header-dark):not(.heb-card-header-dark):not(.fin-card-header-dark) {
+  border-color: #c9c9c9 !important;
+  border-radius: 0 !important;
+  background: #f4f4f4 !important;
+  color: #111 !important;
+}
+
+.admin-theme :is(.adm-price-tile, .heb-price-tile, .fin-price-tile) {
+  border-color: #c9c9c9 !important;
+  border-radius: 0 !important;
+  background: #f4f4f4 !important;
+}
+
+.admin-theme :is(.adm-price-value, .heb-price-value, .fin-price-value) {
+  color: #000 !important;
+}
+
+.admin-theme :is(.adm-step-num, .heb-step-num, .fin-step-num) {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+.admin-theme :is(
+  .btn-primary-mk,
+  .doc-btn-primary,
+  .dlg-btn-save,
+  .btn-apply,
+  .btn-save,
+  .save-btn,
+  .submit-btn,
+  .hud-btn-save,
+  .fud-btn-save,
+  .btn-doc
+):not([disabled]) {
+  border-color: #000 !important;
+  border-radius: 0 !important;
+  background: #000 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+.admin-theme :is(
+  .btn-primary-mk,
+  .doc-btn-primary,
+  .dlg-btn-save,
+  .btn-apply,
+  .btn-save,
+  .save-btn,
+  .submit-btn,
+  .hud-btn-save,
+  .fud-btn-save,
+  .btn-doc
+):not([disabled]):hover {
+  border-color: #292929 !important;
+  background: #292929 !important;
+  color: #fff !important;
+}
+
+.admin-theme :is(
+  .btn-outline-mk,
+  .doc-btn-outline,
+  .dlg-btn-cancel,
+  .btn-reset,
+  .btn-back,
+  .secondary-btn,
+  .hud-btn-cancel,
+  .fud-btn-cancel
+) {
+  border-color: #000 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  color: #000 !important;
+  box-shadow: none !important;
+}
+
+.admin-theme :is(
+  .btn-outline-mk,
+  .doc-btn-outline,
+  .dlg-btn-cancel,
+  .btn-reset,
+  .btn-back,
+  .secondary-btn,
+  .hud-btn-cancel,
+  .fud-btn-cancel
+):hover {
+  background: #eee !important;
+  color: #000 !important;
+}
+
+.admin-theme :is(.btn-view, .btn-edit, .btn-icon-view, .btn-icon-edit, .act-edit, .act-msg) {
+  border-radius: 0 !important;
+  color: #000 !important;
+}
+
+.admin-theme :is(.btn-icon-view, .btn-icon-edit) {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+.admin-theme :is(
+  .adm-alert-info,
+  .heb-alert-info,
+  .heb-notice-info,
+  .fin-alert-info,
+  .doc-tip,
+  .adm-tip-card,
+  .heb-tip-card,
+  .fin-tip-card
+) {
+  border-color: #c9c9c9 !important;
+  border-radius: 0 !important;
+  background: #f4f4f4 !important;
+  color: #333 !important;
+}
+
+.admin-theme :is(
+  .adm-alert-info,
+  .heb-alert-info,
+  .heb-notice-info,
+  .fin-alert-info,
+  .doc-tip,
+  .adm-tip-card,
+  .heb-tip-card,
+  .fin-tip-card
+) mat-icon,
+.admin-theme .doc-tip a {
+  color: currentColor !important;
+}
+
+.admin-theme :is(
+  .adm-more-grid input,
+  .heb-more-grid input,
+  .fin-more-grid input,
+  .adm-more-textarea textarea,
+  .heb-more-textarea textarea,
+  .fin-more-textarea textarea,
+  .request-control,
+  .hud-input,
+  .fud-input,
+  .payment-field,
+  .doc-field
+) {
+  border-color: #aaa !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  color: #111 !important;
+  box-shadow: none !important;
+}
+
+.admin-theme :is(
+  .adm-more-grid input,
+  .heb-more-grid input,
+  .fin-more-grid input,
+  .adm-more-textarea textarea,
+  .heb-more-textarea textarea,
+  .fin-more-textarea textarea,
+  .request-control,
+  .hud-input,
+  .fud-input,
+  .payment-field,
+  .doc-field
+):focus {
+  border-color: #000 !important;
+  box-shadow: 0 0 0 2px #dedede !important;
+  outline: none !important;
+}
+
+.admin-theme :is(.ug-table, .kb-card, .cashout-item) {
+  border-color: #d8d8d8 !important;
+}
+
+.admin-theme :is(.btn-report, .btn-cf-sync):not([disabled]) {
+  border-color: #000 !important;
+  border-radius: 0 !important;
+  background: #000 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+.admin-theme :is(.btn-report, .btn-cf-sync):not([disabled]):hover {
+  background: #292929 !important;
+}
+
+.admin-theme .search-bar {
+  border-color: #aaa !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+.admin-theme .search-bar:focus-within {
+  border-color: #000 !important;
+  box-shadow: 0 0 0 2px #dedede !important;
+}
+
+.admin-theme .search-dropdown {
+  border-color: #000 !important;
+  border-radius: 0 !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14) !important;
+}
+
+.admin-theme .kb-col {
+  border-color: #c9c9c9 !important;
+  border-radius: 0 !important;
+  background: #f4f4f4 !important;
+}
+
+.admin-theme .kb-card {
+  border-radius: 0 !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+.admin-theme :is(.ug-table th, .table thead th) {
+  background: #f4f4f4 !important;
+  color: #000 !important;
+}
+
+.admin-theme :is(.ug-level-badge, .tab-chip, .hud-tab-chip, .fud-tab-chip) {
+  border: 1px solid #c9c9c9 !important;
+  border-radius: 999px !important;
+  background: #f4f4f4 !important;
+  color: #111 !important;
+}
+
+.admin-theme .mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: #000;
+}
+
+.cdk-overlay-container :is(
+  .mat-mdc-menu-item .mdc-list-item__primary-text,
+  .mat-mdc-menu-item mat-icon,
+  .mat-mdc-option .mdc-list-item__primary-text
+) {
+  color: #111 !important;
+}
+
+/* Derniers accents bleus des vues historiques : versions neutres. */
+.admin-theme a:not(.nav-link):not(.brand-link):not(.service-card) {
+  color: #000 !important;
+}
+
+.admin-theme :is(
+  .adm-msg-blue,
+  .heb-msg-blue,
+  .fin-msg-blue,
+  .status-progress,
+  .status-submitted,
+  .sp-progress,
+  .kpi-blue,
+  .kb-blue,
+  .stat-blue,
+  .badge-fin,
+  .count-pill
+) {
+  border-color: #c9c9c9 !important;
+  background: #eeeeee !important;
+  color: #111 !important;
+}
+
+.admin-theme :is(
+  .adm-dot-blue,
+  .heb-dot-blue,
+  .fin-dot-blue,
+  .adm-fill-blue,
+  .heb-fill-blue,
+  .fin-fill-blue
+) {
+  border-color: #333 !important;
+  background: #333 !important;
+  color: #333 !important;
+}
+
+.admin-theme :is(
+  .section-title,
+  .application-title,
+  .comment-box,
+  .cursus-year-header,
+  .document-icon,
+  .icon-action,
+  .cred-url-link,
+  .cred-url-standalone
+),
+.admin-theme :is(.section-title, .application-title, .comment-box) mat-icon {
+  border-color: #c9c9c9 !important;
+  color: #000 !important;
+}
+
+.admin-theme .comment-box,
+.admin-theme .cursus-year-header,
+.admin-theme .document-icon {
+  background: #f4f4f4 !important;
+}
+
+.admin-theme :is(.cred-btn-open, .cred-btn-save, .btn-cf-sync):not([disabled]) {
+  border-color: #000 !important;
+  border-radius: 0 !important;
+  background: #000 !important;
+  color: #fff !important;
+}
+
+body .admin-theme :is(.act-msg, .btn-view) {
+  color: #000 !important;
+}
+
+body .admin-theme :is(.act-msg, .btn-view):hover {
+  background: #eeeeee !important;
+}
+
+.admin-theme :is(.editable-grid input, .editable-textarea textarea, .cred-input):focus {
+  border-color: #000 !important;
+  box-shadow: 0 0 0 2px #dedede !important;
+}
+
+/* Palette primaire Material en noir, y compris dans les dialogs portallés. */
+.admin-theme .mat-primary,
+.cdk-overlay-container .mat-primary {
+  color: #000 !important;
+}
+
+.admin-theme :is(.mat-mdc-raised-button.mat-primary, .mat-mdc-unelevated-button.mat-primary),
+.cdk-overlay-container :is(.mat-mdc-raised-button.mat-primary, .mat-mdc-unelevated-button.mat-primary),
+.admin-theme :is(.mat-raised-button.mat-primary, .mat-flat-button.mat-primary),
+.cdk-overlay-container :is(.mat-raised-button.mat-primary, .mat-flat-button.mat-primary) {
+  --mdc-protected-button-container-color: #000;
+  --mdc-protected-button-label-text-color: #fff;
+  --mdc-filled-button-container-color: #000;
+  --mdc-filled-button-label-text-color: #fff;
+  background: #000 !important;
+  color: #fff !important;
+}
+
+.admin-theme :is(.mat-mdc-button.mat-primary, .mat-mdc-outlined-button.mat-primary, .mat-mdc-icon-button.mat-primary),
+.cdk-overlay-container :is(.mat-mdc-button.mat-primary, .mat-mdc-outlined-button.mat-primary, .mat-mdc-icon-button.mat-primary) {
+  --mdc-text-button-label-text-color: #000;
+  --mdc-outlined-button-label-text-color: #000;
+  --mdc-outlined-button-outline-color: #000;
+  --mdc-icon-button-icon-color: #000;
+  color: #000 !important;
+}
+
+.admin-theme :is(.mat-step-icon-selected, .mat-step-icon-state-edit, .mat-step-icon-state-done) {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+.admin-theme .mat-mdc-radio-button {
+  --mdc-radio-selected-focus-icon-color: #000;
+  --mdc-radio-selected-hover-icon-color: #000;
+  --mdc-radio-selected-icon-color: #000;
+  --mdc-radio-selected-pressed-icon-color: #000;
+}
+
+.admin-theme .mat-mdc-checkbox {
+  --mdc-checkbox-selected-focus-icon-color: #000;
+  --mdc-checkbox-selected-hover-icon-color: #000;
+  --mdc-checkbox-selected-icon-color: #000;
+  --mdc-checkbox-selected-pressed-icon-color: #000;
+}
+
+.admin-theme .mat-mdc-progress-spinner.mat-primary,
+.cdk-overlay-container .mat-mdc-progress-spinner.mat-primary {
+  --mdc-circular-progress-active-indicator-color: #000;
+}
+
+.cdk-overlay-container :is(.mat-calendar-body-selected, .mat-pseudo-checkbox-checked, .mat-mdc-option-pseudo-checkbox.mat-pseudo-checkbox-checked) {
+  border-color: #000 !important;
+  background: #000 !important;
+  color: #fff !important;
 }

@@ -65,7 +65,7 @@ export class AuthenticationService {
       }
     }).catch(error => {
       console.error('Google login failed', error);
-      // Gérer l'erreur de connexion
+      return Promise.reject(error);
     });
   }
 

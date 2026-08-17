@@ -1,53 +1,33 @@
-<header class="fixed inset-x-0 top-0 z-50 px-4 pt-4 transition-all duration-200" [class.pt-2]="isFixed">
-  <div class="mk-header-shell mx-auto max-w-7xl rounded-2xl bg-slate-900/80 shadow-2xl backdrop-blur-xl">
-    <div class="flex items-center justify-between px-4 py-3 lg:px-5">
-      <a routerLink="/" (click)="hidemenu()" class="flex items-center gap-3">
-        <img
-          src="assets/images/landing/lOGO_d/logo.png"
-          alt="Maykconsulting logo"
-          class="h-11 w-11 rounded-xl border border-slate-300/70 bg-white/95 p-1 object-contain shadow-[0_8px_20px_rgba(0,0,0,0.24)]"
-        />
-        <span class="font-display text-2xl font-semibold text-white tracking-tight">Maykconsulting</span>
-      </a>
+<header class="site-header" [class.site-header--scrolled]="isFixed">
+  <div class="header-inner">
+    <a routerLink="/" (click)="hidemenu()" class="header-brand" aria-label="Maykconsulting, accueil">
+      <img src="assets/images/landing/lOGO_d/logo.png" alt="" />
+      <span>Maykconsulting</span>
+    </a>
 
-      <button
-        type="button"
-        (click)="isCollapsed = !isCollapsed"
-        [attr.aria-expanded]="!isCollapsed"
-        aria-controls="mk-nav-links"
-        aria-label="Ouvrir le menu"
-        class="mk-header-menu-btn inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900/80 text-slate-100 lg:hidden"
-      >
-        <mat-icon>menu</mat-icon>
-      </button>
+    <nav class="desktop-nav" aria-label="Navigation principale">
+      <a href="#" scrollTo="intro-wrap">Accueil</a>
+      <a href="#" scrollTo="features-wrap">Services</a>
+      <a href="#" scrollTo="pricing-wrap">Tarifs</a>
+      <a href="#" scrollTo="contacts-wrap">Contact</a>
+    </nav>
 
-      <nav
-        id="mk-nav-links"
-        [ngbCollapse]="isCollapsed"
-        class="hidden items-center gap-1 lg:flex"
-      >
-        <a href="#" scrollTo="intro-wrap" (click)="hidemenu()" class="rounded-lg px-3 py-2 text-base font-semibold text-white transition hover:bg-slate-800">Accueil</a>
-        <a href="#" scrollTo="features-wrap" (click)="hidemenu()" class="rounded-lg px-3 py-2 text-base font-semibold text-white transition hover:bg-slate-800">Services</a>
-        <a href="#" scrollTo="pricing-wrap" (click)="hidemenu()" class="rounded-lg px-3 py-2 text-base font-semibold text-white transition hover:bg-slate-800">Tarifs</a>
-        <a href="#" scrollTo="contacts-wrap" (click)="hidemenu()" class="rounded-lg px-3 py-2 text-base font-semibold text-white transition hover:bg-slate-800">Contact</a>
-        <a routerLink="/login" (click)="hidemenu()" class="mk-btn-primary ml-2 !px-4 !py-2">
-          Espace client
-          <mat-icon class="!h-4 !w-4 !text-base">arrow_forward</mat-icon>
-        </a>
-      </nav>
+    <div class="desktop-actions">
+      <a routerLink="/login" class="login-link">Se connecter</a>
+      <a routerLink="/register" class="header-cta">Commencer</a>
     </div>
 
-    <nav
-      id="mk-nav-links-mobile"
-      [ngbCollapse]="isCollapsed"
-      class="mk-header-mobile-nav grid gap-2 px-4 pb-4 pt-3 lg:hidden"
-    >
-      <a href="#" scrollTo="intro-wrap" (click)="hidemenu()" class="rounded-lg px-3 py-2 text-base font-semibold text-white transition hover:bg-slate-800">Accueil</a>
-      <a href="#" scrollTo="features-wrap" (click)="hidemenu()" class="rounded-lg px-3 py-2 text-base font-semibold text-white transition hover:bg-slate-800">Services</a>
-      <a href="#" scrollTo="pricing-wrap" (click)="hidemenu()" class="rounded-lg px-3 py-2 text-base font-semibold text-white transition hover:bg-slate-800">Tarifs</a>
-      <a href="#" scrollTo="contacts-wrap" (click)="hidemenu()" class="rounded-lg px-3 py-2 text-base font-semibold text-white transition hover:bg-slate-800">Contact</a>
-      <a routerLink="/login" (click)="hidemenu()" class="mk-btn-primary mt-1 !px-4 !py-2">Espace client</a>
-    </nav>
+    <button type="button" class="menu-button" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="mobile-navigation" aria-label="Ouvrir le menu">
+      <mat-icon>{{ isCollapsed ? 'menu' : 'close' }}</mat-icon>
+    </button>
   </div>
-</header>
 
+  <nav id="mobile-navigation" class="mobile-nav" [ngbCollapse]="isCollapsed" aria-label="Navigation mobile">
+    <a href="#" scrollTo="intro-wrap" (click)="hidemenu()">Accueil</a>
+    <a href="#" scrollTo="features-wrap" (click)="hidemenu()">Services</a>
+    <a href="#" scrollTo="pricing-wrap" (click)="hidemenu()">Tarifs</a>
+    <a href="#" scrollTo="contacts-wrap" (click)="hidemenu()">Contact</a>
+    <a routerLink="/login" (click)="hidemenu()">Se connecter</a>
+    <a routerLink="/register" (click)="hidemenu()" class="mobile-cta">Commencer mon projet</a>
+  </nav>
+</header>

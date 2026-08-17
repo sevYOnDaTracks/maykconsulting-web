@@ -117,8 +117,8 @@
   border-radius: 999px;
   font-size: 0.72rem;
   font-weight: 700;
-  background: rgba(30, 60, 114, 0.08);
-  color: #1e3c72;
+  background: #f4f4f4;
+  color: #000;
 }
 
 /* ── Rôles ── */
@@ -173,7 +173,7 @@
 
   &:hover {
     background: #f1f5f9;
-    color: #1e3c72;
+    color: #000;
   }
 
   &.ug-btn-danger:hover {
@@ -203,8 +203,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(30, 60, 114, 0.1);
-    color: #1e3c72;
+    background: #f4f4f4;
+    color: #000;
     font-size: 20px;
     flex-shrink: 0;
   }
@@ -272,7 +272,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #1e3c72;
+  background: #000;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -285,7 +285,7 @@
   mat-icon { font-size: 17px; width: 17px; height: 17px; }
   mat-spinner { --mdc-circular-progress-active-indicator-color: #fff; }
 
-  &:hover:not(:disabled) { background: #0c2e68; }
+  &:hover:not(:disabled) { background: #292929; }
   &:disabled { opacity: 0.5; cursor: default; }
 }
 

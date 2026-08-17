@@ -27,7 +27,7 @@ mat-dialog-actions {
 }
 
 :host ::ng-deep .doc-field .mat-mdc-text-field-wrapper {
-  border-radius: 8px;
+  border-radius: 0;
 }
 
 :host ::ng-deep .doc-field .mdc-notched-outline__notch {
@@ -42,7 +42,7 @@ mat-dialog-actions {
 :host ::ng-deep .doc-field .mdc-notched-outline__leading,
 :host ::ng-deep .doc-field .mdc-notched-outline__notch,
 :host ::ng-deep .doc-field .mdc-notched-outline__trailing {
-  border-color: rgba(30, 60, 114, 0.35) !important;
+  border-color: #aaaaaa !important;
 }
 
 :host ::ng-deep .doc-field.mdc-text-field--focused .mdc-notched-outline__leading,
@@ -51,6 +51,6 @@ mat-dialog-actions {
 :host ::ng-deep .doc-field.mat-focused .mdc-notched-outline__leading,
 :host ::ng-deep .doc-field.mat-focused .mdc-notched-outline__notch,
 :host ::ng-deep .doc-field.mat-focused .mdc-notched-outline__trailing {
-  border-color: #1e3c72 !important;
+  border-color: #000000 !important;
   border-width: 2px !important;
 }

@@ -2,241 +2,285 @@
   display: block;
 }
 
-/* ── Shell ── */
+/* Shell admin — même langage noir/blanc que la landing. */
 .admin-shell {
   position: relative;
   min-height: 100vh;
-  padding-top: 92px;
+  padding-top: 80px;
   overflow-x: hidden;
-  background: #f4f6fb;
+  background: #f2f2f2;
+  color: #0a0a0a;
 }
 
-.bg-orb { display: none; }
+.bg-orb {
+  display: none;
+}
 
-/* ── Toolbar ── */
 .fixed-toolbar {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  inset: 0 0 auto;
   z-index: 1200;
-  background: transparent;
-  padding: 0.85rem 1rem 0;
-  height: auto;
+  box-sizing: border-box;
+  height: 80px;
+  padding: 0;
+  border-bottom: 1px solid #292929;
+  background: #000;
+  color: #fff;
 }
 
 .admin-nav-shell {
-  width: 100%;
-  max-width: 1380px;
+  width: min(100% - 32px, 1280px);
+  min-height: 80px;
   margin: 0 auto;
-  min-height: 68px;
   display: flex;
   align-items: center;
-  padding: 0.5rem 0.9rem;
-  border-radius: 1.1rem;
-  border: 1px solid rgba(148, 163, 184, 0.36);
-  background: linear-gradient(110deg, #072150, #0a2a63 55%, #072047);
-  box-shadow: 0 18px 45px rgba(4, 11, 17, 0.28);
-  backdrop-filter: blur(10px);
+  gap: 18px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: #000;
+  box-shadow: none;
 }
 
-/* ── Brand : flex:1 pour pousser la nav au centre ── */
 .brand-link {
   display: inline-flex;
   align-items: center;
-  text-decoration: none;
   flex: 1;
   min-width: 0;
+  color: #fff;
+  text-decoration: none;
 }
 
 .brand-full-logo {
-  width: 185px;
+  width: 180px;
   max-width: 100%;
   height: auto;
   object-fit: contain;
 }
 
-/* ── Desktop nav : centrée naturellement ── */
 .desktop-nav {
   display: flex;
   align-items: center;
-  gap: 0.2rem;
+  gap: 4px;
   flex-shrink: 0;
 }
 
 .nav-link {
+  min-height: 42px;
   display: inline-flex;
   align-items: center;
-  gap: 0.2rem;
-  height: 40px;
-  border-radius: 10px;
+  justify-content: center;
+  gap: 3px;
+  padding: 0 13px;
   border: 1px solid transparent;
-  padding: 0 0.9rem;
-  color: #e8f3f9;
+  border-radius: 0;
+  background: transparent;
+  color: #d6d6d6;
   font-family: "Space Grotesk", sans-serif;
-  font-size: 0.93rem;
-  font-weight: 600;
+  font-size: 0.92rem;
+  font-weight: 650;
+  line-height: 1;
   text-decoration: none;
   white-space: nowrap;
-  background: transparent;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
 }
 
 .nav-link:hover {
-  background: rgba(15, 42, 58, 0.72);
-  color: #ffffff;
+  border-color: #3a3a3a;
+  background: #202020;
+  color: #fff;
 }
 
 .nav-link mat-icon {
-  width: 20px; height: 20px; font-size: 20px;
+  width: 19px;
+  height: 19px;
+  font-size: 19px;
 }
 
-.active-nav-link {
-  background: rgba(20, 84, 116, 0.65);
-  color: #9cf0e5;
+.active-nav-link,
+.active-nav-link:hover {
+  border-color: #fff;
+  background: #fff;
+  color: #000;
 }
 
 .nav-menu-link {
-  border: 1px solid rgba(100, 116, 139, 0.35);
-  color: #f8fdff !important;
-  background: rgba(6, 18, 33, 0.22) !important;
+  border-color: #3a3a3a !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #fff !important;
 }
 
-.nav-menu-link mat-icon { color: #f8fdff !important; }
-
+.nav-menu-link mat-icon,
 :host ::ng-deep .nav-menu-link .mdc-button__label {
-  color: #f8fdff !important;
+  color: #fff !important;
 }
 
-/* ── Actions : flex:1 pour équilibrer à droite ── */
 .actions {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.4rem;
+  flex: 1;
   flex-shrink: 0;
+  gap: 2px;
 }
 
 .icon-btn {
-  border: none;
-  border-radius: 0.7rem;
-  color: #e6f2fa;
+  border: 0;
+  border-radius: 0;
   background: transparent;
+  color: #fff;
   box-shadow: none;
 }
 
+.icon-btn:hover {
+  background: #202020;
+}
+
 .profile-photo-btn {
-  width: 44px; height: 44px; padding: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
 }
 
 .user-photo {
-  width: 34px; height: 34px;
-  border-radius: 999px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #fff;
+  border-radius: 50%;
   object-fit: cover;
-  border: 1px solid rgba(148, 163, 184, 0.42);
 }
 
-/* ── Sidenav ── */
 .example-sidenav-container {
   position: relative;
   z-index: 1;
-  min-height: calc(100vh - 92px);
-  background: #f4f6fb;
+  min-height: calc(100vh - 80px);
+  background: #f2f2f2;
 }
 
 .custom-sidenav {
   width: min(340px, 92vw);
-  border-right: 1px solid rgba(148, 163, 184, 0.32);
-  background: #ffffff;
-  color: #0f172a;
   padding: 0.85rem 0.45rem;
+  border-right: 1px solid #c9c9c9;
+  background: #fff;
+  color: #111;
 }
 
 .mobile-nav-title {
   margin: 0.2rem 0.5rem 0.6rem;
-  color: #475569;
+  color: #666;
   font-family: "Space Grotesk", sans-serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.15em;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .active-link {
-  background: rgba(59, 130, 246, 0.14);
-  border-radius: 10px;
+  border-radius: 0;
+  background: #000;
+  color: #fff;
 }
 
 .admin-toggle {
-  border-top: 1px solid rgba(148, 163, 184, 0.28);
   margin-top: 0.55rem;
   padding-top: 0.3rem;
+  border-top: 1px solid #d8d8d8;
 }
 
-.admin-sub-links { padding-left: 0.65rem; }
+.admin-sub-links {
+  padding-left: 0.65rem;
+}
 
-.admin-content { background: #f4f6fb; }
+.admin-content {
+  background: #f2f2f2;
+}
 
 .admin-main {
   width: 100%;
-  max-width: 1380px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0.8rem 1rem 2.2rem;
-  color: #0f172a;
+  padding: 24px 16px 48px;
+  color: #111;
 }
 
 :host ::ng-deep .custom-sidenav .mat-list-item,
 :host ::ng-deep .custom-sidenav a[mat-list-item],
 :host ::ng-deep .custom-sidenav .mat-icon {
-  color: #0f172a !important;
+  color: #111 !important;
 }
 
 .empty-notification {
   display: block;
-  padding: 0.55rem 0.95rem;
-  color: #94b2c2;
-  font-size: 0.92rem;
+  padding: 0.7rem 1rem;
+  color: #666;
+  font-size: 0.9rem;
 }
 
-/* ══════════════════════════════
-   RESPONSIVE BREAKPOINTS
-   ══════════════════════════════ */
-
-/* < 900px : nav desktop cachée, logo + actions seulement */
 @media (max-width: 899px) {
   .desktop-nav {
     display: none;
   }
+
   .brand-full-logo {
-    width: 150px;
+    width: 148px;
   }
 }
 
-/* 900px – 1200px : nav compacte */
 @media (min-width: 900px) and (max-width: 1200px) {
-  .brand-full-logo { width: 148px; }
-  .nav-link {
-    font-size: 0.875rem;
-    padding: 0 0.65rem;
-    height: 40px;
-  }
-  .desktop-nav { gap: 0.15rem; }
-}
-
-/* ≥ 1201px : taille pleine */
-@media (min-width: 1201px) {
-  .brand-full-logo { width: 185px; }
-  .nav-link { font-size: 1rem; padding: 0 1rem; height: 44px; }
-}
-
-/* ≤ 600px : mobile serré */
-@media (max-width: 600px) {
-  .fixed-toolbar { padding: 0.65rem 0.6rem 0; }
   .admin-nav-shell {
-    min-height: 62px;
-    padding: 0.42rem 0.6rem;
+    gap: 8px;
   }
-  .brand-full-logo { width: 118px; }
-  .actions { gap: 0.22rem; }
-  .icon-btn, .profile-photo-btn { width: 38px; height: 38px; }
-  .user-photo { width: 28px; height: 28px; }
-  .admin-shell { padding-top: 80px; }
+
+  .brand-full-logo {
+    width: 142px;
+  }
+
+  .nav-link {
+    min-height: 40px;
+    padding: 0 9px;
+    font-size: 0.84rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-shell {
+    padding-top: 70px;
+  }
+
+  .fixed-toolbar {
+    height: 70px;
+  }
+
+  .admin-nav-shell {
+    width: calc(100% - 24px);
+    min-height: 70px;
+    gap: 4px;
+  }
+
+  .brand-full-logo {
+    width: 112px;
+  }
+
+  .actions {
+    gap: 0;
+  }
+
+  .icon-btn,
+  .profile-photo-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .user-photo {
+    width: 28px;
+    height: 28px;
+  }
+
+  .example-sidenav-container {
+    min-height: calc(100vh - 70px);
+  }
+
+  .admin-main {
+    padding: 12px 10px 32px;
+  }
 }

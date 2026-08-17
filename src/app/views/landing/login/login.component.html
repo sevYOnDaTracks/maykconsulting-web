@@ -1,62 +1,26 @@
-<section class="flex min-h-screen items-center px-4 py-6">
-  <div class="mx-auto w-full max-w-md">
-    <div class="glass-card p-6 sm:p-7">
-      <div class="mb-5 flex justify-center">
-        <a routerLink="/" class="inline-flex">
-          <img src="assets/images/landing/lOGO_d/logo.png" alt="Maykconsulting logo" class="h-14 w-14 rounded-xl border border-slate-300/70 bg-white/95 p-1.5 object-contain shadow-[0_10px_28px_rgba(0,0,0,0.28)]" />
-        </a>
-      </div>
+<main class="auth-page">
+  <aside class="auth-aside">
+    <a routerLink="/" class="auth-brand"><img src="assets/images/landing/lOGO_d/logo.png" alt="" /><span>Maykconsulting</span></a>
+    <div class="aside-copy"><p class="auth-kicker">Votre espace personnel</p><h1>Tout votre projet.<br />Au même endroit.</h1><p>Suivez vos démarches, retrouvez vos documents et échangez avec votre conseiller.</p></div>
+    <div class="aside-steps"><span>Admission</span><span>Visa</span><span>Logement</span><span>Garantie</span></div>
+  </aside>
 
-      <h1 class="text-center text-3xl font-semibold text-white">Connexion</h1>
-      <p class="mt-1 text-center text-sm text-white/95">Accedez a votre espace client.</p>
-
-      <button type="button" (click)="loginWithGoogle()" class="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-500/45 bg-slate-900/70 py-2.5 text-sm font-semibold text-slate-100 transition hover:bg-slate-800">
-        Continuer avec Google
-        <img src="assets/images/google.webp" alt="Google" class="h-6 w-6" />
-      </button>
-
-      <div class="relative my-5 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.16em] text-white/50">
-        <span class="flex-1 border-t border-slate-500/35"></span>
-        <span>ou</span>
-        <span class="flex-1 border-t border-slate-500/35"></span>
-      </div>
-
-      <form [formGroup]="loginForm" (ngSubmit)="loginWithEmail()" class="space-y-4">
-        <label class="block">
-          <span class="mb-1.5 block text-sm font-semibold text-slate-200">Email</span>
-          <input type="email" class="input-dark" formControlName="email" id="email" placeholder="vous@email.com" />
-        </label>
-
-        <label class="block">
-          <span class="mb-1.5 block text-sm font-semibold text-slate-200">Mot de passe</span>
-          <div class="relative">
-            <input type="password" class="input-dark pr-20" formControlName="password" id="password" placeholder="Votre mot de passe" />
-            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold uppercase tracking-wide text-slate-900 hover:text-slate-700" (click)="togglePasswordVisibility()">Afficher</button>
-          </div>
-        </label>
-
-        <div class="text-right">
-          <a routerLink="/password-forget" class="text-sm font-semibold text-cyan-300 hover:text-cyan-200">Mot de passe oublie ?</a>
-        </div>
-
-        <button class="mk-btn-primary w-full" type="submit" [disabled]="loading">
-          <ng-container *ngIf="!loading; else loadingTemplate">Connexion</ng-container>
-          <ng-template #loadingTemplate>
-            <div class="flex items-center justify-center">
-              <mat-spinner diameter="22"></mat-spinner>
-            </div>
-          </ng-template>
-        </button>
+  <section class="auth-main">
+    <div class="auth-card">
+      <a routerLink="/" class="mobile-auth-brand"><img src="assets/images/landing/lOGO_d/logo.png" alt="" />Maykconsulting</a>
+      <p class="auth-kicker">Bon retour</p><h2>Se connecter</h2><p class="auth-intro">Accédez à votre espace client.</p>
+      <button type="button" (click)="loginWithGoogle()" class="google-button"><img src="assets/images/google.webp" alt="" />Continuer avec Google</button>
+      <div class="auth-divider"><span>ou avec votre email</span></div>
+      <form [formGroup]="loginForm" (ngSubmit)="loginWithEmail()" novalidate>
+        <label><span>Adresse email</span><input type="email" formControlName="email" id="email" placeholder="vous@email.com" autocomplete="email" [class.input-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" /></label>
+        <p class="field-error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">Saisissez une adresse email valide.</p>
+        <label><span>Mot de passe</span><div class="password-input"><input [type]="passwordVisible ? 'text' : 'password'" formControlName="password" id="password" placeholder="Votre mot de passe" autocomplete="current-password" [class.input-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" /><button type="button" (click)="togglePasswordVisibility()">{{ passwordVisible ? 'Masquer' : 'Afficher' }}</button></div></label>
+        <p class="field-error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">Le mot de passe est requis.</p>
+        <a routerLink="/password-forget" class="forgot-link">Mot de passe oublié ?</a>
+        <button class="auth-submit" type="submit" [disabled]="loading"><span *ngIf="!loading">Se connecter <mat-icon>arrow_forward</mat-icon></span><mat-spinner *ngIf="loading" diameter="22"></mat-spinner></button>
       </form>
-
-      <p class="mt-4 text-center text-sm">
-        <a routerLink="/register" class="font-semibold text-cyan-300 hover:text-cyan-200">Creer un compte</a>
-      </p>
-
-      <p class="mt-2 text-center text-sm">
-        <a routerLink="/" class="font-semibold text-white/95 hover:text-white">Retour a l'accueil</a>
-      </p>
+      <p class="auth-switch">Vous n'avez pas encore de compte ? <a routerLink="/register">Créer un compte</a></p>
+      <a routerLink="/" class="back-home">← Retour à l'accueil</a>
     </div>
-  </div>
-</section>
-
+  </section>
+</main>

@@ -14,6 +14,7 @@ import { EmailService } from '../services/email.service';
 export class RegisterComponent {
   registerForm: FormGroup;
   loading = false;
+  passwordVisible = false;
   private passportUrl: String = '';
 
   constructor(
@@ -99,15 +100,7 @@ export class RegisterComponent {
 
 
   togglePasswordVisibility() {
-    const passwordField = document.getElementById('password') as HTMLInputElement;
-    const confirmPasswordField = document.getElementById('confirmPassword') as HTMLInputElement;
-    if (passwordField.type === 'password') {
-      passwordField.type = 'text';
-      confirmPasswordField.type = 'text';
-    } else {
-      passwordField.type = 'password';
-      confirmPasswordField.type = 'password';
-    }
+    this.passwordVisible = !this.passwordVisible;
   }
 
   loginWithGoogle() {

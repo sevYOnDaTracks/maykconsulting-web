@@ -20,18 +20,23 @@ export class ContactFormComponent implements OnInit {
     staticAlertClosed = true;
     error: string | null = null;
     success: boolean | null = null;
+    loading = false;
 
     constructor(private firestore: AngularFirestore) {}
 
     ngOnInit() {}
 
     submitForm(form: NgForm) {
+        if (this.loading) { return; }
+        this.error = null;
+        this.success = false;
         this.formValues.email = form.value.email || null;
         this.formValues.name = form.value.name || null;
         this.formValues.subject = form.value.subject || null;
         this.formValues.message = form.value.message || null;
 
         if (this.formValues.email && this.formValues.name && this.formValues.subject && this.formValues.message) {
+            this.loading = true;
             // Enregistrer les informations dans Firestore
             this.firestore.collection('MsgPublic').add({
                 ...this.formValues,
@@ -43,10 +48,13 @@ export class ContactFormComponent implements OnInit {
                 })
                 .catch(error => {
                     console.error('Error saving message to Firestore', error);
-                    this.error = 'An error occurred while saving your message. Please try again.';
+                    this.error = 'Une erreur est survenue. Veuillez réessayer.';
+                })
+                .finally(() => {
+                    this.loading = false;
                 });
         } else {
-            this.error = 'All fields are required.';
+            this.error = 'Tous les champs sont obligatoires.';
         }
     }
 }

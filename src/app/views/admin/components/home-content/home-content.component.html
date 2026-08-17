@@ -1,8 +1,9 @@
 <div class="home-wrap" *ngIf="user$ | async as user; else loading">
 
   <!-- Welcome -->
-  <div class="mb-8 text-center">
-    <h1 class="welcome-title">Hello {{ user.firstName }} {{ user.lastName }} !</h1>
+  <div class="welcome-block">
+    <p class="welcome-kicker">Espace personnel</p>
+    <h1 class="welcome-title">Bonjour {{ user.firstName }} {{ user.lastName }}.</h1>
     <p class="welcome-sub">Que souhaitez-vous faire aujourd'hui ?</p>
   </div>
 
@@ -47,24 +48,24 @@
   <!-- Service cards -->
   <div class="service-grid">
     <a routerLink="/admin/hebergement" class="service-card">
-      <div class="service-icon-wrap" style="background: rgba(78,38,128,0.10);">
-        <mat-icon style="color:#4e2680;">weekend</mat-icon>
+      <div class="service-icon-wrap">
+        <mat-icon>weekend</mat-icon>
       </div>
       <span class="service-label">Hébergement</span>
       <span class="service-arrow">→</span>
     </a>
 
     <a routerLink="/admin/admission" class="service-card">
-      <div class="service-icon-wrap" style="background: rgba(30,60,114,0.10);">
-        <mat-icon style="color:#1e3c72;">school</mat-icon>
+      <div class="service-icon-wrap">
+        <mat-icon>school</mat-icon>
       </div>
       <span class="service-label">Admissions</span>
       <span class="service-arrow">→</span>
     </a>
 
     <a routerLink="/admin/finance" class="service-card">
-      <div class="service-icon-wrap" style="background: rgba(30,64,175,0.10);">
-        <mat-icon style="color:#1e40af;">work</mat-icon>
+      <div class="service-icon-wrap">
+        <mat-icon>work</mat-icon>
       </div>
       <span class="service-label">Garant Financier</span>
       <span class="service-arrow">→</span>

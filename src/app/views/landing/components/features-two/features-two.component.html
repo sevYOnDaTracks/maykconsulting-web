@@ -1,63 +1,41 @@
-<section id="features-wrap" class="px-4 py-14 sm:py-16">
-  <div class="mx-auto max-w-7xl">
-    <p class="section-kicker">Nos services</p>
-    <h2 class="section-heading">Un accompagnement simple et tres concret.</h2>
-
-    <div class="mt-10 grid gap-4 md:grid-cols-2">
-      <article class="glass-card group p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_56px_rgba(0,194,168,0.13)]">
-        <div class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-cyan-300 to-sky-400 text-slate-900 shadow-[0_4px_14px_rgba(0,194,168,0.3)] transition-shadow duration-300 group-hover:shadow-[0_6px_20px_rgba(0,194,168,0.48)]">
-          <mat-icon>school</mat-icon>
-        </div>
-        <h3 class="mt-4 text-xl font-semibold text-white">Admissions</h3>
-        <p class="mt-2 text-white/80">Selection des ecoles et montage de dossier pour la France, le Canada et la Belgique.</p>
-        <a routerLink="/register" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-300 transition-all duration-200 hover:gap-2">
-          Voir le service
-          <mat-icon class="!h-4 !w-4 !text-base">arrow_forward</mat-icon>
-        </a>
-      </article>
-
-      <article class="glass-card group p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_56px_rgba(0,194,168,0.13)]">
-        <div class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-cyan-300 to-sky-400 text-slate-900 shadow-[0_4px_14px_rgba(0,194,168,0.3)] transition-shadow duration-300 group-hover:shadow-[0_6px_20px_rgba(0,194,168,0.48)]">
-          <mat-icon>travel_explore</mat-icon>
-        </div>
-        <h3 class="mt-4 text-xl font-semibold text-white">Procedure visa</h3>
-        <p class="mt-2 text-white/80">Montage du dossier et verification des pieces requises pour votre demande.</p>
-        <a routerLink="/register" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-300 transition-all duration-200 hover:gap-2">
-          Voir le service
-          <mat-icon class="!h-4 !w-4 !text-base">arrow_forward</mat-icon>
-        </a>
-      </article>
-
-      <article class="glass-card group p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_56px_rgba(0,194,168,0.13)]">
-        <div class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-cyan-300 to-sky-400 text-slate-900 shadow-[0_4px_14px_rgba(0,194,168,0.3)] transition-shadow duration-300 group-hover:shadow-[0_6px_20px_rgba(0,194,168,0.48)]">
-          <mat-icon>home_work</mat-icon>
-        </div>
-        <h3 class="mt-4 text-xl font-semibold text-white">Hebergement</h3>
-        <p class="mt-2 text-white/80">Recherche de logement et preparation de tous les documents associes.</p>
-        <a routerLink="/register" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-300 transition-all duration-200 hover:gap-2">
-          Voir le service
-          <mat-icon class="!h-4 !w-4 !text-base">arrow_forward</mat-icon>
-        </a>
-      </article>
-
-      <article class="glass-card group p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_56px_rgba(0,194,168,0.13)]">
-        <div class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-cyan-300 to-sky-400 text-slate-900 shadow-[0_4px_14px_rgba(0,194,168,0.3)] transition-shadow duration-300 group-hover:shadow-[0_6px_20px_rgba(0,194,168,0.48)]">
-          <mat-icon>account_balance</mat-icon>
-        </div>
-        <h3 class="mt-4 text-xl font-semibold text-white">Garantie financiere</h3>
-        <p class="mt-2 text-white/80">Solutions adaptees pour renforcer votre dossier financier auupres des ambassades.</p>
-        <a routerLink="/register" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-300 transition-all duration-200 hover:gap-2">
-          Voir le service
-          <mat-icon class="!h-4 !w-4 !text-base">arrow_forward</mat-icon>
-        </a>
-      </article>
+<section id="features-wrap" class="services-section">
+  <div class="section-shell">
+    <div class="section-intro">
+      <p class="section-kicker">Nos services</p>
+      <h2>Tout ce qu'il faut pour avancer.</h2>
+      <p>Un accompagnement concret, centralisé et adapté à votre destination.</p>
     </div>
 
-    <div class="mt-10 flex justify-center">
-      <a routerLink="/register" class="mk-btn-primary">
-        Commencer maintenant
-        <mat-icon class="!h-4 !w-4 !text-base">arrow_forward</mat-icon>
-      </a>
+    <figure class="services-photo">
+      <img src="assets/images/landing/photos/admission-consultation.png" alt="Un étudiant échange avec une conseillère sur son dossier d'admission" loading="lazy" />
+      <figcaption><span>Un accompagnement humain</span><strong>Un conseiller vous aide à prendre les bonnes décisions, dès le départ.</strong></figcaption>
+    </figure>
+
+    <div class="services-grid">
+      <article class="service-card">
+        <div class="service-top"><span class="service-number">01</span><mat-icon>school</mat-icon></div>
+        <h3>Admissions</h3>
+        <p>Sélection des écoles et constitution de votre dossier pour la France, le Canada et la Belgique.</p>
+        <a routerLink="/register">Démarrer <mat-icon>arrow_forward</mat-icon></a>
+      </article>
+      <article class="service-card">
+        <div class="service-top"><span class="service-number">02</span><mat-icon>travel_explore</mat-icon></div>
+        <h3>Procédure visa</h3>
+        <p>Préparation, vérification des pièces et suivi de votre demande jusqu'au rendez-vous.</p>
+        <a routerLink="/register">Démarrer <mat-icon>arrow_forward</mat-icon></a>
+      </article>
+      <article class="service-card">
+        <div class="service-top"><span class="service-number">03</span><mat-icon>home_work</mat-icon></div>
+        <h3>Hébergement</h3>
+        <p>Recherche de logement et préparation de tous les justificatifs nécessaires à votre installation.</p>
+        <a routerLink="/register">Démarrer <mat-icon>arrow_forward</mat-icon></a>
+      </article>
+      <article class="service-card service-card--dark">
+        <div class="service-top"><span class="service-number">04</span><mat-icon>account_balance</mat-icon></div>
+        <h3>Garantie financière</h3>
+        <p>Des solutions adaptées pour constituer un dossier financier solide auprès des ambassades.</p>
+        <a routerLink="/register">Démarrer <mat-icon>arrow_forward</mat-icon></a>
+      </article>
     </div>
   </div>
 </section>
